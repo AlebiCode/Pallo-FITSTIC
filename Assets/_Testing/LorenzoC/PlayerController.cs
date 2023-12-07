@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+namespace LorenzoCastelli
+{
+
 public class PlayerController : MonoBehaviour
 {
     public ControlMap Cm;
@@ -69,4 +72,6 @@ public class PlayerController : MonoBehaviour
         //Vector3 move = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
         //cc.Move(move * Time.deltaTime * speed);
     }
+}
+
 }

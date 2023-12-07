@@ -15,6 +15,9 @@ using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Utilities;
 
+namespace LorenzoCastelli
+{
+
 public partial class @ControlMap: IInputActionCollection2, IDisposable
 {
     public InputActionAsset asset { get; }
@@ -458,4 +461,6 @@ public partial class @ControlMap: IInputActionCollection2, IDisposable
     {
         void OnNewaction(InputAction.CallbackContext context);
     }
+}
+
 }

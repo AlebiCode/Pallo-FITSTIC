@@ -1,0 +1,1 @@
+Se create script per testare, metteteli in un namespace col vostro nome, gracias!
