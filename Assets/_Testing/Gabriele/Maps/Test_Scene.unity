@@ -1868,7 +1868,7 @@ MeshCollider:
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
-  m_Mesh: {fileID: 1477199724}
+  m_Mesh: {fileID: 413732536}
 --- !u!33 &369561370
 MeshFilter:
   m_ObjectHideFlags: 10
@@ -3108,6 +3108,8 @@ GameObject:
   - component: {fileID: 412976996}
   - component: {fileID: 412976995}
   - component: {fileID: 412976994}
+  - component: {fileID: 412976998}
+  - component: {fileID: 412976997}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -3203,6 +3205,47 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 412976992}
   m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &412976997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 412976992}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51ef25bf9edee894c98504bf9603b868, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rb: {fileID: 412976998}
+  speed: 1
+--- !u!54 &412976998
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 412976992}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!43 &413732536
 Mesh:
   m_ObjectHideFlags: 0
