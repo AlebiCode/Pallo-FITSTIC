@@ -92,7 +92,7 @@ namespace Controllers
 
         private void UpdateVelocity()
         {
-            float decelSpeed = (int)speedTier > 0 ? 1f : 2.5f;
+            float decelSpeed = (int)speedTier > 0 ? 0f :10f;
             Vector2 horizontalVelocity = new Vector2(velocity.x, velocity.z);
             float newMagnitude = horizontalVelocity.magnitude - decelSpeed * Time.deltaTime;
 
