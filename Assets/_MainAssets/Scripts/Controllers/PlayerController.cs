@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace Controllers
+namespace Enrico
 {
-
 	public class PlayerController : MonoBehaviour
 	{
 		InputManager input;
@@ -79,5 +78,4 @@ namespace Controllers
 
 		}
 	}
-
 }
