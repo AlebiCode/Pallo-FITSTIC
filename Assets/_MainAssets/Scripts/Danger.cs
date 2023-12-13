@@ -14,6 +14,7 @@ public class Danger : MonoBehaviour
     [SerializeField] private bool isYellow;
     [SerializeField] private bool isMovable;
     [SerializeField] private bool isActive;
+    [SerializeField] private int purpleDamage = 20;
 
 
     [SerializeField] private float explosionRadius = 2f;
@@ -71,7 +72,8 @@ public class Danger : MonoBehaviour
                 {
                     foreach (var player in playersHit)
                     {
-                        player.gameObject.GetComponent<p>
+                        player.gameObject.GetComponentInChildren<PlayerData>().TakeDamage(purpleDamage);
+                        Debug.Log("damage taken = " + purpleDamage);
                     }
 
                     // Comportamento del PurpleDanger
