@@ -7,18 +7,20 @@ namespace Controllers
     [RequireComponent(typeof(Rigidbody))]
     public class TempPlayerController : MonoBehaviour
     {
+        [SerializeField] private float maxChargeTime = 1;
+        [SerializeField] private float maxThrowForce = 10;
+
         [SerializeField] private Rigidbody rb;
         [SerializeField] private float speed = 1;
         [SerializeField] private Transform handsocket;
-        [SerializeField] private float maxChargeTime = 1;
-        [SerializeField] private float minThrowForce = 1;
-        [SerializeField] private float maxThrowForce = 10;
+        //[SerializeField] private float minThrowForce = 1;
 
         private Vector2 directionInput;
         private PalloController heldPallo;
         private float throwChargeTime = 0;
 
         private bool IsHoldingBall => heldPallo;
+        private float MinThrowForce => PalloController.TIER_2_SPEED;
 
         private void Update()
         {
@@ -49,7 +51,7 @@ namespace Controllers
 
             if (throwChargeTime >= maxChargeTime || Input.GetKeyUp(KeyCode.Mouse0))
             {
-                heldPallo.Throw(transform.forward * (minThrowForce + (Mathf.Min(throwChargeTime, maxChargeTime) * (maxThrowForce - minThrowForce) / maxChargeTime)));
+                heldPallo.Throw(transform.forward * (MinThrowForce + (Mathf.Min(throwChargeTime, maxChargeTime) * (maxThrowForce - MinThrowForce) / maxChargeTime)) + Vector3.up * 1.2f);
                 heldPallo = null;
             }
             else if (Input.GetKey(KeyCode.Mouse0))
