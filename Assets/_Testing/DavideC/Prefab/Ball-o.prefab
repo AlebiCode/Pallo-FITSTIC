@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4154718713349759122}
   - component: {fileID: 4282034002349553353}
   - component: {fileID: 1715925203739228025}
-  - component: {fileID: 8988417176920382083}
+  - component: {fileID: 5468498222544573713}
   m_Layer: 0
   m_Name: Ball-o
   m_TagString: Untagged
@@ -101,7 +101,7 @@ SphereCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -129,12 +129,12 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
+  m_UseGravity: 0
+  m_IsKinematic: 1
   m_Interpolate: 1
   m_Constraints: 0
   m_CollisionDetection: 2
---- !u!114 &8988417176920382083
+--- !u!114 &5468498222544573713
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -143,6 +143,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1835825332968310920}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 536ace88e1ca2854ebd8247154d16ff4, type: 3}
+  m_Script: {fileID: 11500000, guid: a882f00dff212664e9dd98651ff5798e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collider: {fileID: 4282034002349553353}
+  rigidbody: {fileID: 0}
+  collisionLayermask:
+    serializedVersion: 2
+    m_Bits: 1
+  ballState: 1
+  speedTier: 0
