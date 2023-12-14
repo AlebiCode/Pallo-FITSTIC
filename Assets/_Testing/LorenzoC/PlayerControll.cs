@@ -8,8 +8,7 @@ using UnityEngine.InputSystem;
 namespace LorenzoCastelli
 {
 
-public class PlayerControll: MonoBehaviour
-{
+public class PlayerControll: PlayerControlsGeneric {
         
 
         [SerializeField] private float maxChargeTime = 1;
@@ -36,19 +35,24 @@ public class PlayerControll: MonoBehaviour
         }
 
 
-        private void PlayerMovement() {
+        public override void PlayerMovement() {
+            PlayerInputsMovement();
+        }
+
+        private void PlayerInputsMovement() {
             directionInput.x = Input.GetAxis("Horizontal");
             directionInput.y = Input.GetAxis("Vertical");
 
             transform.position += new Vector3(directionInput.x, 0, directionInput.y) * speed * Time.deltaTime;
         }
-        public void PlayerRotation() {
+
+        public override void PlayerRotation() {
             RaycastHit hit;
             if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 1000)) {
                 transform.LookAt(new Vector3(hit.point.x, transform.position.y, hit.point.z), Vector3.up);
             }
     }
-        public void BallThrow(){
+        public override void BallThrow(){
             if (!IsHoldingBall)
                 return;
 
@@ -63,13 +67,6 @@ public class PlayerControll: MonoBehaviour
 
         private void OnTriggerEnter(Collider other) {
             if (other.GetComponent<PalloController>() != null) {
-                //è UNA PALLA
-                PalloController palloIncoming = other.GetComponent<PalloController>();
-                //ANDREBBERO ESPANSI GLI STATI DELLA PALLA - LC
-                /*if (palloIncoming.ballstate == thrown){
-                playerData.TakeDamage(palloIncoming.currentDamage)
-            }else{*/
-                //CASO PALLA A TERRA E L'HO PRESA
                 heldPallo = other.GetComponent<PalloController>();
                 if (heldPallo != null) {
                     if (IsHoldingBall) {
