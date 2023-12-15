@@ -45,6 +45,7 @@ namespace Controllers
 
         private Vector3 velocity;
         private RaycastHit spherecastInfo;
+        private RaycastHit groundHitInfo;
 
         private float decelerationTimer = 0;
         private bool IsHeld => ballState == BallStates.held;
@@ -72,7 +73,7 @@ namespace Controllers
                 //da aggingere le varie casistiche
                 OnWallCollision();
             }
-            if (Physics.Raycast(transform.position, Vector3.down, collider.radius + velocity.y * Time.deltaTime, collisionLayermask))
+            if (Physics.Raycast(transform.position, Vector3.down, out groundHitInfo, collider.radius + velocity.y * Time.deltaTime, collisionLayermask))
             {
                 OnGroundCollision();
             }
@@ -88,6 +89,11 @@ namespace Controllers
         {
             speedTier = SpeedTiers.tier0;
             velocity.y = 2.5f;
+
+            if (groundHitInfo.rigidbody)
+            {
+                groundHitInfo.rigidbody.AddForceAtPosition(Vector3.down * velocity.y, groundHitInfo.point, ForceMode.Impulse);
+            }
         }
 
         private void UpdateVelocity()
