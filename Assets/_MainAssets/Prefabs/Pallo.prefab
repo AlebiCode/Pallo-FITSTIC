@@ -14,8 +14,8 @@ GameObject:
   - component: {fileID: 4282034002349553353}
   - component: {fileID: 1715925203739228025}
   - component: {fileID: 5468498222544573713}
-  m_Layer: 0
-  m_Name: Ball-o
+  m_Layer: 7
+  m_Name: Pallo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -93,10 +93,10 @@ SphereCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1835825332968310920}
-  m_Material: {fileID: 13400000, guid: e26c063d9756b0e468e38eaf2882e3c4, type: 2}
+  m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -131,9 +131,9 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 0
   m_IsKinematic: 1
-  m_Interpolate: 1
+  m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 2
+  m_CollisionDetection: 1
 --- !u!114 &5468498222544573713
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -147,7 +147,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   collider: {fileID: 4282034002349553353}
-  rigidbody: {fileID: 0}
+  rigidbody: {fileID: 1715925203739228025}
   collisionLayermask:
     serializedVersion: 2
     m_Bits: 1

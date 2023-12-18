@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using LorenzoCastelli;
 using UnityEngine;
+using Unity.VisualScripting;
 
 public class Danger : MonoBehaviour
 {
@@ -15,13 +16,14 @@ public class Danger : MonoBehaviour
     [SerializeField] private bool isMovable;
     [SerializeField] private bool isActive;
     [SerializeField] private int purpleDamage = 20;
-
-
+    [SerializeField] private int yellowDamage = 20;
+    [SerializeField] private float atPositionForceHorizontal = 2f;
+    [SerializeField] private float atPositionForceVertical = 5f;
+    [SerializeField] private float explosionForce = 20f;
     [SerializeField] private float explosionRadius = 2f;
 
     // Quando la palla colpisce questo oggetto si attiva effetto diverso a seconda del tipo di pericolo (distinzione in base al colore)
 
-  
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.collider.GetType() == typeof(CapsuleCollider))
@@ -48,52 +50,55 @@ public class Danger : MonoBehaviour
         }
         if (isActive)
         {
-            var playersHit = Physics.OverlapSphere(this.transform.position, 2f, 1 << 6);
+            var playersHit = Physics.OverlapSphere(this.transform.position, explosionRadius, 1 << 6 );
 
             if (playersHit.Length > 0)
             {
-
-                if (isRed)
+                foreach (var player in playersHit)
                 {
-                    foreach (var player in playersHit )
+                    if (isRed)
                     {
-                        KillPlayer(player.gameObject.GetComponentInChildren<TempPlayerController>());
+                        player.gameObject.GetComponentInChildren<TempPlayerController>().KillPlayer();
 
+                       //prima di distruzione esegui VFX and SFX
+
+                        Destroy(this.gameObject);
+
+                        // Comportamento del RedDanger
+                        // Porta a zero la vita del personaggio vicino
                     }
-
-                    //prima di distruzione esegui VFX and SFX
-
-                    Destroy(this.gameObject);
-
-                    // Comportamento del RedDanger
-                    // Porta a zero la vita del personaggio vicino
-                }
-                if (isPurple)
-                {
-                    foreach (var player in playersHit)
+                    if (isPurple)
                     {
                         player.gameObject.GetComponentInChildren<PlayerData>().TakeDamage(purpleDamage);
-                        Debug.Log("damage taken = " + purpleDamage);
-                    }
 
-                    // Comportamento del PurpleDanger
-                    // Diminuisce la stamina di valore X
-                    // Respinge il personaggio vicino
-                }
-                if (isYellow)
-                {
-                    // Comportamento del YellowDanger
-                    // Diminuisce la stamina di valore X del personaggio vicino
+                        RejectPlayer(player);
+
+                        Debug.Log("damage taken = " + purpleDamage);
+
+                        // Comportamento del PurpleDanger
+                        // Diminuisce la stamina di valore X
+                        // Respinge il personaggio vicino
+                    }
+                    if (isYellow)
+                    {
+                        player.gameObject.GetComponentInChildren<PlayerData>().TakeDamage(yellowDamage);
+
+                        // Comportamento del YellowDanger
+                        // Diminuisce la stamina di valore X del personaggio vicino
+                    }
                 }
             }
         }
     }
 
-    private void KillPlayer(TempPlayerController player)
+    private void RejectPlayer(Collider _player)
     {
-        Debug.Log("player is killed!");
-        //rimuovi destroy e togli una vita
-        Destroy(player.gameObject);
+        //player.attachedRigidbody.AddExplosionForce(explosionForce, this.transform.position, 5f);
+
+        Vector3 forcedirection = (new Vector3(_player.transform.position.x, _player.transform.position.y + 1f, _player.transform.position.z) - this.transform.position).normalized;
+        _player.attachedRigidbody.AddForce(forcedirection * explosionForce, ForceMode.Impulse);
+
+        //Vector3 finalForce = new Vector3(forcedirection.x * atPositionForceHorizontal, forcedirection.y * atPositionForceVertical, forcedirection.z * atPositionForceHorizontal);
     }
 
     private void StaminaDecrese()
@@ -101,9 +106,6 @@ public class Danger : MonoBehaviour
 
     }
 
-    private void RejectPlayer()
-    {
-
-    }
+    
 
 }

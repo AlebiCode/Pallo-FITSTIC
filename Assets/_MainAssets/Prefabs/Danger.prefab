@@ -125,7 +125,11 @@ MonoBehaviour:
   isYellow: 0
   isMovable: 0
   isActive: 0
-  explosionRadius: 2
+  purpleDamage: 20
+  atPositionForceHorizontal: 2
+  atPositionForceVertical: 5
+  explosionForce: 100
+  explosionRadius: 3
 --- !u!135 &1884014297285692270
 SphereCollider:
   m_ObjectHideFlags: 0

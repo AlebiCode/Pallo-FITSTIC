@@ -1,3 +1,4 @@
+using Controllers;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ public class PlayerData : MonoBehaviour
 {
         private int maxHp=100;
         public int currentHp;
-        public int speed;
+        //public int speed;
         public int ragdollTreshold;
 
         // Start is called before the first frame update
@@ -40,6 +41,7 @@ public class PlayerData : MonoBehaviour
 
         private void Death() {
             currentHp = 0;
+            GetComponent<TempPlayerController>()?.KillPlayer();
             //UPDATE DELLA UI
             //RAGDOLL
         }
