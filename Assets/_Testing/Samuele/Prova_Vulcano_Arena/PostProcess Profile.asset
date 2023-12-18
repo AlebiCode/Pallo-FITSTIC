@@ -71,7 +71,7 @@ MonoBehaviour:
   active: 1
   postExposure:
     m_OverrideState: 1
-    m_Value: 0.32
+    m_Value: 0.31
   contrast:
     m_OverrideState: 1
     m_Value: 29
@@ -105,7 +105,7 @@ MonoBehaviour:
     m_Value: 3.05
   intensity:
     m_OverrideState: 1
-    m_Value: 1.65
+    m_Value: 0.79
   scatter:
     m_OverrideState: 1
     m_Value: 1
