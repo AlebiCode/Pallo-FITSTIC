@@ -29,12 +29,17 @@ namespace Controllers
             BallThrow();
         }
 
+        private void FixedUpdate()
+        {
+            
+        }
         private void PlayerMovement()
         {
             directionInput.x = Input.GetAxis("Horizontal");
             directionInput.y = Input.GetAxis("Vertical");
 
-            transform.position += new Vector3(directionInput.x, 0, directionInput.y) * speed * Time.deltaTime;
+            if(transform.position.y<2)
+                transform.position += new Vector3(directionInput.x, 0, directionInput.y) * speed * Time.deltaTime;
         }
         private void PlayerRotation()
         {
@@ -58,6 +63,13 @@ namespace Controllers
             {
                 throwChargeTime += Time.deltaTime;
             }
+        }
+
+        public void KillPlayer()
+        {
+            Debug.Log("player is killed!");
+            //rimuovi destroy e togli una vita
+            Destroy(this.gameObject);
         }
 
 
