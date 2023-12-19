@@ -7,10 +7,9 @@ using UnityEngine.UI;
 
 namespace vittorio {
     public class GameplayManager : MonoBehaviour {
-        public UnityEvent OnStartGame = new();
-        public UnityEvent OnOvertimeStart = new();
-        public UnityEvent OnEndGame = new();
-        [SerializeField] Text timeText;
+        
+
+
 
 
 
