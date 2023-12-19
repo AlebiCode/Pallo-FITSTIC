@@ -12,6 +12,22 @@ namespace Controllers
 
         [SerializeField] private Rigidbody rb;
         [SerializeField] private float speed = 1;
+        [SerializeField] private int maxHealthPoints = 100;
+
+        private int currentHp;
+        public int CurrentHp 
+        {
+            get { return currentHp; }
+            
+            set
+            {
+                if(value < 0)
+                    currentHp = 0;
+                else
+                    currentHp = value;
+            } 
+        }
+
         [SerializeField] private Transform handsocket;
         //[SerializeField] private float minThrowForce = 1;
 
@@ -22,6 +38,10 @@ namespace Controllers
         private bool IsHoldingBall => heldPallo;
         private float MinThrowForce => PalloController.TIER_2_SPEED;
 
+        private void Awake()
+        {
+            currentHp = maxHealthPoints;
+        }
         private void Update()
         {
             PlayerMovement();
@@ -69,9 +89,20 @@ namespace Controllers
         {
             Debug.Log("player is killed!");
             //rimuovi destroy e togli una vita
-            Destroy(this.gameObject);
+            Destroy(this?.gameObject);
         }
 
+        public void TakeDamage(int amount)
+        {
+            CurrentHp -= amount;
+
+            Debug.Log("Player HP = " + CurrentHp);
+
+            if (CurrentHp <= 0)
+            {
+                this.KillPlayer();
+            }
+        }
 
         private void OnTriggerEnter(Collider other)
         {
@@ -82,7 +113,5 @@ namespace Controllers
                 heldPallo.Hold(handsocket);
             }
         }
-
     }
-
 }

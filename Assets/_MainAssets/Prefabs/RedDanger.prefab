@@ -68,6 +68,12 @@ PrefabInstance:
       propertyPath: isRed
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7116452489658200818, guid: b5e9a60c4e4e3d2418a7e76f1d3d40a5,
+        type: 3}
+      propertyPath: dangerConfig
+      value: 
+      objectReference: {fileID: 11400000, guid: 33cf40dfb93c2af41987b019bbb4b600,
+        type: 2}
     - target: {fileID: 7299551024025674248, guid: b5e9a60c4e4e3d2418a7e76f1d3d40a5,
         type: 3}
       propertyPath: m_Name

@@ -70,6 +70,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7116452489658200818, guid: b5e9a60c4e4e3d2418a7e76f1d3d40a5,
         type: 3}
+      propertyPath: dangerConfig
+      value: 
+      objectReference: {fileID: 11400000, guid: 34791fd766e5a0e4d8fa80f1d898b474,
+        type: 2}
+    - target: {fileID: 7116452489658200818, guid: b5e9a60c4e4e3d2418a7e76f1d3d40a5,
+        type: 3}
       propertyPath: explosionForceVertical
       value: 16.66
       objectReference: {fileID: 0}

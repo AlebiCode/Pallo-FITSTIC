@@ -41,7 +41,6 @@ public class PlayerData : MonoBehaviour
 
         private void Death() {
             currentHp = 0;
-            GetComponent<TempPlayerController>()?.KillPlayer();
             //UPDATE DELLA UI
             //RAGDOLL
         }

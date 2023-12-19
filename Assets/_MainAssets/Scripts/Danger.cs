@@ -5,22 +5,29 @@ using System.Collections.Generic;
 using LorenzoCastelli;
 using UnityEngine;
 using Unity.VisualScripting;
+using System;
 
 public class Danger : MonoBehaviour
 {
     // I pericoli possono diminuire la stamina, applicare una forza respingente e portare alla perdita di una vita
-    [Header("Type of Danger")]
-    [SerializeField] private bool isRed;
-    [SerializeField] private bool isPurple;
-    [SerializeField] private bool isYellow;
-    [SerializeField] private bool isMovable;
-    [SerializeField] private bool isActive;
-    [SerializeField] private int purpleDamage = 20;
-    [SerializeField] private int yellowDamage = 20;
-    [SerializeField] private float atPositionForceHorizontal = 2f;
-    [SerializeField] private float atPositionForceVertical = 5f;
+    //[Header("Type of Danger")]
+
+    public enum DangerTypesEnum
+    {
+        None = 0,
+        Red = 10,
+        Purple = 11,
+        Yellow = 12,
+    }
+
     [SerializeField] private float explosionForce = 20f;
     [SerializeField] private float explosionRadius = 2f;
+    [SerializeField] private bool isActive = false;
+
+    //[SerializeField] public float atPositionForceHorizontal = 2f;
+    //[SerializeField] public float atPositionForceVertical = 5f;
+
+    [SerializeField] private DangersConfig dangerConfig;
 
     // Quando la palla colpisce questo oggetto si attiva effetto diverso a seconda del tipo di pericolo (distinzione in base al colore)
 
@@ -41,7 +48,7 @@ public class Danger : MonoBehaviour
 
     private void DangerBehavior()
     {
-        if (isMovable)
+        if (dangerConfig.isMovable)
         {
             // Attiva la possibilità di spostare il Danger tramite la fisica
             Rigidbody rb = this.GetComponent<Rigidbody>();
@@ -56,7 +63,7 @@ public class Danger : MonoBehaviour
             {
                 foreach (var player in playersHit)
                 {
-                    if (isRed)
+                    if (dangerConfig.DangerType == DangerTypesEnum.Red)
                     {
                         player.gameObject.GetComponentInChildren<TempPlayerController>().KillPlayer();
 
@@ -67,21 +74,23 @@ public class Danger : MonoBehaviour
                         // Comportamento del RedDanger
                         // Porta a zero la vita del personaggio vicino
                     }
-                    if (isPurple)
+                    if (dangerConfig.DangerType == DangerTypesEnum.Purple)
                     {
-                        player.gameObject.GetComponentInChildren<PlayerData>().TakeDamage(purpleDamage);
+                        StaminaDecrese(player);
 
                         RejectPlayer(player);
 
-                        Debug.Log("damage taken = " + purpleDamage);
+                        Debug.Log("damage taken = " + dangerConfig.explosionDamage);
 
                         // Comportamento del PurpleDanger
                         // Diminuisce la stamina di valore X
                         // Respinge il personaggio vicino
                     }
-                    if (isYellow)
+                    if (dangerConfig.DangerType == DangerTypesEnum.Yellow)
                     {
-                        player.gameObject.GetComponentInChildren<PlayerData>().TakeDamage(yellowDamage);
+                        StaminaDecrese(player);
+
+                        Debug.Log("damage taken = " + dangerConfig.explosionDamage);
 
                         // Comportamento del YellowDanger
                         // Diminuisce la stamina di valore X del personaggio vicino
@@ -101,11 +110,12 @@ public class Danger : MonoBehaviour
         //Vector3 finalForce = new Vector3(forcedirection.x * atPositionForceHorizontal, forcedirection.y * atPositionForceVertical, forcedirection.z * atPositionForceHorizontal);
     }
 
-    private void StaminaDecrese()
+    private void StaminaDecrese(Collider _player)
     {
+        _player.gameObject.GetComponentInChildren<TempPlayerController>().TakeDamage(dangerConfig.explosionDamage);
 
     }
 
-    
+
 
 }
