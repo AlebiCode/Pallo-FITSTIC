@@ -18,7 +18,7 @@ namespace vittorio {
         [SerializeField] float OvertimeTimerSeconds;
         [SerializeField] TMP_Text timeText;
 
-        private float currentTimer;
+        private float timeRemaining;
 
         private void Awake() {
 
@@ -42,18 +42,18 @@ namespace vittorio {
 
         private IEnumerator Countdown() {
 
-            currentTimer = normalTimerSeconds;
+            timeRemaining = normalTimerSeconds;
 
-            float minutes = Mathf.FloorToInt(currentTimer / 60);
-            float seconds = Mathf.FloorToInt(currentTimer % 60);
+            float minutes = Mathf.FloorToInt(timeRemaining / 60);
+            float seconds = Mathf.FloorToInt(timeRemaining % 60);
             timeText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
 
-            while (currentTimer > 0) {
-                print(currentTimer); 
+            while (timeRemaining > 0) {
+                
                 yield return new WaitForSeconds(1);
-                currentTimer -= 1;
-                minutes = Mathf.FloorToInt(currentTimer / 60);
-                seconds = Mathf.FloorToInt(currentTimer % 60);
+                timeRemaining -= 1;
+                minutes = Mathf.FloorToInt(timeRemaining / 60);
+                seconds = Mathf.FloorToInt(timeRemaining % 60);
                 timeText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
 
             }
@@ -62,14 +62,14 @@ namespace vittorio {
 
             OnStandardTimeEnd?.Invoke();
 
-            currentTimer = OvertimeTimerSeconds;
+            timeRemaining = OvertimeTimerSeconds;
 
-            while (currentTimer > 0) {
+            while (timeRemaining > 0) {
 
                 yield return new WaitForSeconds(1);
-                currentTimer -= 1;
-                minutes = Mathf.FloorToInt(currentTimer / 60);
-                seconds = Mathf.FloorToInt(currentTimer % 60);
+                timeRemaining -= 1;
+                minutes = Mathf.FloorToInt(timeRemaining / 60);
+                seconds = Mathf.FloorToInt(timeRemaining % 60);
                 timeText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
 
             }
