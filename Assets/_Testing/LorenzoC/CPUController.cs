@@ -10,6 +10,7 @@ namespace LorenzoCastelli {
 
 public class CPUController : PlayerControlsGeneric {
 
+
     [SerializeField] private float maxChargeTime = 1;
     [SerializeField] private float maxThrowForce = 10;
 
@@ -20,11 +21,11 @@ public class CPUController : PlayerControlsGeneric {
     [SerializeField] private Transform handsocket;
 
 
+
+
     private NavMeshAgent ai = new NavMeshAgent();
 
     public GameObject frontPoint;
-
-    private PalloController heldPallo;
 
     public GameObject currentTarget;
     public float lookRadius = 6.66f;
@@ -35,7 +36,7 @@ public class CPUController : PlayerControlsGeneric {
     }
 
     public override void PlayerMovement() {
-        if (heldPallo) {
+        if (playerData.IsHoldingBall()) {
             //SCEGLI UN BERSAGLIO OPPURE MUOVITI DA QUALCHE PARTE
             
         } else {
@@ -93,5 +94,19 @@ public class CPUController : PlayerControlsGeneric {
             PlayerRotation();
 
     }
-}
+
+        private void OnTriggerEnter(Collider other) {
+            if (other.GetComponent<PalloController>() != null) {
+                playerData.PickUpBall(other.GetComponent<PalloController>());
+                playerData.GetPallo().Hold(handsocket);
+                /*if (playerData.IsHoldingBall()) {
+                    throwChargeTime = 0;
+                    heldPallo.Hold(handsocket);
+                }*/
+
+
+            }
+        }
+
+    }
 }

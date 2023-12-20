@@ -49,7 +49,7 @@ namespace Controllers
         private RaycastHit groundHitInfo;
 
         private float decelerationTimer = 0;
-        private bool IsHeld => ballState == BallStates.held;
+        public bool IsHeld => ballState == BallStates.held;
         private float HorizontalVelocityMagnitude => new Vector2(velocity.x, velocity.y).magnitude;
 
         private void Update()
@@ -114,14 +114,14 @@ namespace Controllers
         {
             ballState = BallStates.held;
             transform.SetParent(socket);
-            enabled = false;
+            collider.enabled = false;
             transform.localPosition = Vector3.zero;
         }
         public void Throw(Vector3 velocity)
         {
             ballState = BallStates.thrown;
             transform.SetParent(null);
-            enabled = true;
+            collider.enabled = true;
             decelerationTimer = 0;
             this.velocity = velocity;
 

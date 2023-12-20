@@ -16,7 +16,6 @@ GameObject:
   - component: {fileID: 5667981257436828100}
   - component: {fileID: 4804791177467052910}
   - component: {fileID: 1014190239182657169}
-  - component: {fileID: 7233168938119985468}
   m_Layer: 6
   m_Name: CPU
   m_TagString: Untagged
@@ -154,7 +153,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentHp: 0
-  speed: 5
   ragdollTreshold: 10
 --- !u!114 &4804791177467052910
 MonoBehaviour:
@@ -175,6 +173,7 @@ MonoBehaviour:
   speed: 1
   handsocket: {fileID: 4912432820120657351}
   frontPoint: {fileID: 8345577770266177718}
+  currentTarget: {fileID: 0}
   lookRadius: 6.66
   turningSpeed: 10
 --- !u!195 &1014190239182657169
@@ -199,24 +198,6 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &7233168938119985468
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3524463106244323884}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 22315a5e34647cd4ab6469d7a104a9f1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxChargeTime: 1
-  maxThrowForce: 10
-  playerData: {fileID: 5667981257436828100}
-  rb: {fileID: 1018160926652664545}
-  speed: 1
-  handsocket: {fileID: 4912432820120657351}
 --- !u!1 &8060258898962041783
 GameObject:
   m_ObjectHideFlags: 0

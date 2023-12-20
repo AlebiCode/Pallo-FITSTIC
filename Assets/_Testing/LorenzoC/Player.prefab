@@ -266,8 +266,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentHp: 0
-  speed: 0
   ragdollTreshold: 0
+  handsocket: {fileID: 7407853230732808618}
 --- !u!114 &-4583512960773331150
 MonoBehaviour:
   m_ObjectHideFlags: 0

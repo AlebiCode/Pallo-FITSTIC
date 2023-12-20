@@ -6,17 +6,26 @@ using UnityEngine;
 
 namespace LorenzoCastelli {
 
-
 public class PlayerData : MonoBehaviour
 {
+
+        static GameLogic instance;
+
         private int maxHp=100;
         public int currentHp;
         //public int speed;
         public int ragdollTreshold;
 
-        // Start is called before the first frame update
-        private void Start() {
+
+        public float throwChargeTime = 0;
+
+        private PalloController heldPallo;
+
+        public int importance;
+
+        private void Awake() {
             currentHp = maxHp;
+            instance = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameLogic>();
         }
 
         public void TakeDamage(int amount) {
@@ -43,6 +52,40 @@ public class PlayerData : MonoBehaviour
             currentHp = 0;
             //UPDATE DELLA UI
             //RAGDOLL
+        }
+
+        public bool isAlive() {
+            if (currentHp > 0)
+                return true;
+            else
+                return false;
+        }
+
+        public void AddImportance(int value) {
+            importance += value;
+        }
+
+        public void PickUpBall(PalloController pallo) {
+            if (pallo) {
+                heldPallo = pallo;
+                throwChargeTime = 0;
+                importance += 10;
+            } else {
+                Debug.LogError("Couldn't find " + pallo);
+            }
+        }
+
+        public PalloController GetPallo() {
+            return heldPallo;
+        }
+
+        public void LoseBall() {
+            heldPallo = null;
+            importance -= 10;
+        }
+
+        public bool IsHoldingBall() {
+            return heldPallo;
         }
     }
 

@@ -22,10 +22,7 @@ public class PlayerControll: PlayerControlsGeneric {
         //[SerializeField] private float minThrowForce = 1;
 
         private Vector2 directionInput;
-        private PalloController heldPallo;
-        private float throwChargeTime = 0;
 
-        private bool IsHoldingBall => heldPallo;
         private float MinThrowForce => PalloController.TIER_2_SPEED;
 
         private void Update() {
@@ -53,28 +50,22 @@ public class PlayerControll: PlayerControlsGeneric {
             }
     }
         public override void BallThrow(){
-            if (!IsHoldingBall)
+            if (!playerData.IsHoldingBall())
                 return;
 
-            if (throwChargeTime >= maxChargeTime || Input.GetKeyUp(KeyCode.Mouse0)) {
-                heldPallo.Throw(transform.forward * (MinThrowForce + (Mathf.Min(throwChargeTime, maxChargeTime) * (maxThrowForce - MinThrowForce) / maxChargeTime)) + Vector3.up * 1.2f);
-                heldPallo = null;
+            if (playerData.throwChargeTime >= maxChargeTime || Input.GetKeyUp(KeyCode.Mouse0)) {
+                playerData.GetPallo().Throw(transform.forward * (MinThrowForce + (Mathf.Min(playerData.throwChargeTime, maxChargeTime) * (maxThrowForce - MinThrowForce) / maxChargeTime)) + Vector3.up * 1.2f);
+                playerData.LoseBall();
             } else if (Input.GetKey(KeyCode.Mouse0)) {
-                throwChargeTime += Time.deltaTime;
+                playerData.throwChargeTime += Time.deltaTime;
             }
         }
 
 
         private void OnTriggerEnter(Collider other) {
-            if (other.GetComponent<PalloController>() != null) {
-                heldPallo = other.GetComponent<PalloController>();
-                if (heldPallo != null) {
-                    if (IsHoldingBall) {
-                        throwChargeTime = 0;
-                        heldPallo.Hold(handsocket);
-                    }
-
-                }
+            if ((other.GetComponent<PalloController>() != null) && (!other.GetComponent<PalloController>().IsHeld)){
+                playerData.PickUpBall(other.GetComponent<PalloController>());
+                playerData.GetPallo().Hold(handsocket);
             }
         }
 
