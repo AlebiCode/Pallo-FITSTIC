@@ -63,37 +63,42 @@ public class Danger : MonoBehaviour
             {
                 foreach (var player in playersHit)
                 {
-                    if (dangerConfig.DangerType == DangerTypesEnum.Red)
+                    switch(dangerConfig.DangerType)
                     {
-                        player.gameObject.GetComponentInChildren<TempPlayerController>().KillPlayer();
+                        case DangerTypesEnum.Red:
 
-                       //prima di distruzione esegui VFX and SFX
+                            player.gameObject.GetComponentInChildren<TempPlayerController>().KillPlayer();
 
-                        Destroy(this.gameObject);
+                            //prima di distruzione esegui VFX and SFX
 
-                        // Comportamento del RedDanger
-                        // Porta a zero la vita del personaggio vicino
-                    }
-                    if (dangerConfig.DangerType == DangerTypesEnum.Purple)
-                    {
-                        StaminaDecrese(player);
+                            Destroy(this.gameObject);
 
-                        RejectPlayer(player);
+                            // Comportamento del RedDanger
+                            // Porta a zero la vita del personaggio vicino
+                            break;
 
-                        Debug.Log("damage taken = " + dangerConfig.explosionDamage);
+                        case DangerTypesEnum.Purple:
 
-                        // Comportamento del PurpleDanger
-                        // Diminuisce la stamina di valore X
-                        // Respinge il personaggio vicino
-                    }
-                    if (dangerConfig.DangerType == DangerTypesEnum.Yellow)
-                    {
-                        StaminaDecrese(player);
+                            StaminaDecrese(player);
 
-                        Debug.Log("damage taken = " + dangerConfig.explosionDamage);
+                            RejectPlayer(player);
 
-                        // Comportamento del YellowDanger
-                        // Diminuisce la stamina di valore X del personaggio vicino
+                            Debug.Log("damage taken = " + dangerConfig.explosionDamage);
+
+                            // Comportamento del PurpleDanger
+                            // Diminuisce la stamina di valore X
+                            // Respinge il personaggio vicino
+                            break;
+
+                        case DangerTypesEnum.Yellow:
+
+                            StaminaDecrese(player);
+
+                            Debug.Log("damage taken = " + dangerConfig.explosionDamage);
+
+                            // Comportamento del YellowDanger
+                            // Diminuisce la stamina di valore X del personaggio vicino
+                            break;
                     }
                 }
             }
