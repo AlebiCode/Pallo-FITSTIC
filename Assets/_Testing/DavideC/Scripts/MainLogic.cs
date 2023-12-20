@@ -11,8 +11,12 @@ namespace DavideCTest
     {
         public static MainLogic instance;
 
+        [SerializeField] private GameObject palloModel;
+        [SerializeField] private Vector3 palloSpawnLocation = new Vector3(0f,3f,0f);
+
+
         [SerializeField] private GameObject playerModel;
-        [SerializeField] private Vector3 spawnLocation = Vector3.zero;
+        [SerializeField] private Vector3 playerSpawnLocation = Vector3.zero;
         [SerializeField] private Transform playerContainer;
 
         private float debugMaxTime = 1f;
@@ -47,7 +51,11 @@ namespace DavideCTest
 
         public void SpawnPlayer()
         {
-            Instantiate(playerModel, spawnLocation, Quaternion.Euler(0, 0, 0), playerContainer);
+            Instantiate(playerModel, playerSpawnLocation, Quaternion.Euler(0, 0, 0), playerContainer);
+        }
+        public void SpawnPallo()
+        {
+            Instantiate(palloModel, palloSpawnLocation, Quaternion.Euler(0, 0, 0));
         }
 
         public void PlayersHpToConsole()

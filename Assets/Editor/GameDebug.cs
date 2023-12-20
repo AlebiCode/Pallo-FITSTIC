@@ -9,9 +9,15 @@ public class EditorTools : EditorWindow
 {
     
     [MenuItem("EditorTools/SpawnPlayer")]
-    public static void SpawnPlayer()
+    public static void SpawnPlayerDebug()
     {
         MainLogic.instance.SpawnPlayer();
+    }
+
+    [MenuItem("EditorTools/SpawnPallo")]
+    public static void SpawnPalloDebug()
+    {
+        MainLogic.instance.SpawnPallo();
     }
 
 }

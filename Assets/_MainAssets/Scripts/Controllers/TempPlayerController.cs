@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Controllers
@@ -13,6 +14,8 @@ namespace Controllers
         [SerializeField] private Rigidbody rb;
         [SerializeField] private float speed = 1;
         [SerializeField] private int maxHealthPoints = 100;
+
+        public bool playerIsBeingRejected = false;
 
         private int currentHp;
         public int CurrentHp 
@@ -47,12 +50,10 @@ namespace Controllers
             PlayerMovement();
             PlayerRotation();
             BallThrow();
+
         }
 
-        private void FixedUpdate()
-        {
-            
-        }
+       
         private void PlayerMovement()
         {
             directionInput.x = Input.GetAxis("Horizontal");
@@ -112,6 +113,49 @@ namespace Controllers
                 throwChargeTime = 0;
                 heldPallo.Hold(handsocket);
             }
+        }
+
+        private float velocityChange = 0;
+        RaycastHit castInfo;
+        private void PlayerAirborneControl()
+        {        
+            Physics.SphereCast(transform.position, GetComponent<Collider>().bounds.extents.x, Vector3.down, out castInfo, transform.position.y - ( GetComponent<Collider>().bounds.extents.y + 0.1f ), 1 << 0);
+
+            if (playerIsBeingRejected)
+            {
+                if (castInfo.collider)
+                {
+                    StopAirbornePlayer();
+
+                    Debug.Log("player stopped");
+                }
+                else
+                {
+                    SlowPlayerVerticalSpeed();
+
+                    Debug.Log("player being slowed");
+                }              
+            }
+        }
+        public void SlowPlayerVerticalSpeed()
+        {
+            velocityChange += 0.5f * Time.deltaTime;
+            rb.velocity = new Vector3(rb.velocity.x, -velocityChange, rb.velocity.z);
+        }
+        public void StopAirbornePlayer()
+        {
+            playerIsBeingRejected = false;
+            rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+        }
+        public void SetPlayerToRejectState()
+        {
+            playerIsBeingRejected = true;
+            velocityChange = 0f;
+        }
+
+        private void FixedUpdate()
+        {
+            PlayerAirborneControl();
         }
     }
 }

@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 7116452489658200818}
   - component: {fileID: 1884014297285692270}
   - component: {fileID: 457192397777762358}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Danger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -120,16 +120,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1496f7ce4d94d4d4e883a0dee9e0df17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isRed: 0
-  isPurple: 0
-  isYellow: 0
-  isMovable: 0
-  isActive: 0
-  purpleDamage: 20
-  atPositionForceHorizontal: 2
-  atPositionForceVertical: 5
   explosionForce: 100
   explosionRadius: 3
+  isActive: 0
+  isPlayerBeingRejected: 0
+  dangerConfig: {fileID: 0}
 --- !u!135 &1884014297285692270
 SphereCollider:
   m_ObjectHideFlags: 0

@@ -6,6 +6,7 @@ using LorenzoCastelli;
 using UnityEngine;
 using Unity.VisualScripting;
 using System;
+using TMPro;
 
 public class Danger : MonoBehaviour
 {
@@ -23,6 +24,7 @@ public class Danger : MonoBehaviour
     [SerializeField] private float explosionForce = 20f;
     [SerializeField] private float explosionRadius = 2f;
     [SerializeField] private bool isActive = false;
+    [SerializeField] private bool isPlayerBeingRejected = false;
 
     //[SerializeField] public float atPositionForceHorizontal = 2f;
     //[SerializeField] public float atPositionForceVertical = 5f;
@@ -45,6 +47,7 @@ public class Danger : MonoBehaviour
             }
         }
     }
+
 
     private void DangerBehavior()
     {
@@ -107,10 +110,14 @@ public class Danger : MonoBehaviour
 
     private void RejectPlayer(Collider _player)
     {
+        if(!_player.GetComponent<TempPlayerController>().playerIsBeingRejected)
+            _player.GetComponent<TempPlayerController>().SetPlayerToRejectState();
+
         //player.attachedRigidbody.AddExplosionForce(explosionForce, this.transform.position, 5f);
 
+
         Vector3 forcedirection = (new Vector3(_player.transform.position.x, _player.transform.position.y + 1f, _player.transform.position.z) - this.transform.position).normalized;
-        _player.attachedRigidbody.AddForce(forcedirection * explosionForce, ForceMode.Impulse);
+        _player.attachedRigidbody.AddForce(forcedirection * explosionForce, ForceMode.Force);
 
         //Vector3 finalForce = new Vector3(forcedirection.x * atPositionForceHorizontal, forcedirection.y * atPositionForceVertical, forcedirection.z * atPositionForceHorizontal);
     }
@@ -121,6 +128,8 @@ public class Danger : MonoBehaviour
 
     }
 
-
+    private void FixedUpdate()
+    {
+    }
 
 }
