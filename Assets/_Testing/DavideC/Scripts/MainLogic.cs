@@ -12,11 +12,11 @@ namespace DavideCTest
         public static MainLogic instance;
 
         [SerializeField] private GameObject palloModel;
-        [SerializeField] private Vector3 palloSpawnLocation = new Vector3(0f,3f,0f);
+        [SerializeField] private Vector3 palloSpawnLocation = new Vector3(0f,5f,0f);
 
 
         [SerializeField] private GameObject playerModel;
-        [SerializeField] private Vector3 playerSpawnLocation = Vector3.zero;
+        [SerializeField] private Vector3 playerSpawnLocation = new Vector3(0f, 3f, 0f);
         [SerializeField] private Transform playerContainer;
 
         private float debugMaxTime = 1f;
