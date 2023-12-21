@@ -114,7 +114,7 @@ namespace Controllers
         {
             ballState = BallStates.held;
             transform.SetParent(socket);
-            collider.enabled = false;
+            //collider.enabled = false;
             transform.localPosition = Vector3.zero;
         }
         public void Throw(Vector3 velocity)
