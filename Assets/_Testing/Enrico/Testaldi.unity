@@ -21043,9 +21043,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fef8bbf5915cda647b0a8e81781a2b4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerSpeed: 10
+  playerSpeed: 5
+  slowPlayerSpeed: 2
+  currentPlayerSpeed: 0
+  currentChargeTime: 0
   maxChargeTime: 1
   maxThrowForce: 10
+  throwHeight: 1.2
   handsocket: {fileID: 713184208}
 --- !u!114 &1169982722
 MonoBehaviour:

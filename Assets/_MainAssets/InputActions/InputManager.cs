@@ -153,7 +153,7 @@ public partial class @InputManager: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""f7f31635-4f13-4a19-8bc8-d36c49f726d3"",
+                    ""id"": ""97a54321-5a25-4574-a6e7-ba5518a72564"",
                     ""path"": ""<Gamepad>/rightTrigger"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -164,11 +164,11 @@ public partial class @InputManager: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""97a54321-5a25-4574-a6e7-ba5518a72564"",
-                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""id"": ""a46d8493-3bd8-4e8a-9fec-00eab3a1a089"",
+                    ""path"": ""<Gamepad>/leftTrigger"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""GamePad"",
+                    ""groups"": """",
                     ""action"": ""Throw"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -187,17 +187,6 @@ public partial class @InputManager: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""48369587-debd-4bde-b9ac-a3219ee2ecf1"",
-                    ""path"": ""<Gamepad>/leftTrigger"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""GamePad"",
-                    ""action"": ""Parry"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""4d5f538c-7077-4427-93ca-f286241ae8c3"",
                     ""path"": ""<Gamepad>/leftShoulder"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -235,6 +224,17 @@ public partial class @InputManager: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard"",
+                    ""action"": ""Dodge"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""58c878c8-6c22-441f-8e84-c192f729cad1"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
                     ""action"": ""Dodge"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false

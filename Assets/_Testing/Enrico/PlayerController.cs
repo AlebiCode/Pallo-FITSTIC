@@ -11,7 +11,9 @@ namespace Controllers
         //refactoring assolutamente necessario per questo vomito di variabili
         private CharacterController controller;
         private Vector3 playerVelocity;
-        [SerializeField] private float playerSpeed = 1f;
+        [SerializeField] private float playerSpeed = 5f;
+        [SerializeField] private float slowPlayerSpeed = 2f;
+        [SerializeField] private float currentPlayerSpeed;
         private Vector3 movementInput = Vector3.zero;
         private Vector3 rotationInput = Vector3.zero;
         private bool dodging = false;
@@ -20,7 +22,11 @@ namespace Controllers
         [SerializeField] private float maxChargeTime = 1;
         [SerializeField] private float maxThrowForce = 10;
         private float MinThrowForce => PalloController.TIER_2_SPEED;
+        [SerializeField] private float throwHeight = 1.2f;
         [SerializeField] private Transform handsocket;
+        [SerializeField] private float holdBallCooldown = 0;
+        [SerializeField] private float holdBallCooldownDuration = 2f;
+
         private int currentHp;
         public int CurrentHp
         {
@@ -37,10 +43,21 @@ namespace Controllers
 
         private bool IsHoldingBall => heldPallo;
         private bool IsChargingShot => currentChargeTime != 0;
+        private Vector3 ThrowVelocity
+		{
+            get
+			{
+                return transform.forward *
+                (MinThrowForce + (Mathf.Min(currentChargeTime, maxChargeTime)
+                * (maxThrowForce - MinThrowForce) / maxChargeTime))
+                + Vector3.up * throwHeight;
+            }
+		}
 
         private void Start()
         {
             controller = gameObject.GetComponent<CharacterController>();
+            currentPlayerSpeed = playerSpeed;
         }
 
         public void OnMove(InputAction.CallbackContext context)
@@ -61,22 +78,25 @@ namespace Controllers
 
         public void OnThrow(InputAction.CallbackContext context)
 		{
+            if (!IsHoldingBall)
+			{
+                Debug.Log("No ball to throw");
+                return;
+			}
+
             if (context.phase == InputActionPhase.Canceled)
             {
-                //cosespeciali
+                heldPallo.Throw(ThrowVelocity);
+                heldPallo = null;
+                currentChargeTime = 0;
+                currentPlayerSpeed = playerSpeed;
+                holdBallCooldown = holdBallCooldownDuration;
+                Debug.Log("Throw complete");
             }
-
-            if (!IsChargingShot)
-                return;
-
-            heldPallo.Throw(transform.forward * 
-                (MinThrowForce + (Mathf.Min(currentChargeTime, maxChargeTime)
-                * (maxThrowForce - MinThrowForce) / maxChargeTime))
-                + Vector3.up * 1.2f);
-            
-            heldPallo = null;
-
-            currentChargeTime = 0;
+			else
+			{
+                currentPlayerSpeed = slowPlayerSpeed;
+            }
         }
 
         public void OnParry(InputAction.CallbackContext context)
@@ -89,23 +109,18 @@ namespace Controllers
             dodging = true;
         }
 
-        //TODO trasformare in unityEvent
-        public void KillPlayer()
-        {
-            Debug.Log("player is killed!");
-            //TODO rimuovi destroy e togli una vita
-            Destroy(this.gameObject);
-        }
-
         void Update()
         {
-            if (!dodging)
-			{
-                HandleMovement();
-                HandleRotation();
-			}
-			else
+            if (dodging)
+            {
                 HandleDodge();
+                return;
+            }
+            HandleMovement();
+            HandleRotation();
+            HandleThrow();
+            if (!IsHoldingBall && holdBallCooldown > 0)
+                holdBallCooldown -= Time.deltaTime;
         }
 
         private void HandleMovement()   
@@ -113,27 +128,14 @@ namespace Controllers
             if (playerVelocity.y < 0) //TODO && !stoVenendoSpinto
                 playerVelocity.y = 0f;
 
-            controller.Move(movementInput * Time.deltaTime * playerSpeed);
+            controller.Move(movementInput * Time.deltaTime * currentPlayerSpeed);
         }
 
         private void HandleRotation()
         {
-            //if was already charging and not charging anymore
-            if (currentChargeTime != 0 && rotationInput == Vector3.zero)
-            {
-                currentChargeTime = 0;
-            }
             //if can charge ball
-            else if (heldPallo && rotationInput != Vector3.zero)
+            if (heldPallo && rotationInput != Vector3.zero)
             {
-                //if charge is beginning now
-                if (currentChargeTime == 0)
-                {
-                    //TODO: start animation, change playerspeed
-                }
-                //charge throw
-                currentChargeTime += Time.deltaTime;
-
                 Vector3 rotationVector = transform.position + rotationInput;
                 transform.LookAt(rotationVector, Vector3.up);
             }
@@ -144,20 +146,30 @@ namespace Controllers
             }
         }
 
-        private void OnTriggerEnter(Collider other)
-        {
-            heldPallo = other.GetComponent<PalloController>();
+        private void HandleThrow()
+		{
             if (IsHoldingBall)
             {
-                currentChargeTime = 0;
-                heldPallo.Hold(handsocket);
+                currentChargeTime += Time.deltaTime;
+                Debug.Log("currentChargeTime = " + currentChargeTime);
             }
         }
 
         private void HandleDodge()
-		{
+        {
             dodging = false;
-		}
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (holdBallCooldown <= 0)
+			{
+                heldPallo = other.GetComponent<PalloController>();
+            }
+            
+            if (IsHoldingBall)
+                heldPallo.Hold(handsocket);
+        }
 
         public void TakeDamage(int amount)
         {
@@ -169,6 +181,14 @@ namespace Controllers
             {
                 this.KillPlayer();
             }
+        }
+
+        //TODO trasformare in unityEvent
+        public void KillPlayer()
+        {
+            Debug.Log("player is killed!");
+            //TODO rimuovi destroy e togli una vita
+            Destroy(this.gameObject);
         }
     }
 }
