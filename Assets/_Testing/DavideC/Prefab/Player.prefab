@@ -96,6 +96,7 @@ GameObject:
   - component: {fileID: 6557271615695639553}
   - component: {fileID: 6496745134798839356}
   - component: {fileID: 4101380407129712256}
+  - component: {fileID: 5006782740098314289}
   m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
@@ -220,6 +221,25 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 80
   m_CollisionDetection: 2
+--- !u!114 &5006782740098314289
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3375117753449315852}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2f295fd630ad134c86b65dd15b11f61, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxChargeTime: 1
+  maxThrowForce: 10
+  rb: {fileID: 4101380407129712256}
+  speed: 10
+  maxHealthPoints: 100
+  playerIsBeingRejected: 0
+  handsocket: {fileID: 4232953800799882136}
 --- !u!1 &8419829055797972614
 GameObject:
   m_ObjectHideFlags: 0

@@ -70,7 +70,7 @@ public class Danger : MonoBehaviour
                     {
                         case DangerTypesEnum.Red:
 
-                            player.gameObject.GetComponentInChildren<TempPlayerController>().KillPlayer();
+                            player.gameObject.GetComponentInChildren<TestPlayerController>().KillPlayer();
 
                             //prima di distruzione esegui VFX and SFX
 
@@ -110,8 +110,8 @@ public class Danger : MonoBehaviour
 
     private void RejectPlayer(Collider _player)
     {
-        if(!_player.GetComponent<TempPlayerController>().playerIsBeingRejected)
-            _player.GetComponent<TempPlayerController>().SetPlayerToRejectState();
+        if(!_player.GetComponent<TestPlayerController>().playerIsBeingRejected)
+            _player.GetComponent<TestPlayerController>().SetPlayerToRejectState();
 
         //player.attachedRigidbody.AddExplosionForce(explosionForce, this.transform.position, 5f);
 
@@ -124,7 +124,7 @@ public class Danger : MonoBehaviour
 
     private void StaminaDecrese(Collider _player)
     {
-        _player.gameObject.GetComponentInChildren<TempPlayerController>().TakeDamage(dangerConfig.explosionDamage);
+        _player.gameObject.GetComponentInChildren<TestPlayerController>().TakeDamage(dangerConfig.explosionDamage);
 
     }
 
