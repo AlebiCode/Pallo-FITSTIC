@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_Testing/LorenzoC/Test_Scene_Lory.unity
     guid: 1e0613553a0393441a7f23187ed081d1
+  - enabled: 1
+    path: Assets/_Testing/Vittorio/Test_Scene_V.unity
+    guid: b6f7fe0e1ed51f140a92e54f19e8c061
   m_configObjects: {}
