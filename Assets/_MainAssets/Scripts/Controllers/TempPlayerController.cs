@@ -39,7 +39,7 @@ namespace Controllers
         private float throwChargeTime = 0;
 
         private bool IsHoldingBall => heldPallo;
-        private float MinThrowForce => PalloController.TIER_2_SPEED;
+        private float MinThrowForce => PalloController.SPEED_TIERS[0];
 
         private void Awake()
         {
@@ -59,8 +59,7 @@ namespace Controllers
             directionInput.x = Input.GetAxis("Horizontal");
             directionInput.y = Input.GetAxis("Vertical");
 
-            if(transform.position.y<2)
-                transform.position += new Vector3(directionInput.x, 0, directionInput.y) * speed * Time.deltaTime;
+            transform.position += new Vector3(directionInput.x, 0, directionInput.y) * speed * Time.deltaTime;
         }
         private void PlayerRotation()
         {
