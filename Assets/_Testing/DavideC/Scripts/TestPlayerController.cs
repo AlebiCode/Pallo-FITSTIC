@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using Controllers;
+using DG.Tweening;
 
 namespace DavideCTest
 {
@@ -51,7 +52,6 @@ namespace DavideCTest
             PlayerMovement();
             PlayerRotation();
             BallThrow();
-
         }
 
        
@@ -152,6 +152,45 @@ namespace DavideCTest
         {
             playerIsBeingRejected = true;
             velocityChange = 0f;
+        }
+
+
+        public Coroutine scaleTweenCoroutine;
+        public Tween scalingTween;
+        public Vector3 hitScale = Vector3.one;
+        public Vector3 hitScaleFinal = new Vector3(1.5f, 1.5f, 1.5f);
+
+        public void HitScaling()
+        {
+            if (scaleTweenCoroutine == null)
+            {
+                scaleTweenCoroutine = StartCoroutine(scalingRoutine());
+            }
+
+            IEnumerator scalingRoutine()
+            {
+                if (this.gameObject != null)
+                {
+                    var player = this.gameObject;
+                    //scalingTween = player.transform.DOScale(hitScaleFinal, .2f);
+                    if (scalingTween != null && scalingTween.active)
+                    {
+                        scalingTween.Kill(false);
+                        scalingTween = null;
+                        player.transform.localScale = Vector3.one;
+                    }
+
+                    scalingTween = player.transform.DOPunchScale(hitScaleFinal, .2f, 6, 0.1f);
+                    yield return new WaitForSeconds(.2f);
+
+                }
+                else
+                {
+                    yield return null;
+                }
+            }
+
+            scaleTweenCoroutine = null;
         }
 
         private void FixedUpdate()

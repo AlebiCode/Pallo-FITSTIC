@@ -7,6 +7,8 @@ using UnityEngine;
 using Unity.VisualScripting;
 using System;
 using TMPro;
+using DG.Tweening;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class Danger : MonoBehaviour
 {
@@ -48,7 +50,6 @@ public class Danger : MonoBehaviour
         }
     }
 
-
     private void DangerBehavior()
     {
         if (dangerConfig.isMovable)
@@ -82,6 +83,7 @@ public class Danger : MonoBehaviour
 
                         case DangerTypesEnum.Purple:
 
+
                             StaminaDecrese(player);
 
                             RejectPlayer(player);
@@ -94,6 +96,7 @@ public class Danger : MonoBehaviour
                             break;
 
                         case DangerTypesEnum.Yellow:
+
 
                             StaminaDecrese(player);
 
@@ -115,7 +118,6 @@ public class Danger : MonoBehaviour
 
         //player.attachedRigidbody.AddExplosionForce(explosionForce, this.transform.position, 5f);
 
-
         Vector3 forcedirection = (new Vector3(_player.transform.position.x, _player.transform.position.y + 1f, _player.transform.position.z) - this.transform.position).normalized;
         _player.attachedRigidbody.AddForce(forcedirection * explosionForce, ForceMode.Force);
 
@@ -124,9 +126,13 @@ public class Danger : MonoBehaviour
 
     private void StaminaDecrese(Collider _player)
     {
+        _player.gameObject.GetComponentInChildren<TestPlayerController>().HitScaling();
+
         _player.gameObject.GetComponentInChildren<TestPlayerController>().TakeDamage(dangerConfig.explosionDamage);
 
     }
+
+   
 
     private void FixedUpdate()
     {

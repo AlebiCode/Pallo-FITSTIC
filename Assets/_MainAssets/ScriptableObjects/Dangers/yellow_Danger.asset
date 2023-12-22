@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: yellow_Danger
   m_EditorClassIdentifier: 
   DangerType: 12
-  isMovable: 0
+  isMovable: 1
   explosionDamage: 20
