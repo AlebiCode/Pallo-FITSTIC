@@ -9,8 +9,9 @@ namespace LorenzoCastelli {
 
 public class GameLogic : MonoBehaviour
 {
+
         //public TextMeshProUGUI timerText;
-         public float playTime;
+        public float playTime;
          public GAMESTATES gameState = GAMESTATES.START;
         public  PalloController pallo;
 
@@ -18,7 +19,7 @@ public class GameLogic : MonoBehaviour
 
         public  List<PlayerData> playerInGame = new List<PlayerData>();
 
-    private static GameLogic instance;
+    public  static GameLogic instance;
     public enum GAMESTATES {
         START = 0,
         PLAYING = 1,
@@ -35,6 +36,22 @@ public class GameLogic : MonoBehaviour
             instance = this;
         }
     }
+
+       public void  ForceLookTarget(PlayerData initializer) {
+            foreach(PlayerData player in playerInGame) {
+                if ((player != initializer) && (player.gameObject.GetComponent<CPUController>())){
+                    player.GetComponent<CPUController>().currentTarget = null;
+                }
+            }
+        }
+
+        public void ForceLookTarget() {
+            foreach (PlayerData player in playerInGame) {
+                if (player.gameObject.GetComponent<CPUController>()){
+                    player.GetComponent<CPUController>().currentTarget = null;
+                }
+            }
+        }
 
     private void Start() {
         EnterStart();
@@ -131,6 +148,36 @@ public class GameLogic : MonoBehaviour
                 EnterEndGame(); 
             }
         }
+
+        public void ReorderList() {
+            Debug.Log("Entering");
+            List<PlayerData> tmp = new List<PlayerData>();
+            tmp.Add(playerInGame[0]);
+            for (int i = 1; i<4; i++) {
+                for (int j = 0; j<tmp.Count; j++) {
+                if (playerInGame[i].importance > tmp[j].importance) {
+                        PlayerData change = playerInGame[j];
+                        tmp[j] = playerInGame[i];
+                        tmp.Add(change);
+                        break;
+                        }
+
+                }
+                tmp.Add(playerInGame[i]);
+            }
+            playerInGame = null;
+            playerInGame = tmp;
+        }
+
+        public PlayerData GetClosestMostImportantPlayer(PlayerData player) {
+            foreach(PlayerData target in playerInGame) {
+                if ((Vector3.Distance(target.transform.position, player.transform.position) <= player.lookDistance) && (target.importance >= 0)) {
+                    return target;
+                }
+            }
+            return null;
+        }
+
 
 
     }

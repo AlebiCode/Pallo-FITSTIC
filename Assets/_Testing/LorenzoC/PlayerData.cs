@@ -9,8 +9,7 @@ namespace LorenzoCastelli {
 public class PlayerData : MonoBehaviour
 {
 
-        static GameLogic instance;
-
+        public float lookDistance = 50f;
         private int maxHp=100;
         public int currentHp;
         //public int speed;
@@ -23,9 +22,9 @@ public class PlayerData : MonoBehaviour
 
         public int importance;
 
+
         private void Awake() {
             currentHp = maxHp;
-            instance = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameLogic>();
         }
 
         public void TakeDamage(int amount) {
@@ -70,6 +69,7 @@ public class PlayerData : MonoBehaviour
                 heldPallo = pallo;
                 throwChargeTime = 0;
                 importance += 10;
+                GameLogic.instance.ForceLookTarget(this);
             } else {
                 Debug.LogError("Couldn't find " + pallo);
             }
@@ -82,10 +82,15 @@ public class PlayerData : MonoBehaviour
         public void LoseBall() {
             heldPallo = null;
             importance -= 10;
+            GameLogic.instance.ForceLookTarget();
         }
 
         public bool IsHoldingBall() {
             return heldPallo;
+        }
+
+        internal void CheckInterest() {
+            throw new NotImplementedException();
         }
     }
 
