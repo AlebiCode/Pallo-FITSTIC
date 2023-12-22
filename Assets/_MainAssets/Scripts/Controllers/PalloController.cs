@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using LorenzoCastelli;
@@ -13,46 +14,29 @@ namespace Controllers
         //il check per essere afferrata da un giocatore non è nel player ma nella palla (così uso lo spherecast e evito i clip che possono accadere con ontriggerenter)
         //ragionamento fisica: P=m*v. Ptot=p1+p2. [before impact] Ptot=m1*v1+m2*v2, v2=0, Ptot=p1. [after impact] p1=p2, m1*v1=m2
 
-        public const float TIER_1_SPEED = 4.5f;
-        public const float TIER_2_SPEED = 7.5f;
         private const float GRAVITY = 9.81f;
+        public static readonly float[] SPEED_TIERS = { 4.5f, 7.5f, 10f, 12f };
 
-        private enum SpeedTiers { tier0, tier1, tier2 }
-        private enum BallStates { held, thrown }
+        private enum BallStates { held, thrown, bouncing }
 
         [Header("Components")]
         [SerializeField] private new SphereCollider collider;
         [SerializeField] private new Rigidbody rigidbody;
+        [Header("Settings")]
         [SerializeField] private LayerMask collisionLayermask;
-
+        [Header("Ball Info")]
         [SerializeField] private BallStates ballState = BallStates.thrown;
-        /*private BallStates BallState
-        {
-            get { return ballState; }
-            set
-            {
-                if(ballState != value)
-                    switch (value)
-                    {   
-                        case BallStates.held:
-                            break;
-                        case BallStates.thrown:
-                            break;
-                    }
-                ballState = value;
-            }
-        }*/
-        [SerializeField] private SpeedTiers speedTier = SpeedTiers.tier0;
+        [SerializeField] private int speedTier;
 
         private Vector3 velocity;
         private RaycastHit spherecastInfo;
         private RaycastHit groundHitInfo;
 
-        private float decelerationTimer = 0;
         public bool IsHeld => ballState == BallStates.held;
         private float HorizontalVelocityMagnitude => new Vector2(velocity.x, velocity.y).magnitude;
 
         private void Update()
+
         {
             if (ballState == BallStates.thrown)
             {
@@ -60,7 +44,6 @@ namespace Controllers
                 UpdateVelocity();
             }
         }
-
         private void Move()
         {
             CollisionChecks();
@@ -71,24 +54,21 @@ namespace Controllers
             Physics.SphereCast(transform.position, collider.radius, velocity, out spherecastInfo, velocity.magnitude * Time.deltaTime, collisionLayermask);
             if (spherecastInfo.collider)
             {
-                //da aggingere le varie casistiche
-                OnWallCollision();
-            }
-            if (Physics.Raycast(transform.position, Vector3.down, out groundHitInfo, collider.radius + velocity.y * Time.deltaTime, collisionLayermask))
-            {
-                OnGroundCollision();
+                if(Vector3.Angle(Vector3.up, spherecastInfo.normal) <= 45)
+                    OnGroundCollision();
+                else
+                    OnWallCollision();
             }
         }
         private void OnWallCollision()
         {
             //eh... migliorabile
-            Debug.Log("Bounced against " + spherecastInfo.transform.name);
+            //Debug.Log("Bounced against " + spherecastInfo.transform.name);
             velocity = Vector3.Reflect(velocity, new Vector3(spherecastInfo.normal.x, 0, spherecastInfo.normal.z)).normalized * velocity.magnitude;
-            decelerationTimer = 0;
         }
         private void OnGroundCollision()
         {
-            speedTier = SpeedTiers.tier0;
+            ballState = BallStates.bouncing;
             velocity.y = 2.5f;
 
             if (groundHitInfo.rigidbody)
@@ -122,10 +102,9 @@ namespace Controllers
             ballState = BallStates.thrown;
             transform.SetParent(null);
             collider.enabled = true;
-            decelerationTimer = 0;
             this.velocity = velocity;
 
-            speedTier = SpeedTiers.tier1;
+            speedTier = 1;
             UpdateSpeedTier();
         }
 
@@ -137,14 +116,16 @@ namespace Controllers
         {
             speedTier = CalculateSpeedTier(horizontalMagnitude);
         }
-        private SpeedTiers CalculateSpeedTier(float horizontalMagnitude)
+        private int CalculateSpeedTier(float horizontalMagnitude)
         {
-            if (horizontalMagnitude >= TIER_2_SPEED)
-                return SpeedTiers.tier2;
-            else if (horizontalMagnitude >= TIER_1_SPEED)
-                return SpeedTiers.tier1;
-            else
-                return SpeedTiers.tier0;
+            for (int i = SPEED_TIERS.Length - 1; i >= 0; i++)
+            {
+                if (horizontalMagnitude >= SPEED_TIERS[i])
+                {
+                    return i;
+                }
+            }
+            return 0;
         }
 
     }
