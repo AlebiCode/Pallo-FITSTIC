@@ -34,15 +34,29 @@ namespace Controllers
 
         public bool IsHeld => ballState == BallStates.held;
         private float HorizontalVelocityMagnitude => new Vector2(velocity.x, velocity.y).magnitude;
+        private BallStates BallState
+        {
+            get { return ballState; }
+            set { 
+                ballState = value;
+                switch (ballState)
+                {
+                    case BallStates.thrown:
+                    case BallStates.bouncing:
+                        enabled = true;
+                        break;
+                    case BallStates.held:
+                        enabled = false;
+                        break;
+                }
+            }
+        }
+
 
         private void Update()
-
         {
-            if (ballState == BallStates.thrown)
-            {
-                Move();
-                UpdateVelocity();
-            }
+            Move();
+            UpdateVelocity();
         }
         private void Move()
         {
@@ -68,7 +82,7 @@ namespace Controllers
         }
         private void OnGroundCollision()
         {
-            ballState = BallStates.bouncing;
+            BallState = BallStates.bouncing;
             velocity.y = 2.5f;
 
             if (groundHitInfo.rigidbody)
@@ -79,27 +93,30 @@ namespace Controllers
 
         private void UpdateVelocity()
         {
-            float decelSpeed = (int)speedTier > 0 ? 0f :10f;
-            Vector2 horizontalVelocity = new Vector2(velocity.x, velocity.z);
-            float newMagnitude = horizontalVelocity.magnitude - decelSpeed * Time.deltaTime;
+            //decellera se sta rimbalzando a terra
+            if (BallState == BallStates.bouncing)
+            {
+                float decelSpeed = 10f;
+                Vector2 horizontalVelocity = new Vector2(velocity.x, velocity.z);
+                horizontalVelocity = horizontalVelocity.normalized * (horizontalVelocity.magnitude - decelSpeed * Time.deltaTime);
+                velocity.x = horizontalVelocity.x;
+                velocity.z = horizontalVelocity.y;
+            }
 
-            velocity.y = velocity.y - ((int)speedTier > 0 ? GRAVITY/2 : GRAVITY) * Time.deltaTime;
-            horizontalVelocity = horizontalVelocity.normalized * newMagnitude;
-            velocity.x = horizontalVelocity.x;
-            velocity.z = horizontalVelocity.y;
-            //UpdateSpeedTier(newMagnitude);
+            //gravità
+            velocity.y = velocity.y - (BallState == BallStates.bouncing ? GRAVITY : GRAVITY/2) * Time.deltaTime;
         }
 
         public void Hold(Transform socket)
         {
-            ballState = BallStates.held;
+            BallState = BallStates.held;
             transform.SetParent(socket);
             //collider.enabled = false;
             transform.localPosition = Vector3.zero;
         }
         public void Throw(Vector3 velocity)
         {
-            ballState = BallStates.thrown;
+            BallState = BallStates.thrown;
             transform.SetParent(null);
             collider.enabled = true;
             this.velocity = velocity;
@@ -118,7 +135,7 @@ namespace Controllers
         }
         private int CalculateSpeedTier(float horizontalMagnitude)
         {
-            for (int i = SPEED_TIERS.Length - 1; i >= 0; i++)
+            for (int i = SPEED_TIERS.Length - 1; i >= 0; i--)
             {
                 if (horizontalMagnitude >= SPEED_TIERS[i])
                 {

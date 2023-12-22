@@ -634,7 +634,7 @@ Transform:
   m_GameObject: {fileID: 313174599}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.6738684, y: -1.1487892, z: 11}
+  m_LocalPosition: {x: -2.6738684, y: -1.14, z: 11}
   m_LocalScale: {x: 26, y: 1.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3296,7 +3296,7 @@ MonoBehaviour:
   updateBotta: 0
   boneOffSetActive: 1
   bone: 54
-  offset: {x: 0, y: 5, z: 0}
+  offset: {x: 0, y: 0, z: 0}
   ikUpdate: 1
 --- !u!1 &412976992
 GameObject:
@@ -3425,6 +3425,8 @@ MonoBehaviour:
   maxThrowForce: 20
   rb: {fileID: 412976998}
   speed: 5
+  maxHealthPoints: 100
+  playerIsBeingRejected: 0
   handsocket: {fileID: 1046016762}
 --- !u!54 &412976998
 Rigidbody:
