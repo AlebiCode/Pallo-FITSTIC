@@ -26,6 +26,8 @@ namespace Controllers
         [SerializeField] private Transform handsocket;
         [SerializeField] private float holdBallCooldown = 0;
         [SerializeField] private float holdBallCooldownDuration = 2f;
+        private float dodgeDuration = .25f;
+        private float dodgeCounter = 0f;
 
         private int currentHp;
         public int CurrentHp
@@ -101,12 +103,13 @@ namespace Controllers
 
         public void OnParry(InputAction.CallbackContext context)
         {
-
+            //MARCO spherecast + sfx + cooldown reset
         }
 
         public void OnDodge(InputAction.CallbackContext context)
         {
-            dodging = true;
+            if (context.phase == InputActionPhase.Started)
+                dodging = true;
         }
 
         void Update()
@@ -116,9 +119,11 @@ namespace Controllers
                 HandleDodge();
                 return;
             }
+
             HandleMovement();
             HandleRotation();
             HandleThrow();
+
             if (!IsHoldingBall && holdBallCooldown > 0)
                 holdBallCooldown -= Time.deltaTime;
         }
@@ -148,6 +153,8 @@ namespace Controllers
 
         private void HandleThrow()
 		{
+            //MARCO aggiungere istruzione per vedere se azione Throw sta venendo premuta sul gamepad
+            //c'è istruzione per controllare in update lo stato di un azione
             if (IsHoldingBall)
             {
                 currentChargeTime += Time.deltaTime;
@@ -157,7 +164,10 @@ namespace Controllers
 
         private void HandleDodge()
         {
-            dodging = false;
+            //MARCO come fare dodge? salvo direzione + ignoro/disabilito input movimento + controller.Move(savedDirection)?
+            dodgeCounter += Time.deltaTime;
+            if (dodgeCounter >= dodgeDuration)
+                dodging = false;
         }
 
         private void OnTriggerEnter(Collider other)
