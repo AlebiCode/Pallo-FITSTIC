@@ -21,7 +21,7 @@ namespace Controllers
         [SerializeField] private float currentChargeTime = 0;
         [SerializeField] private float maxChargeTime = 1;
         [SerializeField] private float maxThrowForce = 10;
-        private float MinThrowForce => PalloController.TIER_2_SPEED;
+        private float MinThrowForce => PalloController.SPEED_TIERS[1];
         [SerializeField] private float throwHeight = 1.2f;
         [SerializeField] private Transform handsocket;
         [SerializeField] private float holdBallCooldown = 0;

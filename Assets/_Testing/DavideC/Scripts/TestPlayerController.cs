@@ -40,7 +40,7 @@ namespace DavideCTest
         private float throwChargeTime = 0;
 
         private bool IsHoldingBall => heldPallo;
-        private float MinThrowForce => PalloController.TIER_2_SPEED;
+        private float MinThrowForce => PalloController.SPEED_TIERS[1];
 
         private void Awake()
         {

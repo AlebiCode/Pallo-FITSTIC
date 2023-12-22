@@ -23,7 +23,7 @@ public class PlayerControll: PlayerControlsGeneric {
 
         private Vector2 directionInput;
 
-        private float MinThrowForce => PalloController.TIER_2_SPEED;
+        private float MinThrowForce => PalloController.SPEED_TIERS[1];
 
         private void Update() {
             PlayerMovement();
