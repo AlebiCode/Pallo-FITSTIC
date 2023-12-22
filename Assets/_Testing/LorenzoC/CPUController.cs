@@ -38,8 +38,14 @@ namespace LorenzoCastelli {
         public override void PlayerMovement() {
             if (playerData.IsHoldingBall()) {
                 if (currentTarget) {
-                    transform.RotateAround(currentTarget.transform.position, transform.TransformDirection(Vector3.forward), 2f * Time.deltaTime);
+                    if (Vector3.Distance(currentTarget.transform.position, this.transform.position) <= 0.5f) {
+                        transform.RotateAround(currentTarget.transform.position, transform.TransformDirection(Vector3.forward+Vector3.right), 0.5f * Time.deltaTime);
+                    } else {
+                        ai.SetDestination(currentTarget.transform.position);
+                    }
 
+                } else {
+                    currentTarget= GameLogic.instance.FindInterestingPlayer(this.playerData).gameObject;
                 }
                 //SCEGLI UN BERSAGLIO OPPURE MUOVITI DA QUALCHE PARTE
 
@@ -56,13 +62,13 @@ namespace LorenzoCastelli {
                 //List<PlayerData> playerList = new List<PlayerData>();
                // playerList = instance.playerInGame;
                 foreach (PlayerData player in GameLogic.instance.playerInGame) {
-                    if ((player.importance > maxImportance) && (Vector3.Distance(player.gameObject.transform.position, this.transform.position) <= distanceLimit)) {
+                    if ((player.importance > maxImportance) && (Vector3.Distance(player.gameObject.transform.position, this.transform.position) <= distanceLimit) && (player != gameObject.GetComponent<PlayerData>())) {
                         currentTarget = player.gameObject;
                         maxImportance = player.importance;
                     }
                 }
                 if (maxImportance <= 0) {
-                    if (Vector3.Distance(GameLogic.instance.pallo.gameObject.transform.position, this.transform.position) <= distanceLimit) {
+                    if ((Vector3.Distance(GameLogic.instance.pallo.gameObject.transform.position, this.transform.position) <= distanceLimit) && (!playerData.IsHoldingBall())) {
                         currentTarget = GameLogic.instance.pallo.gameObject;
                 }
             }
@@ -70,9 +76,10 @@ namespace LorenzoCastelli {
 
         public override void PlayerRotation() {
             if (!currentTarget) {
+                //if (gameObject.GetComponent<PlayerData>())
                 LookForTarget();
             } else {
-                if (Vector3.Distance(currentTarget.transform.position, this.transform.position) > distanceLimit) {
+                if (Vector3.Distance(currentTarget.transform.position, this.transform.position) > distanceLimit) /*|| (currentTarget.GetComponent<PalloController>().IsHeld))*/ {
                     currentTarget = null;
                 } else {
                     LookTarget(currentTarget);
@@ -104,6 +111,8 @@ namespace LorenzoCastelli {
             if ((other.GetComponent<PalloController>() != null) && (!other.GetComponent<PalloController>().IsHeld)) {
                 playerData.PickUpBall(other.GetComponent<PalloController>());
                 playerData.GetPallo().Hold(handsocket);
+                LookForTarget();
+
                 /*if (playerData.IsHoldingBall()) {
                     throwChargeTime = 0;
                     heldPallo.Hold(handsocket);
