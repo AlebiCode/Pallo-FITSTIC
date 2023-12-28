@@ -13,6 +13,7 @@ namespace LorenzoCastelli {
 
         [SerializeField] private float maxChargeTime = 1;
         [SerializeField] private float maxThrowForce = 10;
+        private float MinThrowForce => PalloController.SPEED_TIERS[1];
 
         [SerializeField] public PlayerData playerData;
 
@@ -27,31 +28,47 @@ namespace LorenzoCastelli {
 
         public GameObject frontPoint;
 
-        public GameObject currentTarget;
+        public GameObject currentLookTarget;
+        public Vector3 currentMoveLocationTarget;
         public float distanceLimit = 6.66f;
         public float turningSpeed = 10f;
 
+
+        public void MoveTo(Vector3 position) {
+            ai.SetDestination(position);
+        }
+
+
         public override void BallThrow() {
-            throw new System.NotImplementedException();
+            if (!playerData.IsHoldingBall())
+                return;
+
+            if (playerData.throwChargeTime >= maxChargeTime) {
+                playerData.GetPallo().Throw(transform.forward * (MinThrowForce + (Mathf.Min(playerData.throwChargeTime, maxChargeTime) * (maxThrowForce - MinThrowForce) / maxChargeTime)) + Vector3.up * 1.2f);
+                playerData.LoseBall();
+            } else {
+                playerData.throwChargeTime += Time.deltaTime;
+            }
         }
 
         public override void PlayerMovement() {
             if (playerData.IsHoldingBall()) {
-                if (currentTarget) {
-                    if (Vector3.Distance(currentTarget.transform.position, this.transform.position) <= 0.5f) {
-                        transform.RotateAround(currentTarget.transform.position, transform.TransformDirection(Vector3.forward+Vector3.right), 0.5f * Time.deltaTime);
+                if (!currentLookTarget.GetComponent<PalloController>()) {
+                    //
+                    if (Vector3.Distance(currentLookTarget.transform.position, this.transform.position) <= 0.5f) {
+                        transform.RotateAround(currentLookTarget.transform.position, transform.TransformDirection(Vector3.forward+Vector3.right), 0.5f * Time.deltaTime);
                     } else {
-                        ai.SetDestination(currentTarget.transform.position);
+                        currentMoveLocationTarget = currentLookTarget.transform.position;
+                        ai.SetDestination(currentMoveLocationTarget);
                     }
 
                 } else {
-                    currentTarget= GameLogic.instance.FindInterestingPlayer(this.playerData).gameObject;
+                    currentMoveLocationTarget = GameLogic.instance.FindInterestingPlayer(this.playerData).gameObject.transform.position;
                 }
-                //SCEGLI UN BERSAGLIO OPPURE MUOVITI DA QUALCHE PARTE
-
             } else {
                 //CONTROLLO SE LA PALLA L'HA PRESO QUALCUNO OPPURE NO
-                ai.SetDestination(GameObject.FindGameObjectWithTag("Pallo").transform.position);
+                currentMoveLocationTarget = GameLogic.instance.pallo.transform.position;
+                ai.SetDestination(currentMoveLocationTarget);
             }
         }
 
@@ -63,26 +80,32 @@ namespace LorenzoCastelli {
                // playerList = instance.playerInGame;
                 foreach (PlayerData player in GameLogic.instance.playerInGame) {
                     if ((player.importance > maxImportance) && (Vector3.Distance(player.gameObject.transform.position, this.transform.position) <= distanceLimit) && (player != gameObject.GetComponent<PlayerData>())) {
-                        currentTarget = player.gameObject;
+                        currentLookTarget = player.gameObject;
                         maxImportance = player.importance;
                     }
                 }
                 if (maxImportance <= 0) {
                     if ((Vector3.Distance(GameLogic.instance.pallo.gameObject.transform.position, this.transform.position) <= distanceLimit) && (!playerData.IsHoldingBall())) {
-                        currentTarget = GameLogic.instance.pallo.gameObject;
+                        currentLookTarget = GameLogic.instance.pallo.gameObject;
                 }
             }
         }
 
         public override void PlayerRotation() {
-            if (!currentTarget) {
-                //if (gameObject.GetComponent<PlayerData>())
-                LookForTarget();
-            } else {
-                if (Vector3.Distance(currentTarget.transform.position, this.transform.position) > distanceLimit) /*|| (currentTarget.GetComponent<PalloController>().IsHeld))*/ {
-                    currentTarget = null;
+            if (!currentLookTarget) {
+                //NON HO UN BERSAGLIO
+                if (playerData.IsHoldingBall() && currentLookTarget.GetComponent<PalloController>()) {
+                    //STO TENENDO LA PALLA
+                    currentLookTarget = GameLogic.instance.FindInterestingPlayer(this.GetComponent<PlayerData>()).gameObject;
                 } else {
-                    LookTarget(currentTarget);
+                    LookForTarget();
+                }
+                //if (gameObject.GetComponent<PlayerData>())
+            } else {
+                if (Vector3.Distance(currentLookTarget.transform.position, this.transform.position) > distanceLimit) /*|| (currentTarget.GetComponent<PalloController>().IsHeld))*/ {
+                    currentLookTarget = null;
+                } else {
+                    LookTarget(currentLookTarget);
                 }
             }
         }
@@ -104,14 +127,15 @@ namespace LorenzoCastelli {
         void Update() {
             PlayerMovement();
             PlayerRotation();
-
+            BallThrow();
         }
 
         private void OnTriggerEnter(Collider other) {
             if ((other.GetComponent<PalloController>() != null) && (!other.GetComponent<PalloController>().IsHeld)) {
                 playerData.PickUpBall(other.GetComponent<PalloController>());
                 playerData.GetPallo().Hold(handsocket);
-                LookForTarget();
+                currentLookTarget = GameLogic.instance.FindInterestingPlayer(playerData).gameObject;
+
 
                 /*if (playerData.IsHoldingBall()) {
                     throwChargeTime = 0;

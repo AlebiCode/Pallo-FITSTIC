@@ -70,6 +70,7 @@ public class PlayerData : MonoBehaviour
                 throwChargeTime = 0;
                 importance += 10;
                 GameLogic.instance.ForceLookTarget(this);
+                GameLogic.instance.ForceDistanceBots(this);
             } else {
                 Debug.LogError("Couldn't find " + pallo);
             }

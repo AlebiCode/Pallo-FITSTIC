@@ -39,7 +39,7 @@ namespace LorenzoCastelli {
         public void ForceLookTarget(PlayerData initializer) {
             foreach (PlayerData player in playerInGame) {
                 if ((player != initializer) && (player.gameObject.GetComponent<CPUController>())) {
-                    player.GetComponent<CPUController>().currentTarget = null;
+                    player.GetComponent<CPUController>().currentLookTarget = null;
                 }
             }
         }
@@ -47,7 +47,7 @@ namespace LorenzoCastelli {
         public void ForceLookTarget() {
             foreach (PlayerData player in playerInGame) {
                 if (player.gameObject.GetComponent<CPUController>()) {
-                    player.GetComponent<CPUController>().currentTarget = null;
+                    player.GetComponent<CPUController>().currentLookTarget = null;
                 }
             }
         }
@@ -190,6 +190,24 @@ namespace LorenzoCastelli {
 
         private float CalculateHeavyPoint(PlayerData pd) {
             return pd.importance / pd.currentHp;
+        }
+
+
+        public void ForceDistanceBots(PlayerData from) {
+            foreach (PlayerData player in playerInGame) {
+                if (player.gameObject.GetComponent<CPUController>() && player != from) {
+                    Vector3 directionToTarget = player.transform.position - from.gameObject.transform.position;
+
+                    // Normalize the direction vector to get a unit vector
+                    directionToTarget.Normalize();
+
+                    // Calculate the position to move away from the target
+                    Vector3 movePosition = player.transform.position + directionToTarget * 1f;
+
+                    // Move towards the calculated position using NavMesh
+                    player.GetComponent<CPUController>().MoveTo(movePosition);
+                }
+            }
         }
     }
 }
