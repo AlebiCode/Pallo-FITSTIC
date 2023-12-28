@@ -9,7 +9,7 @@ namespace LorenzoCastelli {
 
     public class GameLogic : MonoBehaviour {
 
-        //public TextMeshProUGUI timerText;
+        public TextMeshProUGUI timerText;
         public float playTime;
         public GAMESTATES gameState = GAMESTATES.START;
         public PalloController pallo;
@@ -57,7 +57,7 @@ namespace LorenzoCastelli {
         }
 
         private void EnterStart() {
-            //timerText.text = "00";
+            timerText.text = "00";
             Debug.Log("Changing to " + GAMESTATES.PLAYING + " from " + gameState);
             EnterPlaying();
         }
@@ -68,7 +68,7 @@ namespace LorenzoCastelli {
             foreach (PlayerData player in playersList) {
                 playerInGame.Add(player);
             }
-            //TM.text = playTime.ToString();
+            timerText.text = playTime.ToString();
             gameState = GAMESTATES.PLAYING;
         }
 
@@ -147,7 +147,7 @@ namespace LorenzoCastelli {
             }
         }
 
-        public void ReorderList() {
+        /*public void ReorderList() {
             Debug.Log("Entering");
             List<PlayerData> tmp = new List<PlayerData>();
             tmp.Add(playerInGame[0]);
@@ -165,7 +165,7 @@ namespace LorenzoCastelli {
             }
             playerInGame = null;
             playerInGame = tmp;
-        }
+        }*/
 
         public PlayerData GetClosestMostImportantPlayer(PlayerData player) {
             foreach (PlayerData target in playerInGame) {

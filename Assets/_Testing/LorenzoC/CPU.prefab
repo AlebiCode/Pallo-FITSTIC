@@ -152,8 +152,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b37fc85ea289d041b82f1607250326e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lookDistance: 50
   currentHp: 0
   ragdollTreshold: 10
+  throwChargeTime: 0
+  importance: 0
 --- !u!114 &4804791177467052910
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -172,9 +175,13 @@ MonoBehaviour:
   rb: {fileID: 1018160926652664545}
   speed: 1
   handsocket: {fileID: 4912432820120657351}
+  collisionLayers:
+    serializedVersion: 2
+    m_Bits: 0
   frontPoint: {fileID: 8345577770266177718}
-  currentTarget: {fileID: 0}
-  lookRadius: 6.66
+  currentLookTarget: {fileID: 0}
+  currentMoveLocationTarget: {x: 0, y: 0, z: 0}
+  distanceLimit: 6.66
   turningSpeed: 10
 --- !u!195 &1014190239182657169
 NavMeshAgent:
@@ -223,7 +230,7 @@ Transform:
   m_GameObject: {fileID: 8060258898962041783}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.586, y: 0.437, z: 0}
+  m_LocalPosition: {x: 0, y: -0.38, z: 0.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

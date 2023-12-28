@@ -73,21 +73,16 @@ namespace LorenzoCastelli {
         }
 
         private void LookForTarget() {
-                //SE NON STO GUARDANDO NESSUNO CERCA UN NUOVO TARGET
+            //SE NON STO GUARDANDO NESSUNO CERCA UN NUOVO TARGET
+
+            GameObject target = GameLogic.instance.GetClosestMostImportantPlayer(playerData).gameObject;
                 //PRIORITà AI PLAYER CON LA PALLA/IMPORTANZA
-                int maxImportance = 0;
-                //List<PlayerData> playerList = new List<PlayerData>();
-               // playerList = instance.playerInGame;
-                foreach (PlayerData player in GameLogic.instance.playerInGame) {
-                    if ((player.importance > maxImportance) && (Vector3.Distance(player.gameObject.transform.position, this.transform.position) <= distanceLimit) && (player != gameObject.GetComponent<PlayerData>())) {
-                        currentLookTarget = player.gameObject;
-                        maxImportance = player.importance;
-                    }
-                }
-                if (maxImportance <= 0) {
+                if (!target) {
                     if ((Vector3.Distance(GameLogic.instance.pallo.gameObject.transform.position, this.transform.position) <= distanceLimit) && (!playerData.IsHoldingBall())) {
                         currentLookTarget = GameLogic.instance.pallo.gameObject;
                 }
+            } else {
+                currentLookTarget = target;
             }
         }
 
