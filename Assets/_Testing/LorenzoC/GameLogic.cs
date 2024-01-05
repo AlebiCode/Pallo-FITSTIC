@@ -40,6 +40,7 @@ namespace LorenzoCastelli {
             foreach (PlayerData player in playerInGame) {
                 if ((player != initializer) && (player.gameObject.GetComponent<CPUController>())) {
                     player.GetComponent<CPUController>().currentLookTarget = null;
+                    ForceDistanceBots(initializer);
                 }
             }
         }
@@ -168,12 +169,21 @@ namespace LorenzoCastelli {
         }*/
 
         public PlayerData GetClosestMostImportantPlayer(PlayerData player) {
-            foreach (PlayerData target in playerInGame) {
-                if ((Vector3.Distance(target.transform.position, player.transform.position) <= player.lookDistance) && (target.importance >= 0)) {
-                    return target;
+            float distance = player.lookDistance;
+            int maxImportance = 0;
+            PlayerData target = new PlayerData();
+            foreach (PlayerData players in playerInGame) {
+                if ((Vector3.Distance(players.transform.position, player.transform.position) < distance) && (players.importance > maxImportance)) {
+                    target = players;
+                    maxImportance = players.importance;
+                    distance = Vector3.Distance(players.transform.position, player.transform.position);
                 }
             }
-            return null;
+            if (maxImportance > 0) {
+                return target;
+            } else {
+                return null;
+            }
         }
 
         public PlayerData FindInterestingPlayer(PlayerData player) {
@@ -195,17 +205,9 @@ namespace LorenzoCastelli {
 
         public void ForceDistanceBots(PlayerData from) {
             foreach (PlayerData player in playerInGame) {
-                if (player.gameObject.GetComponent<CPUController>() && player != from) {
-                    Vector3 directionToTarget = player.transform.position - from.gameObject.transform.position;
-
-                    // Normalize the direction vector to get a unit vector
-                    directionToTarget.Normalize();
-
-                    // Calculate the position to move away from the target
-                    Vector3 movePosition = player.transform.position + directionToTarget * 1f;
-
-                    // Move towards the calculated position using NavMesh
-                    player.GetComponent<CPUController>().MoveTo(movePosition);
+                if (player.GetComponent<CPUController>() && player != from) {
+                    player.GetComponent<CPUController>().state = PLAYERSTATES.BACKINGOFF;
+                    player.GetComponent<CPUController>().BackingOff();
                 }
             }
         }

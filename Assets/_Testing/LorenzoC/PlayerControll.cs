@@ -9,7 +9,8 @@ namespace LorenzoCastelli
 {
 
 public class PlayerControll: PlayerControlsGeneric {
-        
+
+        public PLAYERSTATES state = PLAYERSTATES.EMPTYHANDED;
 
         [SerializeField] private float maxChargeTime = 1;
         [SerializeField] private float maxThrowForce = 10;
@@ -56,6 +57,7 @@ public class PlayerControll: PlayerControlsGeneric {
             if (playerData.throwChargeTime >= maxChargeTime || Input.GetKeyUp(KeyCode.Mouse0)) {
                 playerData.GetPallo().Throw(transform.forward * (MinThrowForce + (Mathf.Min(playerData.throwChargeTime, maxChargeTime) * (maxThrowForce - MinThrowForce) / maxChargeTime)) + Vector3.up * 1.2f);
                 playerData.LoseBall();
+                state = PLAYERSTATES.EMPTYHANDED;
             } else if (Input.GetKey(KeyCode.Mouse0)) {
                 playerData.throwChargeTime += Time.deltaTime;
             }
@@ -66,6 +68,7 @@ public class PlayerControll: PlayerControlsGeneric {
             if ((other.GetComponent<PalloController>() != null) && (!other.GetComponent<PalloController>().IsHeld)){
                 playerData.PickUpBall(other.GetComponent<PalloController>());
                 playerData.GetPallo().Hold(handsocket);
+                state = PLAYERSTATES.WITHBALL;
             }
         }
 
