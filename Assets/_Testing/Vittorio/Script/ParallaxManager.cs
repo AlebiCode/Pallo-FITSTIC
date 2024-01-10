@@ -32,7 +32,11 @@ public class ParallaxManager : MonoBehaviour
         }
     }
 
-   
+    private void Update() {
+        if(Input.GetKeyDown(KeyCode.A)) {
+            Move(Direction.Left);
+        }else if(Input.GetKeyDown(KeyCode.D)) { Move(Direction.Right);}
+    }
 
 
 }
