@@ -71,3 +71,15 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 UpgradeLog.htm
+Packages/packages-lock.json
+Packages/manifest.json
+Packages/packages-lock.json
+Packages/manifest.json
+Packages/manifest.json
+Packages/packages-lock.json
+ProjectSettings/Packages/com.unity.probuilder/Settings.json
+ProjectSettings/ShaderGraphSettings.asset
+ProjectSettings/ShaderGraphSettings.asset
+ProjectSettings/Packages/com.unity.probuilder/Settings.json
+ProjectSettings/Packages/com.unity.probuilder/Settings.json
+Packages/packages-lock.json

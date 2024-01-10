@@ -171,9 +171,9 @@ namespace LorenzoCastelli {
         public PlayerData GetClosestMostImportantPlayer(PlayerData player) {
             float distance = player.lookDistance;
             int maxImportance = 0;
-            PlayerData target = new PlayerData();
+            PlayerData target = null;
             foreach (PlayerData players in playerInGame) {
-                if ((Vector3.Distance(players.transform.position, player.transform.position) < distance) && (players.importance > maxImportance)) {
+                if ((Vector3.Distance(players.transform.position, player.transform.position) < distance) && (players.importance > maxImportance) && players != player) {
                     target = players;
                     maxImportance = players.importance;
                     distance = Vector3.Distance(players.transform.position, player.transform.position);

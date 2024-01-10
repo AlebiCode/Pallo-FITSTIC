@@ -9,7 +9,7 @@ namespace LorenzoCastelli {
 public class PlayerData : MonoBehaviour
 {
 
-        public float lookDistance = 50f;
+        public float lookDistance = 0.5f;
         private int maxHp=100;
         public int currentHp;
         //public int speed;

@@ -31,7 +31,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3524463106244323884}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -136,7 +136,7 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 0
-  m_IsKinematic: 1
+  m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -169,6 +169,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 879a6ce537851da47a59ec92ad9eba1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  state: 0
+  maxBackoffTime: 10
+  currentBackOffTime: 0
   maxChargeTime: 1
   maxThrowForce: 10
   playerData: {fileID: 5667981257436828100}
@@ -177,7 +180,7 @@ MonoBehaviour:
   handsocket: {fileID: 4912432820120657351}
   collisionLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 192
   frontPoint: {fileID: 8345577770266177718}
   currentLookTarget: {fileID: 0}
   currentMoveLocationTarget: {x: 0, y: 0, z: 0}

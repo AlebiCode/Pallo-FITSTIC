@@ -14,11 +14,12 @@ namespace LorenzoCastelli {
 
 
         public PLAYERSTATES state = PLAYERSTATES.EMPTYHANDED;
-        private float maxAttackTime = 10;
-        private float currentAttackTime = 0;
-        private float maxBackoffTime = 10;
-        private float currentBackOffTime = 0;
-
+        public float maxAttackTime = 4;
+        public float currentAttackTime = 0;
+        public float maxBackoffTime = 4;
+        public float currentBackOffTime = 0;
+        private bool roamingToLocation = false;
+        private Vector3 targetRoamingPos;
 
         [SerializeField] private float maxChargeTime = 1;
         [SerializeField] private float maxThrowForce = 10;
@@ -39,7 +40,7 @@ namespace LorenzoCastelli {
 
         public GameObject currentLookTarget;
         public Vector3 currentMoveLocationTarget;
-        public float distanceLimit = 6.66f;
+        public float distanceLimit = 0.5f;
         public float turningSpeed = 10f;
 
 
@@ -93,22 +94,53 @@ namespace LorenzoCastelli {
                     }
                     break;
                 case PLAYERSTATES.EMPTYHANDED:
-                    if (GameLogic.instance.GetClosestMostImportantPlayer(playerData)) {
-                        //se sono vicino ad uno con la palla decido cosa fare
-                        Coinflip();
+                    if (GameLogic.instance.pallo.IsHeld) {
+                        if (GameLogic.instance.GetClosestMostImportantPlayer(playerData)) {
+                            //se sono vicino ad uno con la palla decido cosa fare
+                            Coinflip();
+                            break;
+                        } else {
+                            Roam();
+                            break;
+                        }
                     } else {
                         ChangeState(PLAYERSTATES.GOINGFORBALL);
-                            }
-                    break;
+                        break;
+                    }
 
                 default:
                     break;
             }
         }
 
+        private void Roam() {
+            //currentLookTarget = GameLogic.instance.FindInterestingPlayer(playerData).gameObject;
+            //if (!currentLookTarget) {
+                if (!roamingToLocation) {
+                Debug.Log("Going here");
+                    Vector3 randomDirection = UnityEngine.Random.insideUnitSphere * 0.5f;
+                    randomDirection += transform.position;
+                    NavMeshHit hit;
+                    NavMesh.SamplePosition(randomDirection, out hit, 0.5f, 1);
+                    targetRoamingPos = hit.position;
+                    currentMoveLocationTarget = targetRoamingPos;
+                    ai.SetDestination(targetRoamingPos);
+                    roamingToLocation = true;
+                } else {
+                    if (transform.localPosition == targetRoamingPos) {
+                        roamingToLocation = false;
+                    }
+                }
+            /*} else {
+                roamingToLocation = false;
+            }*/
+            
+
+        }
+
         private void Coinflip() {
-            int coin = (int)UnityEngine.Random.Range(0, 1);
-            if (coin == 0) {
+            int coin = (int)UnityEngine.Random.Range(0, 10);
+            if (coin < 5) {
                 ChangeState(PLAYERSTATES.BACKINGOFF);
             } else {
                 ChangeState(PLAYERSTATES.ATTACKING);
@@ -117,18 +149,30 @@ namespace LorenzoCastelli {
 
         private void AttackingState() {
             if (currentLookTarget) {
-                if (Vector3.Distance(currentLookTarget.transform.position, transform.position) <= 0.2f) {
-                    //Se è vicino triggera attacco
-                    //ATTACCO 
-                    currentBackOffTime = 0;
-                    state = PLAYERSTATES.EMPTYHANDED;
-                }
-            }
-            currentAttackTime += Time.deltaTime;
-            if (currentAttackTime >= maxAttackTime) {
+               // if (Vector3.Distance(currentLookTarget.transform.position, transform.position) <= 0.5f) {
+                //Se è vicino ma non abbastanza vicino raggiungilo
+                //ATTACCO 
+                currentMoveLocationTarget=currentLookTarget.transform.position;
+                    ai.SetDestination(currentMoveLocationTarget);
+                    currentAttackTime += Time.deltaTime;
+                    if (currentAttackTime >= maxAttackTime) {
+                        currentAttackTime = 0;
+                        ChangeState(PLAYERSTATES.EMPTYHANDED);
+                        return;
+                    } else if (Vector3.Distance(currentLookTarget.transform.position, transform.position) <= 0.3f) {
+                        Debug.Log("Player " + gameObject.name + " Is attacking " + currentLookTarget.name);
+                        currentAttackTime = 0;
+                        ChangeState(PLAYERSTATES.EMPTYHANDED);
+                        return;
+                    }
+
+           // }
+            } else {
                 currentAttackTime = 0;
                 ChangeState(PLAYERSTATES.EMPTYHANDED);
+                return;
             }
+            
         }
 
         public void BackingOff() {
@@ -145,10 +189,12 @@ namespace LorenzoCastelli {
                 if (currentBackOffTime > maxBackoffTime) {
                     currentBackOffTime = 0;
                     ChangeState(PLAYERSTATES.EMPTYHANDED);
+                    return;
                 }
             } else {
                 currentBackOffTime = 0;
                 ChangeState(PLAYERSTATES.EMPTYHANDED);
+                return;
             }
             
         }
