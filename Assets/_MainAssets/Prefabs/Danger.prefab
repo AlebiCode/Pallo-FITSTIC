@@ -121,7 +121,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1496f7ce4d94d4d4e883a0dee9e0df17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  explosionForce: 100
+  explosionForce: 66
   explosionRadius: 3
   isActive: 0
   isPlayerBeingRejected: 0
@@ -187,5 +187,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   onPalloEnter:
+    m_PersistentCalls:
+      m_Calls: []
+  onPalloExit:
     m_PersistentCalls:
       m_Calls: []
