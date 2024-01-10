@@ -9,6 +9,7 @@ using System;
 using TMPro;
 using DG.Tweening;
 using static UnityEditor.Experimental.GraphView.GraphView;
+using StateMachine;
 
 public class Danger : MonoBehaviour
 {
@@ -32,13 +33,24 @@ public class Danger : MonoBehaviour
     //[SerializeField] public float atPositionForceVertical = 5f;
 
     [SerializeField] private DangersConfig dangerConfig;
+    public DangersConfig DangerConfig => dangerConfig;
+
+    private void Awake()
+    {
+        if (DangerConfig.isMovable)
+        {
+            // Attiva la possibilità di spostare il Danger tramite la fisica
+            Rigidbody rb = this.GetComponent<Rigidbody>();
+            rb.isKinematic = false;
+        }
+    }
 
     // Quando la palla colpisce questo oggetto si attiva effetto diverso a seconda del tipo di pericolo (distinzione in base al colore)
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.collider.GetType() == typeof(CapsuleCollider))
-        {
+        //if (collision.collider.GetType() == typeof(CapsuleCollider))
+        //{
             if (collision.gameObject.layer == 6)
             {
                 DangerBehavior();
@@ -46,19 +58,18 @@ public class Danger : MonoBehaviour
             if (collision.gameObject.layer == 7)
             {
                 //aggiungi logica palla contro trappola
+                //DangerBehaviorForBall();
             }
-        }
+        //}
+    }
+
+    private void DangerBehaviorForBall()
+    {
     }
 
     private void DangerBehavior()
     {
-        if (dangerConfig.isMovable)
-        {
-            // Attiva la possibilità di spostare il Danger tramite la fisica
-            Rigidbody rb = this.GetComponent<Rigidbody>();
-
-            rb.isKinematic = false;
-        }
+        
         if (isActive)
         {
             var playersHit = Physics.OverlapSphere(this.transform.position, explosionRadius, 1 << 6 );
@@ -131,8 +142,6 @@ public class Danger : MonoBehaviour
         _player.gameObject.GetComponentInChildren<TestPlayerController>().TakeDamage(dangerConfig.explosionDamage);
 
     }
-
-   
 
     private void FixedUpdate()
     {

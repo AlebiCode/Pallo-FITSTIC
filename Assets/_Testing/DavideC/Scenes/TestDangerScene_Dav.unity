@@ -21155,6 +21155,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Pallo
       objectReference: {fileID: 0}
+    - target: {fileID: 5468498222544573713, guid: f9734987ca9b6c24886d8c36dc073efb,
+        type: 3}
+      propertyPath: collisionLayermask.m_Bits
+      value: 513
+      objectReference: {fileID: 0}
     - target: {fileID: 6332995951935327140, guid: f9734987ca9b6c24886d8c36dc073efb,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -21383,6 +21388,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1106628089372602965, guid: b307ee73af0050e4cbd404163f8e964e,
+        type: 3}
+      propertyPath: m_IsKinematic
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2147889340336447450, guid: b307ee73af0050e4cbd404163f8e964e,
         type: 3}
       propertyPath: m_LocalPosition.x

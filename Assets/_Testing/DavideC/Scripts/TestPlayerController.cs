@@ -49,6 +49,7 @@ namespace DavideCTest
         }
         private void Update()
         {
+            PlayerGrounded();
             PlayerMovement();
             PlayerRotation();
             BallThrow();
@@ -60,8 +61,14 @@ namespace DavideCTest
             directionInput.x = Input.GetAxis("Horizontal");
             directionInput.y = Input.GetAxis("Vertical");
 
-            if(transform.position.y<2)
-                transform.position += new Vector3(directionInput.x, 0, directionInput.y) * speed * Time.deltaTime;
+            if(transform.position.y<2f)
+                transform.position += new Vector3(directionInput.x, 0f, directionInput.y) * speed * Time.deltaTime;
+           
+        }
+        private void PlayerGrounded()
+        {
+            if (transform.position.y < 1.6f)
+                transform.position = new Vector3(transform.position.x, 1.5f, transform.position.z);
         }
         private void PlayerRotation()
         {

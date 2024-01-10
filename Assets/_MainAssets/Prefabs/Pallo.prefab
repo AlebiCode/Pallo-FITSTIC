@@ -96,7 +96,7 @@ SphereCollider:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 513
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -150,6 +150,6 @@ MonoBehaviour:
   rigidbody: {fileID: 1715925203739228025}
   collisionLayermask:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 513
   ballState: 1
   speedTier: 0
