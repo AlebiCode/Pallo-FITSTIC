@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using Controllers;
 using LorenzoCastelli;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -41,7 +43,11 @@ namespace LorenzoCastelli {
         public float turningSpeed = 10f;
 
 
-
+        public void ChangeState(PLAYERSTATES newstate) {
+            if (newstate != state) {
+                state = newstate;
+            }
+        }
 
 
         public override void BallThrow() {
@@ -51,7 +57,7 @@ namespace LorenzoCastelli {
             if (playerData.throwChargeTime >= maxChargeTime) {
                 playerData.GetPallo().Throw(transform.forward * (MinThrowForce + (Mathf.Min(playerData.throwChargeTime, maxChargeTime) * (maxThrowForce - MinThrowForce) / maxChargeTime)) + Vector3.up * 1.2f);
                 playerData.LoseBall();
-                state = PLAYERSTATES.EMPTYHANDED;
+                ChangeState(PLAYERSTATES.EMPTYHANDED);
             } else {
                 playerData.throwChargeTime += Time.deltaTime;
             }
@@ -89,14 +95,23 @@ namespace LorenzoCastelli {
                 case PLAYERSTATES.EMPTYHANDED:
                     if (GameLogic.instance.GetClosestMostImportantPlayer(playerData)) {
                         //se sono vicino ad uno con la palla decido cosa fare
-                        //Coinflip();
+                        Coinflip();
                     } else {
-                        state = PLAYERSTATES.GOINGFORBALL;
-                    }
+                        ChangeState(PLAYERSTATES.GOINGFORBALL);
+                            }
                     break;
 
                 default:
                     break;
+            }
+        }
+
+        private void Coinflip() {
+            int coin = (int)UnityEngine.Random.Range(0, 1);
+            if (coin == 0) {
+                ChangeState(PLAYERSTATES.BACKINGOFF);
+            } else {
+                ChangeState(PLAYERSTATES.ATTACKING);
             }
         }
 
@@ -112,7 +127,7 @@ namespace LorenzoCastelli {
             currentAttackTime += Time.deltaTime;
             if (currentAttackTime >= maxAttackTime) {
                 currentAttackTime = 0;
-                state = PLAYERSTATES.EMPTYHANDED;
+                ChangeState(PLAYERSTATES.EMPTYHANDED);
             }
         }
 
@@ -127,13 +142,13 @@ namespace LorenzoCastelli {
                 ai.SetDestination(direction*1.5f);
                 currentMoveLocationTarget = direction* 1.5f;
                 currentBackOffTime += Time.deltaTime;
-                if (currentBackOffTime <= maxBackoffTime) {
+                if (currentBackOffTime > maxBackoffTime) {
                     currentBackOffTime = 0;
-                    state = PLAYERSTATES.EMPTYHANDED;
+                    ChangeState(PLAYERSTATES.EMPTYHANDED);
                 }
             } else {
                 currentBackOffTime = 0;
-                state = PLAYERSTATES.EMPTYHANDED;
+                ChangeState(PLAYERSTATES.EMPTYHANDED);
             }
             
         }
@@ -202,7 +217,7 @@ namespace LorenzoCastelli {
 
         private void OnTriggerEnter(Collider other) {
             if ((other.GetComponent<PalloController>() != null) && (!other.GetComponent<PalloController>().IsHeld)) {
-                state = PLAYERSTATES.WITHBALL;
+                ChangeState(PLAYERSTATES.WITHBALL);
                 playerData.PickUpBall(other.GetComponent<PalloController>());
                 playerData.GetPallo().Hold(handsocket);
                 currentLookTarget = GameLogic.instance.FindInterestingPlayer(playerData).gameObject;
