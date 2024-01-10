@@ -3,12 +3,46 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class PalloTrigger : MonoBehaviour
 {
-
+    //[SerializeField] private bool isActive = true;
     [SerializeField] private UnityEvent<PalloController> onPalloEnter = new UnityEvent<PalloController>();
+    [SerializeField] private UnityEvent<PalloController> onPalloExit = new UnityEvent<PalloController>();
 
-    public UnityEvent<PalloController> OnPalloEnter => onPalloEnter;
+    private void Start()
+    {
+        //mi serve questo start vuoto per far apparire l'icona per attivare/disattivare il component nell'inspector. Che bello!
+    }   
+
+    public void SetActivationStatus(bool value)
+    {
+        enabled = value;
+    }
+
+    public void CallPalloTriggerEnter(PalloController palloController)
+    {
+        if (enabled)
+            onPalloEnter.Invoke(palloController);
+    }
+    public void CallPalloTriggerExit(PalloController palloController)
+    {
+        if (enabled)
+            onPalloExit.Invoke(palloController);
+    }
+
+    public void AddOnEnterListener(UnityAction<PalloController> unityAction)
+    {
+        onPalloEnter.AddListener(unityAction);
+    }
+    public void AddOnExitListener(UnityAction<PalloController> unityAction)
+    {
+        onPalloExit.AddListener(unityAction);
+    }
+
+
+
+
 
 }

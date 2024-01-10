@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using LorenzoCastelli;
 using StateMachine;
 using UnityEngine;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 namespace Controllers
 {
@@ -20,7 +21,7 @@ namespace Controllers
         private const float GRAVITY = 9.81f;
         public static readonly float[] SPEED_TIERS = { 4.5f, 7.5f, 10f, 12f };
 
-        private enum BallStates { held, thrown, bouncing }
+        public enum BallStates { held, thrown, bouncing }
 
         [Header("Components")]
         [SerializeField] private new SphereCollider collider;
@@ -34,9 +35,10 @@ namespace Controllers
         private Vector3 velocity;
         private RaycastHit spherecastInfo;
         private Collider[] overlapSphereBuffer = new Collider[OVERLAP_SPHERE_BUFFER_SIZE];
-        private RaycastHit groundHitInfo;
 
+        public BallStates GetBallState => ballState;
         public bool IsHeld => ballState == BallStates.held;
+        public bool CollisionsActive => enabled;
         private float HorizontalVelocityMagnitude => new Vector2(velocity.x, velocity.y).magnitude;
         private BallStates BallState
         {
@@ -64,29 +66,26 @@ namespace Controllers
         }
         private void Move()
         {
+            //if(IsHeld) return;    Non serve perchè se è held non viene chiamato update (component disabled)
             CollisionChecks();
             transform.position += velocity * Time.deltaTime;
         }
         private void CollisionChecks()
         {
-            Physics.OverlapSphereNonAlloc(transform.position, collider.radius, overlapSphereBuffer, collisionLayermask, QueryTriggerInteraction.Collide);
-            for (int i = 0; i < overlapSphereBuffer.Length; i++)
+            /*int colliderIndex = -1 + Physics.OverlapSphereNonAlloc(transform.position, collider.radius, overlapSphereBuffer, collisionLayermask, QueryTriggerInteraction.Collide);
+            while (colliderIndex >= 0)
             {
-                if (overlapSphereBuffer[i])
-                {
-                    Debug.Log("Overlap " + overlapSphereBuffer[i].name);
-                    PalloTriggerCheck(overlapSphereBuffer[i]);
-                }
+                Debug.Log("Overlap " + overlapSphereBuffer[colliderIndex].name);
+                PalloTriggerCheck(overlapSphereBuffer[colliderIndex]);
+                colliderIndex--;
             }
+            if (IsHeld)
+                return;*/
             Physics.SphereCast(transform.position, collider.radius, velocity, out spherecastInfo, velocity.magnitude * Time.deltaTime, collisionLayermask, QueryTriggerInteraction.Collide);
             if (spherecastInfo.collider)
             {
-                Debug.Log("Hit " + spherecastInfo.transform.name);
-                PalloTrigger palloTrigger = spherecastInfo.transform.GetComponent<PalloTrigger>();
-                if (palloTrigger != null)
-                {
-                    palloTrigger.OnPalloEnter.Invoke(this);
-                }
+                //Debug.Log("Hit " + spherecastInfo.collider.name);
+                PalloTriggerCheck(spherecastInfo.collider.GetComponent<PalloTrigger>());
                 if (!spherecastInfo.collider.isTrigger)
                 {
                     if (Vector3.Angle(Vector3.up, spherecastInfo.normal) <= 45)
@@ -96,16 +95,26 @@ namespace Controllers
                 }
             }
         }
-        private void PalloTriggerCheck(Component component)
+        private PalloTrigger lastPalloTrigger;
+        private void PalloTriggerCheck(PalloTrigger newPalloTrigger)
         {
-            PalloTrigger palloTrigger = component.GetComponent<PalloTrigger>();
-            if (palloTrigger != null)
-                palloTrigger.OnPalloEnter.Invoke(this);
+            if (newPalloTrigger != lastPalloTrigger)
+            {
+                lastPalloTrigger?.CallPalloTriggerExit(this);
+                lastPalloTrigger = newPalloTrigger;
+                newPalloTrigger?.CallPalloTriggerEnter(this);
+            }
+
         }
         private void OnWallCollision()
         {
             //eh... migliorabile
             //Debug.Log("Bounced against " + spherecastInfo.transform.name);
+            if (spherecastInfo.rigidbody)
+            {
+                spherecastInfo.rigidbody.AddForceAtPosition(velocity, spherecastInfo.point, ForceMode.Impulse);
+            }
+
             velocity = Vector3.Reflect(velocity, new Vector3(spherecastInfo.normal.x, 0, spherecastInfo.normal.z)).normalized * velocity.magnitude;
         }
         private void OnGroundCollision()
@@ -113,9 +122,24 @@ namespace Controllers
             BallState = BallStates.bouncing;
             velocity.y = 2.5f;
 
-            if (groundHitInfo.rigidbody)
+            if (spherecastInfo.rigidbody)
             {
-                groundHitInfo.rigidbody.AddForceAtPosition(Vector3.down * velocity.y, groundHitInfo.point, ForceMode.Impulse);
+                spherecastInfo.rigidbody.AddForceAtPosition(Vector3.down * velocity.y, spherecastInfo.point, ForceMode.Impulse);
+            }
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (collisionLayermask == (collisionLayermask | (1 << other.gameObject.layer)))
+            {
+                PalloTriggerCheck(other.GetComponent<PalloTrigger>());
+            }
+        }
+        private void OnTriggerExit(Collider other)
+        {
+            if (collisionLayermask == (collisionLayermask | (1 << other.gameObject.layer)))
+            {
+                PalloTriggerCheck(null);
             }
         }
 
@@ -142,12 +166,12 @@ namespace Controllers
             //collider.enabled = false;
             transform.localPosition = Vector3.zero;
         }
-        public void Throw(Vector3 direction, int speedTier = 0)
+        public void Throw(Vector3 speed, int speedTier = 0)
         {
             BallState = BallStates.thrown;
             transform.SetParent(null);
             collider.enabled = true;
-            this.velocity = direction * SPEED_TIERS[speedTier];
+            this.velocity = speed;// * SPEED_TIERS[speedTier];
 
             //UpdateSpeedTier();
         }

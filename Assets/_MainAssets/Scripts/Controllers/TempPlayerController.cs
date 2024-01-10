@@ -15,6 +15,9 @@ namespace Controllers
         [SerializeField] private float speed = 1;
         [SerializeField] private int maxHealthPoints = 100;
 
+        [SerializeField] private PalloTrigger parryHitbox;
+        [SerializeField] private Transform handsocket;
+
         public bool playerIsBeingRejected = false;
 
         private int currentHp;
@@ -31,9 +34,6 @@ namespace Controllers
             } 
         }
 
-        [SerializeField] private Transform handsocket;
-        //[SerializeField] private float minThrowForce = 1;
-
         private Vector2 directionInput;
         private PalloController heldPallo;
         private float throwChargeTime = 0;
@@ -47,7 +47,8 @@ namespace Controllers
         }
         private void Start()
         {
-            GetComponentInChildren<PalloTrigger>().OnPalloEnter.AddListener(GrabPallo);
+            GetComponent<PalloTrigger>().AddOnEnterListener(PalloContact);
+            parryHitbox.AddOnEnterListener(GrabPallo);
         }
         private void Update()
         {
@@ -55,6 +56,10 @@ namespace Controllers
             PlayerRotation();
             BallThrow();
 
+            if (Input.GetKeyDown(KeyCode.Mouse1))
+                parryHitbox.SetActivationStatus(true);
+            else if (Input.GetKeyUp(KeyCode.Mouse1))
+                parryHitbox.SetActivationStatus(false);
         }
 
        
@@ -100,7 +105,7 @@ namespace Controllers
         {
             CurrentHp -= amount;
 
-            Debug.Log("Player HP = " + CurrentHp);
+            Debug.Log("Took damage. Player HP = " + CurrentHp);
 
             if (CurrentHp <= 0)
             {
@@ -108,6 +113,13 @@ namespace Controllers
             }
         }
 
+        public void PalloContact(PalloController palloController)
+        {
+            if(palloController.GetBallState == PalloController.BallStates.thrown)
+                TakeDamage(10);
+            else
+                GrabPallo(palloController);
+        }
         public void GrabPallo(PalloController palloController)
         {
             heldPallo = palloController;
