@@ -148,7 +148,7 @@ namespace LorenzoCastelli {
         }
 
         private void AttackingState() {
-            if (currentLookTarget) {
+            if ((currentLookTarget)&& (currentLookTarget.GetComponent<PlayerData>().IsHoldingBall())) {
                // if (Vector3.Distance(currentLookTarget.transform.position, transform.position) <= 0.5f) {
                 //Se è vicino ma non abbastanza vicino raggiungilo
                 //ATTACCO 
@@ -176,7 +176,7 @@ namespace LorenzoCastelli {
         }
 
         public void BackingOff() {
-            if (currentLookTarget) {
+            if ((currentLookTarget) && (currentLookTarget.GetComponent<PlayerData>().IsHoldingBall())) {
                 // Calculate the direction from this GameObject to the target
                 Vector3 direction = transform.position - currentLookTarget.transform.position;
 

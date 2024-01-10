@@ -39,7 +39,7 @@ namespace LorenzoCastelli {
         public void ForceLookTarget(PlayerData initializer) {
             foreach (PlayerData player in playerInGame) {
                 if ((player != initializer) && (player.gameObject.GetComponent<CPUController>())) {
-                    player.GetComponent<CPUController>().currentLookTarget = null;
+                    player.GetComponent<CPUController>().currentLookTarget = initializer.gameObject;
                     ForceDistanceBots(initializer);
                 }
             }
