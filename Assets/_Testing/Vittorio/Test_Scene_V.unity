@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.30692244, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -435,6 +435,7 @@ GameObject:
   - component: {fileID: 585835158}
   - component: {fileID: 585835157}
   - component: {fileID: 585835156}
+  - component: {fileID: 585835161}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -474,6 +475,7 @@ MonoBehaviour:
   rb: {fileID: 585835157}
   speed: 1
   maxHealthPoints: 100
+  playerIsBeingRejected: 0
   handsocket: {fileID: 0}
 --- !u!54 &585835157
 Rigidbody:
@@ -575,6 +577,19 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 585835154}
   m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &585835161
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 585835154}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19ec861bf007231439305010ba82962e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 0}
 --- !u!1 &674473534
 GameObject:
   m_ObjectHideFlags: 0
@@ -1484,6 +1499,74 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 988995081}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1001 &1009665913
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 80b2f95d81fe2534d8d6f2b8933c1e42,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -6.390527
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 80b2f95d81fe2534d8d6f2b8933c1e42,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 80b2f95d81fe2534d8d6f2b8933c1e42,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -1.3593836
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 80b2f95d81fe2534d8d6f2b8933c1e42,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 80b2f95d81fe2534d8d6f2b8933c1e42,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 80b2f95d81fe2534d8d6f2b8933c1e42,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 80b2f95d81fe2534d8d6f2b8933c1e42,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 80b2f95d81fe2534d8d6f2b8933c1e42,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 80b2f95d81fe2534d8d6f2b8933c1e42,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 80b2f95d81fe2534d8d6f2b8933c1e42,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 80b2f95d81fe2534d8d6f2b8933c1e42,
+        type: 3}
+      propertyPath: m_Name
+      value: CookingPapa
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 80b2f95d81fe2534d8d6f2b8933c1e42, type: 3}
 --- !u!1 &1096891343
 GameObject:
   m_ObjectHideFlags: 0
@@ -2729,3 +2812,4 @@ SceneRoots:
   - {fileID: 1478256705}
   - {fileID: 1419862163}
   - {fileID: 1096891346}
+  - {fileID: 1009665913}
