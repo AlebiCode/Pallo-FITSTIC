@@ -45,6 +45,10 @@ namespace Controllers
         {
             currentHp = maxHealthPoints;
         }
+        private void Start()
+        {
+            GetComponentInChildren<PalloTrigger>().OnPalloEnter.AddListener(GrabPallo);
+        }
         private void Update()
         {
             PlayerMovement();
@@ -104,14 +108,11 @@ namespace Controllers
             }
         }
 
-        private void OnTriggerEnter(Collider other)
+        public void GrabPallo(PalloController palloController)
         {
-            heldPallo = other.GetComponent<PalloController>();
-            if (IsHoldingBall)
-            {
-                throwChargeTime = 0;
-                heldPallo.Hold(handsocket);
-            }
+            heldPallo = palloController;
+            throwChargeTime = 0;
+            heldPallo.Hold(handsocket);
         }
 
         private float velocityChange = 0;
