@@ -10,6 +10,22 @@ namespace StateMachine
 		{
 
 		}
+
+		public override void Enter()
+		{
+			base.Enter();
+			owner.dodging = true;
+		}
+
+		public override void Exit()
+		{
+			base.Exit();
+		}
+
+		public override void Update()
+		{
+			base.Update();
+		}
 	}
 
 }

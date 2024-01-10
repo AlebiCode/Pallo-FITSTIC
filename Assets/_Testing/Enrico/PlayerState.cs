@@ -17,15 +17,15 @@ namespace StateMachine
 
 		}
 
-		public void Enter()
+		public virtual void Enter()
 		{
 			OnEnter.Invoke(owner);
 		}
-		public void Exit()
+		public virtual void Exit()
 		{
 			OnExit.Invoke(owner);
 		}
-		public void Update()
+		public virtual void Update()
 		{
 
 		}

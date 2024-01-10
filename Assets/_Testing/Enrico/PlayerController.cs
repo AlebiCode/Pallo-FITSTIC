@@ -1,152 +1,117 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace Controllers
+namespace StateMachine
 {
     [RequireComponent(typeof(CharacterController))]
     [RequireComponent(typeof(Rigidbody))]
 
     public class PlayerController : MonoBehaviour
     {
-        //refactoring assolutamente necessario per questo vomito di variabili
-        private CharacterController controller;
-        private Vector3 playerVelocity;
-        [SerializeField] private float playerSpeed = 5f;
-        [SerializeField] private float slowPlayerSpeed = 2f;
-        [SerializeField] private float currentPlayerSpeed;
-        private Vector3 movementInput = Vector3.zero;
-        private Vector3 rotationInput = Vector3.zero;
-        private bool dodging = false;
-        private PalloController heldPallo;
-        [SerializeField] private float currentChargeTime = 0;
-        [SerializeField] private float maxChargeTime = 1;
-        [SerializeField] private float maxThrowForce = 10;
-        private float MinThrowForce => PalloController.SPEED_TIERS[1];
-        [SerializeField] private float throwHeight = 1.2f;
-        [SerializeField] private Transform handsocket;
-        [SerializeField] private float holdBallCooldown = 0;
-        [SerializeField] private float holdBallCooldownDuration = 2f;
-        private float dodgeDuration = .25f;
-        private float dodgeCounter = 0f;
+        private Player player;
 
-        private int currentHp;
-        public int CurrentHp
+		#region properties
+		public bool CanMove =>  player.stateMachine.currentState == player.stateMachine.idle    ||
+                                player.stateMachine.currentState == player.stateMachine.throww  ||
+                                player.stateMachine.currentState == player.stateMachine.dodge   ||
+                                player.stateMachine.currentState == player.stateMachine.parry   ||
+                                player.stateMachine.currentState == player.stateMachine.stun;
+
+        public bool CanThrow => player.IsHoldingBall &&
+                                (player.stateMachine.currentState == player.stateMachine.move);
+
+        public bool CanDodge => player.stateMachine.currentState == player.stateMachine.move;
+
+        public bool CanParry => !player.IsHoldingBall &&
+                                (player.stateMachine.currentState == player.stateMachine.move);
+
+        public bool CanStun =>  player.stateMachine.currentState == player.stateMachine.move    ||
+                                player.stateMachine.currentState == player.stateMachine.throww  ||
+                                player.stateMachine.currentState == player.stateMachine.dodge   ||
+                                player.stateMachine.currentState == player.stateMachine.parry;
+
+		#endregion
+        
+		private void Start()
         {
-            get { return currentHp; }
+            player = gameObject.GetComponent<Player>();
 
-            set
+            player.currentPlayerSpeed = player.playerSpeed;
+        }
+
+        void Update()
+        {
+            if (player.dodging)
             {
-                if (value < 0)
-                    currentHp = 0;
-                else
-                    currentHp = value;
+                HandleDodge();
+                return;
             }
+
+            HandleRotation();
+            HandleThrow();
+
+            if (!player.IsHoldingBall && player.holdBallCooldown > 0)
+                player.holdBallCooldown -= Time.deltaTime;
         }
 
-        private bool IsHoldingBall => heldPallo;
-        private bool IsChargingShot => currentChargeTime != 0;
-        private Vector3 ThrowVelocity
-		{
-            get
-			{
-                return transform.forward *
-                (MinThrowForce + (Mathf.Min(currentChargeTime, maxChargeTime)
-                * (maxThrowForce - MinThrowForce) / maxChargeTime))
-                + Vector3.up * throwHeight;
-            }
-		}
-
-        private void Start()
-        {
-            controller = gameObject.GetComponent<CharacterController>();
-            currentPlayerSpeed = playerSpeed;
-        }
+        #region onInput
 
         public void OnMove(InputAction.CallbackContext context)
         {
-            movementInput = new Vector3(
-                context.ReadValue<Vector2>().x, 
+            player.movementInput = new Vector3(
+                context.ReadValue<Vector2>().x,
                 0,
                 (context.ReadValue<Vector2>().y));
         }
 
         public void OnRotation(InputAction.CallbackContext context)
         {
-            rotationInput = new Vector3(
+            player.rotationInput = new Vector3(
                 context.ReadValue<Vector2>().x,
                 0,
                 (context.ReadValue<Vector2>().y));
         }
 
         public void OnThrow(InputAction.CallbackContext context)
-		{
-            if (!IsHoldingBall)
-			{
-                Debug.Log("No ball to throw");
-                return;
-			}
+        {
+            if (CanThrow)
+            {
+                player.stateMachine.ChangeState(player.stateMachine.throww);
+            }
 
             if (context.phase == InputActionPhase.Canceled)
             {
-                heldPallo.Throw(ThrowVelocity);
-                heldPallo = null;
-                currentChargeTime = 0;
-                currentPlayerSpeed = playerSpeed;
-                holdBallCooldown = holdBallCooldownDuration;
-                Debug.Log("Throw complete");
-            }
-			else
-			{
-                currentPlayerSpeed = slowPlayerSpeed;
+                player.stateMachine.ChangeState(player.stateMachine.move);
             }
         }
 
         public void OnParry(InputAction.CallbackContext context)
         {
-            //MARCO spherecast + sfx + cooldown reset
+            if (CanParry)
+                player.stateMachine.ChangeState(player.stateMachine.parry);
         }
 
         public void OnDodge(InputAction.CallbackContext context)
         {
-            if (context.phase == InputActionPhase.Started)
-                dodging = true;
+			if (CanDodge)
+                player.stateMachine.ChangeState(player.stateMachine.dodge);
         }
 
-        void Update()
-        {
-            if (dodging)
-            {
-                HandleDodge();
-                return;
-            }
+        #endregion
 
-            HandleMovement();
-            HandleRotation();
-            HandleThrow();
-
-            if (!IsHoldingBall && holdBallCooldown > 0)
-                holdBallCooldown -= Time.deltaTime;
-        }
-
-        private void HandleMovement()   
-        {
-            if (playerVelocity.y < 0) //TODO && !stoVenendoSpinto
-                playerVelocity.y = 0f;
-
-            controller.Move(movementInput * Time.deltaTime * currentPlayerSpeed);
-        }
+        #region HandleInput
 
         private void HandleRotation()
         {
             //if can charge ball
-            if (heldPallo && rotationInput != Vector3.zero)
+            if (player.heldPallo && player.rotationInput != Vector3.zero)
             {
-                Vector3 rotationVector = transform.position + rotationInput;
+                Vector3 rotationVector = transform.position + player.rotationInput;
                 transform.LookAt(rotationVector, Vector3.up);
             }
-			else if (movementInput != Vector3.zero)
+			else if (player.movementInput != Vector3.zero)
 			{
-                Vector3 moveVector = transform.position + movementInput;
+                Vector3 moveVector = transform.position + player.movementInput;
                 transform.LookAt(moveVector, Vector3.up);
             }
         }
@@ -155,39 +120,43 @@ namespace Controllers
 		{
             //MARCO aggiungere istruzione per vedere se azione Throw sta venendo premuta sul gamepad
             //c'è istruzione per controllare in update lo stato di un azione
-            if (IsHoldingBall)
+            if (player.IsHoldingBall)
             {
-                currentChargeTime += Time.deltaTime;
-                Debug.Log("currentChargeTime = " + currentChargeTime);
+                player.currentChargeTime += Time.deltaTime;
+                Debug.Log("currentChargeTime = " + player.currentChargeTime);
             }
         }
 
         private void HandleDodge()
         {
             //MARCO come fare dodge? salvo direzione + ignoro/disabilito input movimento + controller.Move(savedDirection)?
-            dodgeCounter += Time.deltaTime;
-            if (dodgeCounter >= dodgeDuration)
-                dodging = false;
+            player.dodgeCounter += Time.deltaTime;
+            if (player.dodgeCounter >= player.dodgeDuration)
+                player.dodging = false;
         }
 
-        private void OnTriggerEnter(Collider other)
+		#endregion
+
+		#region key methods
+
+		private void OnTriggerEnter(Collider other)
         {
-            if (holdBallCooldown <= 0)
+            if (player.holdBallCooldown <= 0)
 			{
-                heldPallo = other.GetComponent<PalloController>();
+                player.heldPallo = other.GetComponent<PalloController>();
             }
             
-            if (IsHoldingBall)
-                heldPallo.Hold(handsocket);
+            if (player.IsHoldingBall)
+                player.heldPallo.Hold(player.handsocket);
         }
 
         public void TakeDamage(int amount)
         {
-            CurrentHp -= amount;
+            player.CurrentHp -= amount;
 
-            Debug.Log("Player HP = " + CurrentHp);
+            Debug.Log("Player HP = " + player.CurrentHp);
 
-            if (CurrentHp <= 0)
+            if (player.CurrentHp <= 0)
             {
                 this.KillPlayer();
             }
@@ -200,5 +169,7 @@ namespace Controllers
             //TODO rimuovi destroy e togli una vita
             Destroy(this.gameObject);
         }
-    }
+
+		#endregion
+	}
 }

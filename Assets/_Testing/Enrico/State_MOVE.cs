@@ -10,6 +10,26 @@ namespace StateMachine
 		{
 
 		}
+
+		public override void Enter()
+		{
+			base.Enter();
+		}
+
+		public override void Exit()
+		{
+			base.Exit();
+		}
+
+		public override void Update()
+		{
+			base.Update();
+
+			if (owner.playerVelocity.y < 0) //TODO && !stoVenendoSpinto
+				owner.playerVelocity.y = 0f;
+
+			owner.controller.Move(owner.movementInput * Time.deltaTime * owner.currentPlayerSpeed);
+		}
 	}
 }
 
