@@ -6,9 +6,6 @@ using StateMachine;
 using UnityEngine;
 using static UnityEditor.Experimental.GraphView.GraphView;
 
-namespace Controllers
-{
-
     public class PalloController : MonoBehaviour
     {
         //TODO:
@@ -198,5 +195,3 @@ namespace Controllers
         }
         */
     }
-
-}
