@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 
@@ -11,26 +12,22 @@ namespace AleBorghesi
     {
         protected Animator animator;
 
-        private Transform spine, rightHand, rightArm;
-
         private IK_Bone hipsBone;
+        public bool ikUpdate = true;
         [Header("BoneHits")]
-        public bool updateBotta;
-        public bool boneOffSetActive;
-        public HumanBodyBones bone;
-        public Vector3 offset;
-        private IK_Bone targetBone;
-        private Vector3 originalPos;
+        //public HumanBodyBones bone;
+        public HumanBodyBones DEBUG_StartBottaBone;
+        private IK_Bone bottaBone;
+        public Vector3 bottaOffset;
 
         void Start()
         {
             animator = GetComponent<Animator>();
             hipsBone = IK_Bone.CreateBody(animator);
-            targetBone = IK_Bone.FindBoneFromEnum(animator, bone, hipsBone);
-            originalPos = targetBone.Transform.localPosition;
+            bottaBone = hipsBone;
+            bottaBone = IK_Bone.FindBoneFromEnum(animator, DEBUG_StartBottaBone, hipsBone);
         }
 
-        public bool ikUpdate = true;
         private void OnAnimatorIK(int layerIndex)
         {
             if (!ikUpdate)
@@ -40,36 +37,36 @@ namespace AleBorghesi
         }
 
 
-        float time;
         void LateUpdate()
         {
-            if (updateBotta)
+            if (bottaOffset.magnitude > 0)
             {
-
-                updateBotta = false;
-            }
-            if (boneOffSetActive)
-            {
-                //Recuts();
-                Recuts();
+                //SimpleBotta();
+                UpdateBottaBonesOffsets();
+                //UpdateBottaBonesOffsetsV2(bottaBone, null, bottaOffset);
             }
         }
 
-
-        private void Recuts()
+        private void SimpleBotta()
         {
-            if (targetBone.ParentBone == null)
-            {
-                targetBone.Transform.position += offset;
-                return;
-            }
-            
-            float dist = Vector3.Distance(targetBone.Transform.position, targetBone.ParentBone.Transform.position);
-            targetBone.Transform.position += offset;
-            Brubbo(targetBone.ParentBone, targetBone, dist);
-            offset = Vector3.MoveTowards(offset, Vector3.zero, Time.deltaTime);
+            bottaBone.Transform.position += bottaOffset;
+            bottaOffset = Vector3.MoveTowards(bottaOffset, Vector3.zero, Time.deltaTime);
         }
-        private void Brubbo(IK_Bone toMove, IK_Bone alreadyMoved, float oldDist)
+        private void UpdateBottaBonesOffsets()
+        {
+            if (bottaBone.ParentBone == null)
+            {
+                bottaBone.Transform.position += bottaOffset;
+            }
+            else
+            {
+                float dist = Vector3.Distance(bottaBone.Transform.position, bottaBone.ParentBone.Transform.position);
+                bottaBone.Transform.position += bottaOffset;
+                ChainMovementAscending(bottaBone.ParentBone, bottaBone, dist);
+            }
+            bottaOffset = Vector3.MoveTowards(bottaOffset, Vector3.zero, Time.deltaTime);
+        }
+        private void ChainMovementAscending(IK_Bone toMove, IK_Bone alreadyMoved, float oldDist)
         {
             float dist = 0;
             if(toMove.ParentBone != null)
@@ -79,16 +76,53 @@ namespace AleBorghesi
             foreach (var c in toMove.ChildBones)
             {
                 if(c != alreadyMoved)
-                    DescendingBrubbo(c, toMove, oldPos);
+                    ChainMovementDescending(c, toMove, oldPos);
             }
             if (toMove.ParentBone != null)
-                Brubbo(toMove.ParentBone, toMove, dist);
+                ChainMovementAscending(toMove.ParentBone, toMove, dist);
         }
-        private void DescendingBrubbo(IK_Bone toMove, IK_Bone alreadyMoved, Vector3 oldPos)
+        private void ChainMovementDescending(IK_Bone toMove, IK_Bone alreadyMoved, Vector3 oldPos)
         {
             toMove.Transform.position = alreadyMoved.Transform.position + (toMove.Transform.position - alreadyMoved.Transform.position).normalized * Vector3.Distance(toMove.Transform.position, oldPos);
         }
+        private void UpdateBottaBonesOffsetsV2(IK_Bone toMove, IK_Bone callerBone, Vector3 offset)
+        {
+            Vector3 oldPos = toMove.Transform.position;
+            toMove.Transform.position += offset;
+            if (toMove.ParentBone != null && toMove.ParentBone != callerBone)
+            {
+                float dist = Vector3.Distance(oldPos, toMove.ParentBone.Transform.position);
+                Vector3 vec = toMove.ParentBone.Transform.position - toMove.Transform.position;
+                UpdateBottaBonesOffsetsV2(toMove.ParentBone, toMove,  toMove.Transform.position + (vec.normalized * dist) - toMove.ParentBone.Transform.position);
+            }
+            if(toMove.ChildBones != null)
+                foreach (var c in toMove.ChildBones)
+                {
+                    if(c == callerBone)
+                        continue;
+                    float dist = Vector3.Distance(oldPos, c.Transform.position);
+                    Vector3 vec = c.Transform.position - toMove.Transform.position;
+                    UpdateBottaBonesOffsetsV2(c, toMove, toMove.Transform.position + (vec.normalized * dist) - c.Transform.position);
+                }
+            bottaOffset = Vector3.MoveTowards(bottaOffset, Vector3.zero, Time.deltaTime);
+        }
 
+        public void SetBotta(Vector3 bottaPoint, Vector3 impulse)
+        {
+            bottaBone = GetClosestBoneToPoint(hipsBone, bottaPoint).Item1;
+            bottaOffset = impulse;
+        }
+        private (IK_Bone, float) GetClosestBoneToPoint(IK_Bone startingBone, Vector3 point)
+        {
+            (IK_Bone, float) closest = (startingBone, Vector3.Distance(startingBone.Transform.position, point));
+            foreach (var bone in startingBone.ChildBones)
+            {
+                (IK_Bone, float) newDist = GetClosestBoneToPoint(bone, point);
+                if(newDist.Item2 < closest.Item2)
+                    closest = newDist;
+            }
+            return closest;
+        }
     }
 
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using LorenzoCastelli;
+using StateMachine;
 using UnityEngine;
 
 namespace Controllers
@@ -13,6 +14,8 @@ namespace Controllers
         //come funziona il rallentamento?
         //il check per essere afferrata da un giocatore non è nel player ma nella palla (così uso lo spherecast e evito i clip che possono accadere con ontriggerenter)
         //ragionamento fisica: P=m*v. Ptot=p1+p2. [before impact] Ptot=m1*v1+m2*v2, v2=0, Ptot=p1. [after impact] p1=p2, m1*v1=m2
+
+        private const int OVERLAP_SPHERE_BUFFER_SIZE = 3;
 
         private const float GRAVITY = 9.81f;
         public static readonly float[] SPEED_TIERS = { 4.5f, 7.5f, 10f, 12f };
@@ -30,6 +33,7 @@ namespace Controllers
 
         private Vector3 velocity;
         private RaycastHit spherecastInfo;
+        private Collider[] overlapSphereBuffer = new Collider[OVERLAP_SPHERE_BUFFER_SIZE];
         private RaycastHit groundHitInfo;
 
         public bool IsHeld => ballState == BallStates.held;
@@ -65,14 +69,38 @@ namespace Controllers
         }
         private void CollisionChecks()
         {
-            Physics.SphereCast(transform.position, collider.radius, velocity, out spherecastInfo, velocity.magnitude * Time.deltaTime, collisionLayermask);
+            Physics.OverlapSphereNonAlloc(transform.position, collider.radius, overlapSphereBuffer, collisionLayermask, QueryTriggerInteraction.Collide);
+            for (int i = 0; i < overlapSphereBuffer.Length; i++)
+            {
+                if (overlapSphereBuffer[i])
+                {
+                    Debug.Log("Overlap " + overlapSphereBuffer[i].name);
+                    PalloTriggerCheck(overlapSphereBuffer[i]);
+                }
+            }
+            Physics.SphereCast(transform.position, collider.radius, velocity, out spherecastInfo, velocity.magnitude * Time.deltaTime, collisionLayermask, QueryTriggerInteraction.Collide);
             if (spherecastInfo.collider)
             {
-                if(Vector3.Angle(Vector3.up, spherecastInfo.normal) <= 45)
-                    OnGroundCollision();
-                else
-                    OnWallCollision();
+                Debug.Log("Hit " + spherecastInfo.transform.name);
+                PalloTrigger palloTrigger = spherecastInfo.transform.GetComponent<PalloTrigger>();
+                if (palloTrigger != null)
+                {
+                    palloTrigger.OnPalloEnter.Invoke(this);
+                }
+                if (!spherecastInfo.collider.isTrigger)
+                {
+                    if (Vector3.Angle(Vector3.up, spherecastInfo.normal) <= 45)
+                        OnGroundCollision();
+                    else
+                        OnWallCollision();
+                }
             }
+        }
+        private void PalloTriggerCheck(Component component)
+        {
+            PalloTrigger palloTrigger = component.GetComponent<PalloTrigger>();
+            if (palloTrigger != null)
+                palloTrigger.OnPalloEnter.Invoke(this);
         }
         private void OnWallCollision()
         {
@@ -114,17 +142,17 @@ namespace Controllers
             //collider.enabled = false;
             transform.localPosition = Vector3.zero;
         }
-        public void Throw(Vector3 velocity)
+        public void Throw(Vector3 direction, int speedTier = 0)
         {
             BallState = BallStates.thrown;
             transform.SetParent(null);
             collider.enabled = true;
-            this.velocity = velocity;
+            this.velocity = direction * SPEED_TIERS[speedTier];
 
-            speedTier = 1;
-            UpdateSpeedTier();
+            //UpdateSpeedTier();
         }
 
+        /*
         private void UpdateSpeedTier()
         {
             UpdateSpeedTier(HorizontalVelocityMagnitude);
@@ -144,7 +172,7 @@ namespace Controllers
             }
             return 0;
         }
-
+        */
     }
 
 }
