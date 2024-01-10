@@ -68,7 +68,10 @@ namespace DavideCTest
         private void PlayerGrounded()
         {
             if (transform.position.y < 1.6f)
-                transform.position = new Vector3(transform.position.x, 1.5f, transform.position.z);
+            {
+                float lerpMove = Mathf.Lerp(transform.position.y, 1.5f, (transform.position.y - 1.5f) / rb.velocity.y);
+                transform.position = new Vector3(transform.position.x, lerpMove, transform.position.z);
+            }
         }
         private void PlayerRotation()
         {
