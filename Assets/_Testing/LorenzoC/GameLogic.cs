@@ -206,8 +206,8 @@ namespace LorenzoCastelli {
         public void ForceDistanceBots(PlayerData from) {
             foreach (PlayerData player in playerInGame) {
                 if (player.GetComponent<CPUController>() && player != from) {
-                    player.GetComponent<CPUController>().state = PLAYERSTATES.BACKINGOFF;
-                    player.GetComponent<CPUController>().BackingOff();
+                    player.GetComponent<CPUController>().ChangeState(PLAYERSTATES.BACKINGOFF);
+                    //player.GetComponent<CPUController>().BackingOff();
                 }
             }
         }
