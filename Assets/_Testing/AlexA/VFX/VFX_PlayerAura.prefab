@@ -4876,10 +4876,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9aa64e3b100f96647ad7bf09b8d86394, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lv0Material: {fileID: 0}
-  lv1Material: {fileID: 0}
-  lv2Material: {fileID: 0}
-  lv3Material: {fileID: 0}
+  materials:
+  - {fileID: 2100000, guid: b5b21e3dc1b451d42ada54d76a2086f4, type: 2}
+  - {fileID: 2100000, guid: dda9679db2e7680459802ac20ef81721, type: 2}
+  - {fileID: 2100000, guid: 1ca3d022a6565a24790bed3cbae86515, type: 2}
+  - {fileID: 2100000, guid: 6c5f109c6572b02479620e322ab1dc15, type: 2}
 --- !u!1 &4631872134910449360
 GameObject:
   m_ObjectHideFlags: 0
