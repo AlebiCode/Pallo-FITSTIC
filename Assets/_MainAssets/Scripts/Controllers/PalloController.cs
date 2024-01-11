@@ -4,8 +4,12 @@ using System.Collections.Generic;
 using LorenzoCastelli;
 using StateMachine;
 using UnityEngine;
+using UnityEngine.Events;
 using static UnityEditor.Experimental.GraphView.GraphView;
 
+
+namespace Controllers
+{
     public class PalloController : MonoBehaviour
     {
         //TODO:
@@ -29,9 +33,16 @@ using static UnityEditor.Experimental.GraphView.GraphView;
         [SerializeField] private BallStates ballState = BallStates.thrown;
         [SerializeField] private int speedTier;
 
+        private UnityEvent<BallStates> onBallStateChange = new UnityEvent<BallStates>();
+        private UnityEvent<int> onSpeedTierChange = new UnityEvent<int>();
+
         private Vector3 velocity;
         private RaycastHit spherecastInfo;
         private Collider[] overlapSphereBuffer = new Collider[OVERLAP_SPHERE_BUFFER_SIZE];
+
+
+        public UnityEvent<BallStates> OnStateChange => onBallStateChange;
+        public UnityEvent<int> OnSpeedTierChange => onSpeedTierChange;
 
         public BallStates GetBallState => ballState;
         public bool IsHeld => ballState == BallStates.held;
@@ -52,6 +63,7 @@ using static UnityEditor.Experimental.GraphView.GraphView;
                         enabled = false;
                         break;
                 }
+                onBallStateChange.Invoke(value);
             }
         }
 
@@ -170,6 +182,7 @@ using static UnityEditor.Experimental.GraphView.GraphView;
             collider.enabled = true;
             this.velocity = speed;// * SPEED_TIERS[speedTier];
 
+            onSpeedTierChange.Invoke(speedTier);    //da fare per bene
             //UpdateSpeedTier();
         }
 
@@ -195,3 +208,5 @@ using static UnityEditor.Experimental.GraphView.GraphView;
         }
         */
     }
+
+}
