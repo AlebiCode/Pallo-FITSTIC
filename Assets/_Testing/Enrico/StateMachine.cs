@@ -38,6 +38,7 @@ namespace StateMachine
 			currentState.Enter();
 		}
 
+		/*
 		void PrintBestemmia(Player owner)
 		{
 			Debug.Log("Accipigna");
@@ -47,7 +48,7 @@ namespace StateMachine
 		{
 			parry.OnExit -= PrintBestemmia;
 		}
-
+		*/
 	}
 }
 

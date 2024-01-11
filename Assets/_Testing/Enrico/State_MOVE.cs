@@ -25,10 +25,30 @@ namespace StateMachine
 		{
 			base.Update();
 
-			if (owner.playerVelocity.y < 0) //TODO && !stoVenendoSpinto
+			HandleMovement();
+			HandleRotation();
+		}
+
+		private void HandleMovement()
+		{
+			if (owner.playerVelocity.y < 0)
 				owner.playerVelocity.y = 0f;
 
 			owner.controller.Move(owner.movementInput * Time.deltaTime * owner.currentPlayerSpeed);
+		}
+
+		private void HandleRotation()
+		{
+			if (owner.heldPallo && owner.rotationInput != Vector3.zero)
+			{
+				Vector3 rotationVector = owner.transform.position + owner.rotationInput;
+				owner.transform.LookAt(rotationVector, Vector3.up);
+			}
+			else if (owner.movementInput != Vector3.zero)
+			{
+				Vector3 moveVector = owner.transform.position + owner.movementInput;
+				owner.transform.LookAt(moveVector, Vector3.up);
+			}
 		}
 	}
 }

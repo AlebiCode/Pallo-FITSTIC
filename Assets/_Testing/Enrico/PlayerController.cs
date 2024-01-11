@@ -48,9 +48,6 @@ namespace StateMachine
                 return;
             }
 
-            HandleRotation();
-            HandleThrow();
-
             if (!player.IsHoldingBall && player.holdBallCooldown > 0)
                 player.holdBallCooldown -= Time.deltaTime;
         }
@@ -101,32 +98,6 @@ namespace StateMachine
         #endregion
 
         #region HandleInput
-
-        private void HandleRotation()
-        {
-            //if can charge ball
-            if (player.heldPallo && player.rotationInput != Vector3.zero)
-            {
-                Vector3 rotationVector = transform.position + player.rotationInput;
-                transform.LookAt(rotationVector, Vector3.up);
-            }
-			else if (player.movementInput != Vector3.zero)
-			{
-                Vector3 moveVector = transform.position + player.movementInput;
-                transform.LookAt(moveVector, Vector3.up);
-            }
-        }
-
-        private void HandleThrow()
-		{
-            //MARCO aggiungere istruzione per vedere se azione Throw sta venendo premuta sul gamepad
-            //c'è istruzione per controllare in update lo stato di un azione
-            if (player.IsHoldingBall)
-            {
-                player.currentChargeTime += Time.deltaTime;
-                Debug.Log("currentChargeTime = " + player.currentChargeTime);
-            }
-        }
 
         private void HandleDodge()
         {

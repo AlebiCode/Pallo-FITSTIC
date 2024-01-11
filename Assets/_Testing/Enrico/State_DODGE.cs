@@ -25,6 +25,7 @@ namespace StateMachine
 		public override void Update()
 		{
 			base.Update();
+			owner.controller.Move(owner.movementInput * Time.deltaTime * owner.currentPlayerSpeed);
 		}
 	}
 

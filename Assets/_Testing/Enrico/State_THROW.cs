@@ -13,12 +13,12 @@ namespace StateMachine
 
 		public override void Enter()
 		{
+			base.Enter();
 			owner.currentPlayerSpeed = owner.slowPlayerSpeed;
 		}
 		public override void Exit()
 		{
-			base.Enter();
-
+			base.Exit();
 			//throw ball
 			owner.heldPallo.Throw(owner.ThrowVelocity);
 
@@ -34,7 +34,7 @@ namespace StateMachine
 		public override void Update()
 		{
 			base.Update();
-
+			owner.currentChargeTime += Time.deltaTime;
 		}
 	}
 }
