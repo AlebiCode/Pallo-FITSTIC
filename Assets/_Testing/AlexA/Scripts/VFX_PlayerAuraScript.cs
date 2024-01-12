@@ -15,7 +15,6 @@ namespace VFX
         private GameObject vfx_PlayerAuraBase;
 
         private Player myPlayer;
-        private PalloController heldPallo;
 
         private float maxSize;
         private float minSize;
@@ -49,6 +48,11 @@ namespace VFX
         private void Update()
         {
             OnChargingUpdate();
+        }
+
+        private void Start()
+        {
+            Init();
         }
 
         private void Init()
@@ -85,8 +89,7 @@ namespace VFX
 
         private void OnChargingStarted(Player owner) 
         {
-            heldPallo = myPlayer.heldPallo;
-            heldPallo.OnSpeedTierChange.AddListener(CheckThrowLevel);
+            CheckThrowLevel(myPlayer.heldPallo.SpeedTier);
             vfx_PlayerAuraCapsule.SetActive(true);
             vfx_PlayerAuraBase.SetActive(true);
             isCharging = true;
@@ -106,7 +109,6 @@ namespace VFX
             vfx_PlayerAuraCapsule.SetActive(false);
             vfx_PlayerAuraBase.SetActive(false);
             vfx_PlayerAuraCapsule.transform.DOScale(minSize, 0f);
-            heldPallo.OnSpeedTierChange.RemoveListener(CheckThrowLevel);
         }
     }
 }
