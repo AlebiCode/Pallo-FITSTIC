@@ -6,6 +6,8 @@ namespace StateMachine
 {
 	public class State_MOVE : PlayerState
 	{
+		public Vector3 moveVector;
+
 		public State_MOVE(Player owner) : base(owner)
 		{
 
@@ -44,7 +46,7 @@ namespace StateMachine
 			else */
 			if (player.movementInput != Vector3.zero)
 			{
-				Vector3 moveVector = player.transform.position + player.movementInput;
+				moveVector = player.transform.position + player.movementInput;
 				player.transform.LookAt(moveVector, Vector3.up);
 			}
 		}

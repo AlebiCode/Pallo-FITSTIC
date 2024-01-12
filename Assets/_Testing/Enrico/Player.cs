@@ -8,18 +8,20 @@ namespace StateMachine
     public class Player : MonoBehaviour
     {
         #region variables and properties
+
+        public string currentState; //debug
+
         //linked classes
         public StateMachine stateMachine;
         public PlayerController playerController;
         public CharacterController controller;
+        public Transform handsocket;
         public PalloController heldPallo;
-
-        public string currentState; //debug
 
         //movement
         [SerializeField] public float playerSpeed = 5f;
         [SerializeField] public float slowPlayerSpeed = 2f;
-        [SerializeField] public float dodgePlayerSpeed = 8f;
+        [SerializeField] public float dodgePlayerSpeed = 13f;
         public Vector3 movementInput = Vector3.zero; //TODO put private
         public Vector3 rotationInput = Vector3.zero; //TODO put private
 
@@ -28,15 +30,15 @@ namespace StateMachine
         [SerializeField] public float maxChargeTime = 1;
         [SerializeField] public float maxThrowForce = 10;
         [SerializeField] public float throwHeight = 1.2f;
-        [SerializeField] public Transform handsocket;
         [SerializeField] public float holdBallCooldown = 0;
         [SerializeField] public float holdBallCooldownDuration = 2f;
         public float MinThrowForce => PalloController.SPEED_TIERS[1];
 
         //dodge
-        public bool dodging = false;
-        public float dodgeDuration = .25f;
-        public float dodgeCounter = 0f;
+        public Vector3 dodgeDirection;
+        public float dodgeCurrentSpeed = 0f;
+        public float dodgeMaxDuration = .5f;
+        public float dodgeCurrentTime = 0f;
 
         //hp
         public int currentHp;
@@ -71,13 +73,9 @@ namespace StateMachine
 
         void Start()
         {
-            //versione monobehaviour
-            //stateMachine = (gameObject.AddComponent(typeof(StateMachine)) as StateMachine);
-            //stateMachine.Initialize(this);
-
-            //versione non monobehaviour
             stateMachine = new StateMachine(this);
 
+            GetComponent<PalloTrigger>().AddOnEnterListener(PalloContact);
             controller = gameObject.GetComponent<CharacterController>();
             playerController = gameObject.GetComponent<PlayerController>();
         }
@@ -87,15 +85,15 @@ namespace StateMachine
             stateMachine.currentState?.Update();
         }
 
-        private void OnTriggerEnter(Collider other)
-        {
+        private void PalloContact(PalloController pallo)
+		{
+            /*
             if (holdBallCooldown <= 0)
             {
-                heldPallo = other.GetComponent<PalloController>();
-            }
-
-            if (IsHoldingBall)
-                heldPallo.Hold(handsocket);
+                
+            }*/
+            heldPallo = pallo;
+            heldPallo.Hold(handsocket);
         }
 
         public void TakeDamage(int amount)

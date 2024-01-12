@@ -137,7 +137,7 @@ GameObject:
   - component: {fileID: 40550825}
   - component: {fileID: 40550824}
   - component: {fileID: 40550829}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Pallo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -273,7 +273,7 @@ MonoBehaviour:
   rigidbody: {fileID: 40550824}
   collisionLayermask:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 1089
   ballState: 1
   speedTier: 0
 --- !u!1 &45369722
@@ -20882,6 +20882,7 @@ GameObject:
   - component: {fileID: 1169982717}
   - component: {fileID: 1169982716}
   - component: {fileID: 1169982715}
+  - component: {fileID: 1169982724}
   m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
@@ -21173,20 +21174,39 @@ MonoBehaviour:
   currentState: 
   playerSpeed: 5
   slowPlayerSpeed: 2
-  dodgePlayerSpeed: 8
+  dodgePlayerSpeed: 13
   movementInput: {x: 0, y: 0, z: 0}
   rotationInput: {x: 0, y: 0, z: 0}
   currentChargeTime: 0
   maxChargeTime: 1
   maxThrowForce: 10
   throwHeight: 1.2
-  handsocket: {fileID: 0}
+  handsocket: {fileID: 713184208}
   holdBallCooldown: 0
   holdBallCooldownDuration: 2
-  dodging: 0
-  dodgeDuration: 0.25
-  dodgeCounter: 0
+  dodgeDirection: {x: 0, y: 0, z: 0}
+  dodgeCurrentSpeed: 0
+  dodgeMaxDuration: 0.5
+  dodgeCurrentTime: 0
   currentHp: 0
+--- !u!114 &1169982724
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1169982713}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f188414ac4239343befa0bc63824e67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onPalloEnter:
+    m_PersistentCalls:
+      m_Calls: []
+  onPalloExit:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1227845319
 GameObject:
   m_ObjectHideFlags: 0

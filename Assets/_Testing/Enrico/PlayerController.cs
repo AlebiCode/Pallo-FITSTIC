@@ -48,10 +48,11 @@ namespace StateMachine
 
         public void OnMove(InputAction.CallbackContext context)
         {
-            player.movementInput = new Vector3(
+            player.movementInput = (new Vector3(
                 context.ReadValue<Vector2>().x,
                 0,
-                (context.ReadValue<Vector2>().y));
+                (context.ReadValue<Vector2>().y)))
+                .normalized;
         }
 
         public void OnRotation(InputAction.CallbackContext context)
