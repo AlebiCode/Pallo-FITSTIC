@@ -44,6 +44,7 @@ namespace Controllers
         public UnityEvent<BallStates> OnStateChange => onBallStateChange;
         public UnityEvent<int> OnSpeedTierChange => onSpeedTierChange;
 
+        public int SpeedTier => speedTier;
         public BallStates GetBallState => ballState;
         public bool IsHeld => ballState == BallStates.held;
         public bool CollisionsActive => enabled;
@@ -93,7 +94,7 @@ namespace Controllers
             Physics.SphereCast(transform.position, collider.radius, velocity, out spherecastInfo, velocity.magnitude * Time.deltaTime, collisionLayermask, QueryTriggerInteraction.Collide);
             if (spherecastInfo.collider)
             {
-                //Debug.Log("Hit " + spherecastInfo.collider.name);
+                Debug.Log("Hit " + spherecastInfo.collider.name);
                 PalloTriggerCheck(spherecastInfo.collider.GetComponent<PalloTrigger>());
                 if (!spherecastInfo.collider.isTrigger)
                 {
@@ -117,23 +118,28 @@ namespace Controllers
         }
         private void OnWallCollision()
         {
-            //eh... migliorabile
-            //Debug.Log("Bounced against " + spherecastInfo.transform.name);
-            if (spherecastInfo.rigidbody)
-            {
-                spherecastInfo.rigidbody.AddForceAtPosition(velocity, spherecastInfo.point, ForceMode.Impulse);
-            }
-
+            AddInpulseToCollision(velocity);
+            ReflectHorizontalVelocity();
+        }
+        private void ReflectHorizontalVelocity()
+        {
             velocity = Vector3.Reflect(velocity, new Vector3(spherecastInfo.normal.x, 0, spherecastInfo.normal.z)).normalized * velocity.magnitude;
         }
         private void OnGroundCollision()
         {
+            GroundBounce();
+            AddInpulseToCollision(Vector3.down * velocity.y);
+        }
+        private void GroundBounce()
+        {
             BallState = BallStates.bouncing;
             velocity.y = 2.5f;
-
+        }
+        private void AddInpulseToCollision(Vector3 force)
+        {
             if (spherecastInfo.rigidbody)
             {
-                spherecastInfo.rigidbody.AddForceAtPosition(Vector3.down * velocity.y, spherecastInfo.point, ForceMode.Impulse);
+                spherecastInfo.rigidbody.AddForceAtPosition(force, spherecastInfo.point, ForceMode.Impulse);
             }
         }
 
