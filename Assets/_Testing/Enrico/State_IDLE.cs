@@ -24,6 +24,7 @@ namespace StateMachine
 		public override void Update()
 		{
 			base.Update();
+			player.stateMachine.ChangeState(player.stateMachine.move);
 		}
 	}
 }

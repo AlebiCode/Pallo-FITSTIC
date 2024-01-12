@@ -16,6 +16,8 @@ namespace StateMachine
         public CharacterController controller;
         public PalloController heldPallo;
 
+        public string currentState;
+
         //movement
         public Vector3 playerVelocity;
         [SerializeField] public float playerSpeed = 5f;
@@ -70,18 +72,53 @@ namespace StateMachine
 
         #endregion
 
-        // Start is called before the first frame update
         void Start()
         {
-            stateMachine = new StateMachine();
-            playerController = new PlayerController();
+            //versione monobehaviour
+            //stateMachine = (gameObject.AddComponent(typeof(StateMachine)) as StateMachine);
+            //stateMachine.Initialize(this);
+
+            //versione non monobehaviour
+            stateMachine = new StateMachine(this);
+
             controller = gameObject.GetComponent<CharacterController>();
+            playerController = gameObject.GetComponent<PlayerController>();
         }
 
-        // Update is called once per frame
         void Update()
         {
+            stateMachine.currentState?.Update();
+        }
 
+        private void OnTriggerEnter(Collider other)
+        {
+            if (holdBallCooldown <= 0)
+            {
+                heldPallo = other.GetComponent<PalloController>();
+            }
+
+            if (IsHoldingBall)
+                heldPallo.Hold(handsocket);
+        }
+
+        public void TakeDamage(int amount)
+        {
+            CurrentHp -= amount;
+
+            Debug.Log("Player HP = " + CurrentHp);
+
+            if (CurrentHp <= 0)
+            {
+                this.KillPlayer();
+            }
+        }
+
+        //TODO trasformare in unityEvent
+        public void KillPlayer()
+        {
+            Debug.Log("player is killed!");
+            //TODO rimuovi destroy e togli una vita
+            Destroy(this.gameObject);
         }
     }
 }

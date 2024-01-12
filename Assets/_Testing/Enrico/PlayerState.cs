@@ -4,27 +4,29 @@ using UnityEngine;
 
 namespace StateMachine
 {
-	public delegate void PlayerEvent(Player owner);
+	public delegate void PlayerEvent(Player player);
 	public abstract class PlayerState : IState
 	{
 		public event PlayerEvent OnEnter;
 		public event PlayerEvent OnExit;
 
-		public Player owner;
-		public PlayerState(Player owner)
+		public Player player;
+		public PlayerState(Player player)
 		{
-			this.owner = owner;
+			this.player = player;
 
 		}
 
 		public virtual void Enter()
 		{
-			OnEnter.Invoke(owner);
+			OnEnter?.Invoke(player);
 		}
+
 		public virtual void Exit()
 		{
-			OnExit.Invoke(owner);
+			OnExit?.Invoke(player);
 		}
+
 		public virtual void Update()
 		{
 

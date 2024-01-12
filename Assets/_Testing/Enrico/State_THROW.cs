@@ -14,19 +14,19 @@ namespace StateMachine
 		public override void Enter()
 		{
 			base.Enter();
-			owner.currentPlayerSpeed = owner.slowPlayerSpeed;
+			player.currentPlayerSpeed = player.slowPlayerSpeed;
 		}
 		public override void Exit()
 		{
 			base.Exit();
 			//throw ball
-			owner.heldPallo.Throw(owner.ThrowVelocity);
+			player.heldPallo.Throw(player.ThrowVelocity);
 
 			//reset variables
-			owner.heldPallo = null;
-			owner.currentChargeTime = 0;
-			owner.currentPlayerSpeed = owner.playerSpeed;
-			owner.holdBallCooldown = owner.holdBallCooldownDuration;
+			player.heldPallo = null;
+			player.currentChargeTime = 0;
+			player.currentPlayerSpeed = player.playerSpeed;
+			player.holdBallCooldown = player.holdBallCooldownDuration;
 
 			Debug.Log("Throw complete");
 		}
@@ -34,7 +34,7 @@ namespace StateMachine
 		public override void Update()
 		{
 			base.Update();
-			owner.currentChargeTime += Time.deltaTime;
+			player.currentChargeTime += Time.deltaTime;
 		}
 	}
 }

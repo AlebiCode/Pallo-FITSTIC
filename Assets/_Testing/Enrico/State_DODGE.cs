@@ -6,6 +6,8 @@ namespace StateMachine
 {
 	public class State_DODGE : PlayerState
 	{
+		//private Vector3 dodgeDirection = Vector3.zero;
+
 		public State_DODGE(Player owner) : base(owner)
 		{
 
@@ -14,18 +16,27 @@ namespace StateMachine
 		public override void Enter()
 		{
 			base.Enter();
-			owner.dodging = true;
+			//dodgeDirection = owner.rotationInput;
+			player.dodging = true;
 		}
 
 		public override void Exit()
 		{
 			base.Exit();
+
+			player.dodging = false;
 		}
 
 		public override void Update()
 		{
 			base.Update();
-			owner.controller.Move(owner.movementInput * Time.deltaTime * owner.currentPlayerSpeed);
+
+			player.controller.Move(player.movementInput * Time.deltaTime * player.currentPlayerSpeed);
+
+			player.dodgeCounter += Time.deltaTime;
+			if (player.dodgeCounter >= player.dodgeDuration)
+				player.stateMachine.ChangeState(player.stateMachine.move);
+
 		}
 	}
 

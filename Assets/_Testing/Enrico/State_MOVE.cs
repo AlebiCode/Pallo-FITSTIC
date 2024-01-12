@@ -31,23 +31,23 @@ namespace StateMachine
 
 		private void HandleMovement()
 		{
-			if (owner.playerVelocity.y < 0)
-				owner.playerVelocity.y = 0f;
+			if (player.playerVelocity.y < 0)
+				player.playerVelocity.y = 0f;
 
-			owner.controller.Move(owner.movementInput * Time.deltaTime * owner.currentPlayerSpeed);
+			player.controller.Move(player.movementInput * Time.deltaTime * player.currentPlayerSpeed);
 		}
 
 		private void HandleRotation()
 		{
-			if (owner.heldPallo && owner.rotationInput != Vector3.zero)
+			if (player.heldPallo && player.rotationInput != Vector3.zero)
 			{
-				Vector3 rotationVector = owner.transform.position + owner.rotationInput;
-				owner.transform.LookAt(rotationVector, Vector3.up);
+				Vector3 rotationVector = player.transform.position + player.rotationInput;
+				player.transform.LookAt(rotationVector, Vector3.up);
 			}
-			else if (owner.movementInput != Vector3.zero)
+			else if (player.movementInput != Vector3.zero)
 			{
-				Vector3 moveVector = owner.transform.position + owner.movementInput;
-				owner.transform.LookAt(moveVector, Vector3.up);
+				Vector3 moveVector = player.transform.position + player.movementInput;
+				player.transform.LookAt(moveVector, Vector3.up);
 			}
 		}
 	}

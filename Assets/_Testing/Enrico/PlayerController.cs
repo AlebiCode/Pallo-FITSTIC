@@ -42,12 +42,6 @@ namespace StateMachine
 
         void Update()
         {
-            if (player.dodging)
-            {
-                HandleDodge();
-                return;
-            }
-
             if (!player.IsHoldingBall && player.holdBallCooldown > 0)
                 player.holdBallCooldown -= Time.deltaTime;
         }
@@ -96,52 +90,5 @@ namespace StateMachine
         }
 
         #endregion
-
-        #region HandleInput
-
-        private void HandleDodge()
-        {
-            //MARCO come fare dodge? salvo direzione + ignoro/disabilito input movimento + controller.Move(savedDirection)?
-            player.dodgeCounter += Time.deltaTime;
-            if (player.dodgeCounter >= player.dodgeDuration)
-                player.dodging = false;
-        }
-
-		#endregion
-
-		#region key methods
-
-		private void OnTriggerEnter(Collider other)
-        {
-            if (player.holdBallCooldown <= 0)
-			{
-                player.heldPallo = other.GetComponent<PalloController>();
-            }
-            
-            if (player.IsHoldingBall)
-                player.heldPallo.Hold(player.handsocket);
-        }
-
-        public void TakeDamage(int amount)
-        {
-            player.CurrentHp -= amount;
-
-            Debug.Log("Player HP = " + player.CurrentHp);
-
-            if (player.CurrentHp <= 0)
-            {
-                this.KillPlayer();
-            }
-        }
-
-        //TODO trasformare in unityEvent
-        public void KillPlayer()
-        {
-            Debug.Log("player is killed!");
-            //TODO rimuovi destroy e togli una vita
-            Destroy(this.gameObject);
-        }
-
-		#endregion
 	}
 }
