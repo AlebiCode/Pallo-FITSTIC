@@ -14,18 +14,15 @@ namespace StateMachine
 		public override void Enter()
 		{
 			base.Enter();
-			player.currentPlayerSpeed = player.slowPlayerSpeed;
 		}
+
 		public override void Exit()
 		{
 			base.Exit();
-			//throw ball
-			player.heldPallo.Throw(player.ThrowVelocity);
 
 			//reset variables
 			player.heldPallo = null;
 			player.currentChargeTime = 0;
-			player.currentPlayerSpeed = player.playerSpeed;
 			player.holdBallCooldown = player.holdBallCooldownDuration;
 
 			Debug.Log("Throw complete");
@@ -34,7 +31,30 @@ namespace StateMachine
 		public override void Update()
 		{
 			base.Update();
+
 			player.currentChargeTime += Time.deltaTime;
+
+			HandleMovement();
+			HandleRotation();
+		}
+
+		private void HandleMovement()
+		{
+			player.controller.Move(player.movementInput * Time.deltaTime * player.slowPlayerSpeed);
+		}
+
+		private void HandleRotation()
+		{
+			if (player.rotationInput != Vector3.zero)
+			{
+				Vector3 rotationVector = player.transform.position + player.rotationInput;
+				player.transform.LookAt(rotationVector, Vector3.up);
+			}
+			else if (player.movementInput != Vector3.zero)
+			{
+				Vector3 moveVector = player.transform.position + player.movementInput;
+				player.transform.LookAt(moveVector, Vector3.up);
+			}
 		}
 	}
 }

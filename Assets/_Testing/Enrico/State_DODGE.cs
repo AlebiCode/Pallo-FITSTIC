@@ -31,7 +31,7 @@ namespace StateMachine
 		{
 			base.Update();
 
-			player.controller.Move(player.movementInput * Time.deltaTime * player.currentPlayerSpeed);
+			player.controller.Move(player.movementInput * Time.deltaTime * player.dodgePlayerSpeed);
 
 			player.dodgeCounter += Time.deltaTime;
 			if (player.dodgeCounter >= player.dodgeDuration)

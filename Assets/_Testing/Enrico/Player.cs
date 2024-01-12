@@ -8,23 +8,20 @@ namespace StateMachine
     public class Player : MonoBehaviour
     {
         #region variables and properties
-        //TODO refactoring assolutamente necessario per questo vomito di variabili e proprietà
-
         //linked classes
         public StateMachine stateMachine;
         public PlayerController playerController;
         public CharacterController controller;
         public PalloController heldPallo;
 
-        public string currentState;
+        public string currentState; //debug
 
         //movement
-        public Vector3 playerVelocity;
         [SerializeField] public float playerSpeed = 5f;
         [SerializeField] public float slowPlayerSpeed = 2f;
-        [SerializeField] public float currentPlayerSpeed;
-        public Vector3 movementInput = Vector3.zero;
-        public Vector3 rotationInput = Vector3.zero;
+        [SerializeField] public float dodgePlayerSpeed = 8f;
+        public Vector3 movementInput = Vector3.zero; //TODO put private
+        public Vector3 rotationInput = Vector3.zero; //TODO put private
 
         //throw
         [SerializeField] public float currentChargeTime = 0;

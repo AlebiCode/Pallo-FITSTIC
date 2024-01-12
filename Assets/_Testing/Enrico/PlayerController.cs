@@ -36,8 +36,6 @@ namespace StateMachine
 		private void Start()
         {
             player = gameObject.GetComponent<Player>();
-
-            player.currentPlayerSpeed = player.playerSpeed;
         }
 
         void Update()
@@ -71,8 +69,9 @@ namespace StateMachine
                 player.stateMachine.ChangeState(player.stateMachine.throww);
             }
 
-            if (context.phase == InputActionPhase.Canceled)
+            if (context.phase == InputActionPhase.Canceled && player.stateMachine.currentState == player.stateMachine.throww)
             {
+                player.heldPallo.Throw(player.ThrowVelocity);
                 player.stateMachine.ChangeState(player.stateMachine.move);
             }
         }

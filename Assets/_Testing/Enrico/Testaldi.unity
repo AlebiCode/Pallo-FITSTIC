@@ -20874,8 +20874,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1169982714}
-  - component: {fileID: 1169982722}
+  - component: {fileID: 1169982723}
   - component: {fileID: 1169982721}
+  - component: {fileID: 1169982722}
   - component: {fileID: 1169982720}
   - component: {fileID: 1169982718}
   - component: {fileID: 1169982717}
@@ -21043,14 +21044,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fef8bbf5915cda647b0a8e81781a2b4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerSpeed: 5
-  slowPlayerSpeed: 2
-  currentPlayerSpeed: 0
-  currentChargeTime: 0
-  maxChargeTime: 1
-  maxThrowForce: 10
-  throwHeight: 1.2
-  handsocket: {fileID: 713184208}
 --- !u!114 &1169982722
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21158,10 +21151,42 @@ MonoBehaviour:
     m_ActionId: 45afacd8-1f4c-4094-90bf-ec54c4ebf9b3
     m_ActionName: Gameplay/Dodge[/Keyboard/leftShift]
   m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: Keyboard
+  m_DefaultControlScheme: GamePad
   m_DefaultActionMap: Gameplay
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &1169982723
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1169982713}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d82d52e712dbaa4a82fa0d70ef15b90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerController: {fileID: 0}
+  controller: {fileID: 0}
+  heldPallo: {fileID: 0}
+  currentState: 
+  playerSpeed: 5
+  slowPlayerSpeed: 2
+  dodgePlayerSpeed: 8
+  movementInput: {x: 0, y: 0, z: 0}
+  rotationInput: {x: 0, y: 0, z: 0}
+  currentChargeTime: 0
+  maxChargeTime: 1
+  maxThrowForce: 10
+  throwHeight: 1.2
+  handsocket: {fileID: 0}
+  holdBallCooldown: 0
+  holdBallCooldownDuration: 2
+  dodging: 0
+  dodgeDuration: 0.25
+  dodgeCounter: 0
+  currentHp: 0
 --- !u!1 &1227845319
 GameObject:
   m_ObjectHideFlags: 0
