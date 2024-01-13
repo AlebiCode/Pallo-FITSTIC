@@ -76,9 +76,15 @@ namespace LorenzoCastelli {
                     AttackingState();
                     break;
                 case PLAYERSTATES.GOINGFORBALL:
-                    currentMoveLocationTarget = GameLogic.instance.pallo.transform.position;
-                    ai.SetDestination(currentMoveLocationTarget);
-                    break;
+                    if (!GameLogic.instance.pallo.IsHeld) {
+                        currentMoveLocationTarget = GameLogic.instance.pallo.transform.position;
+                        ai.SetDestination(currentMoveLocationTarget);
+                        break;
+                    } else {
+                        ChangeState(PLAYERSTATES.EMPTYHANDED);
+                        break;
+                    }
+                    
                 case PLAYERSTATES.WITHBALL:
                     if (!currentLookTarget.GetComponent<PalloController>()) {
                         //
@@ -94,17 +100,21 @@ namespace LorenzoCastelli {
                     }
                     break;
                 case PLAYERSTATES.EMPTYHANDED:
-                    if (GameLogic.instance.pallo.IsHeld) {
+                    if ((GameLogic.instance.pallo.IsHeld) && (!currentLookTarget)) {
                         if (GameLogic.instance.GetClosestMostImportantPlayer(playerData)) {
                             //se sono vicino ad uno con la palla decido cosa fare
+                            LookTarget(GameLogic.instance.GetClosestMostImportantPlayer(playerData).gameObject);
                             Coinflip();
                             break;
                         } else {
                             Roam();
                             break;
                         }
-                    } else {
+                    } else if (!GameLogic.instance.pallo.IsHeld) {
                         ChangeState(PLAYERSTATES.GOINGFORBALL);
+                        break;
+                    } else {
+                        Roam();
                         break;
                     }
 
@@ -159,7 +169,9 @@ namespace LorenzoCastelli {
                         currentAttackTime = 0;
                         ChangeState(PLAYERSTATES.EMPTYHANDED);
                         return;
-                    } else if (Vector3.Distance(currentLookTarget.transform.position, transform.position) <= 0.3f) {
+                    }
+                if (Vector3.Distance(currentLookTarget.transform.position, transform.position) <= 0.3f) {
+                    float temp = Vector3.Distance(currentLookTarget.transform.position, transform.position);
                         Debug.Log("Player " + gameObject.name + " Is attacking " + currentLookTarget.name);
                         currentAttackTime = 0;
                         ChangeState(PLAYERSTATES.EMPTYHANDED);
@@ -244,6 +256,7 @@ namespace LorenzoCastelli {
             if (target) {
                 Quaternion _lookRotation = Quaternion.LookRotation((target.transform.position - transform.position).normalized);
                 transform.rotation = Quaternion.Slerp(transform.rotation, _lookRotation, Time.deltaTime * turningSpeed);
+                currentLookTarget = target;
             }
         }
         #endregion

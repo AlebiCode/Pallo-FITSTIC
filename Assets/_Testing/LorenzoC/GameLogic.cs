@@ -168,6 +168,20 @@ namespace LorenzoCastelli {
             playerInGame = tmp;
         }*/
 
+
+        public bool IsPlayerClose(PlayerData caller, PlayerData otherPlayer) {
+            if (otherPlayer.GetComponent<PlayerData>()) {
+                PlayerData close = playerInGame.Find(player => player == otherPlayer);
+                if (close) {
+                    if (Vector3.Distance(close.gameObject.transform.position, caller.gameObject.transform.position) <= 0.5f) {
+                        return true;
+                    }
+                       
+                    }
+                }
+            return false;
+            }
+
         public PlayerData GetClosestMostImportantPlayer(PlayerData player) {
             float distance = player.lookDistance;
             int maxImportance = 0;
