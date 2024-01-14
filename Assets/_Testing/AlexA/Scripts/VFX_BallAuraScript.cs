@@ -10,12 +10,13 @@ public class VFX_BallAuraScript : MonoBehaviour
 
     private GameObject vfx_BallAuraCapsule;
     private GameObject vfx_BallAuraTrail;
+    private GameObject myPallo;
 
-    private PalloController myPallo;
+    private PalloController myPalloScript;
 
     private void OnDisable()
     {
-        myPallo.OnStateChange.RemoveListener(OnChangeBallState);
+        myPalloScript.OnStateChange.RemoveListener(OnChangeBallState);
     }
 
     private void Start()
@@ -27,8 +28,9 @@ public class VFX_BallAuraScript : MonoBehaviour
     {
         vfx_BallAuraCapsule = GetComponentInChildren<GameObject>();
         vfx_BallAuraTrail = vfx_BallAuraCapsule.GetComponentInChildren<GameObject>();
-        myPallo = transform.parent.GetComponent<PalloController>();
-        myPallo.OnStateChange.AddListener(OnChangeBallState);
+        myPallo = transform.parent.gameObject;
+        myPalloScript = myPallo.GetComponent<PalloController>();
+        myPalloScript.OnStateChange.AddListener(OnChangeBallState);
     }
 
     private void CheckLevel(int level) 
@@ -59,16 +61,17 @@ public class VFX_BallAuraScript : MonoBehaviour
 
     private void OnChangeBallState(PalloController.BallStates state) 
     { 
-        if(state != PalloController.BallStates.thrown) 
+        if(state == PalloController.BallStates.thrown) 
         {
-            vfx_BallAuraCapsule.SetActive(false);
-            vfx_BallAuraTrail.SetActive(false);
+            Vector3 direction;
+            CheckLevel(myPalloScript.SpeedTier);
+            direction = gameObject.transform.InverseTransformDirection(myPallo.GetComponent<Rigidbody>().velocity);
+            transform.forward = direction;
+            vfx_BallAuraCapsule.SetActive(true);
         }
         else 
         {
-            CheckLevel(myPallo.SpeedTier);
-            vfx_BallAuraCapsule.SetActive(true);
-            vfx_BallAuraTrail.SetActive(true);
+            vfx_BallAuraCapsule.SetActive(false);
         }
     }
 }
