@@ -5,6 +5,9 @@ using Controllers;
 
 namespace StateMachine
 {
+    [RequireComponent(typeof(PlayerController))]
+    [RequireComponent(typeof(Animator))]
+
     public class Player : MonoBehaviour
     {
         #region variables and properties
@@ -17,13 +20,15 @@ namespace StateMachine
         public CharacterController controller;
         public Transform handsocket;
         public PalloController heldPallo;
+        public Camera mainCamera;
+        public bool usingGamePad;
 
         //movement
-        [SerializeField] public float playerSpeed = 5f;
-        [SerializeField] public float slowPlayerSpeed = 2f;
-        [SerializeField] public float dodgePlayerSpeed = 13f;
-        public Vector3 movementInput = Vector3.zero; //TODO put private
-        public Vector3 rotationInput = Vector3.zero; //TODO put private
+        public float playerSpeed = 5f;
+        public float dodgePlayerSpeed = 30f;
+        public Vector2 movementInput = Vector2.zero;
+        public Vector2 rotationInput = Vector2.zero;
+        public Vector3 MovementDirectionFromInput => new Vector3(movementInput.x, 0, movementInput.y);
 
         //throw
         [SerializeField] public float currentChargeTime = 0;
@@ -35,10 +40,9 @@ namespace StateMachine
         public float MinThrowForce => PalloController.SPEED_TIERS[1];
 
         //dodge
-        public Vector3 dodgeDirection;
-        public float dodgeCurrentSpeed = 0f;
-        public float dodgeMaxDuration = .5f;
-        public float dodgeCurrentTime = 0f;
+        public float dodgeMaxDuration = .6f;
+        public float dodgeCooldownTimer = 1f;
+        public float dodgeCurrentCooldown = 0f;
 
         //hp
         public int currentHp;
@@ -76,13 +80,20 @@ namespace StateMachine
             stateMachine = new StateMachine(this);
 
             GetComponent<PalloTrigger>().AddOnEnterListener(PalloContact);
-            controller = gameObject.GetComponent<CharacterController>();
             playerController = gameObject.GetComponent<PlayerController>();
+            controller = gameObject.GetComponent<CharacterController>();
+            mainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
         }
 
         void Update()
         {
             stateMachine.currentState?.Update();
+        }
+
+        public void LookAt(Vector3 lookPoint)
+        {
+            Vector3 heightCorrectedPoint = new Vector3(lookPoint.x, transform.position.y, lookPoint.z);
+            transform.LookAt(heightCorrectedPoint);
         }
 
         private void PalloContact(PalloController pallo)

@@ -8,9 +8,9 @@ public class VFX_BallAuraScript : MonoBehaviour
     [SerializeField] private List<Material> capsuleMaterials;
     [SerializeField] private List<Material> trailMaterials;
 
-    private GameObject vfx_BallAuraCapsule;
-    private GameObject vfx_BallAuraTrail;
-    private GameObject myPallo;
+    [SerializeField] private GameObject vfx_BallAuraCapsule;
+    [SerializeField] private GameObject vfx_BallAuraTrail;
+    [SerializeField] private GameObject myPallo;
 
     private PalloController myPalloScript;
 
@@ -19,18 +19,30 @@ public class VFX_BallAuraScript : MonoBehaviour
         myPalloScript.OnStateChange.RemoveListener(OnChangeBallState);
     }
 
+    private void OnEnable()
+    {
+        if (!myPalloScript) 
+        {
+            myPallo = transform.parent.gameObject;
+            myPalloScript = myPallo.GetComponent<PalloController>();
+        }
+        else
+            myPalloScript.OnStateChange.AddListener(OnChangeBallState);
+    }
+
     private void Start()
     {
-        Init();    
+        Init();
     }
 
     private void Init() 
     {
-        vfx_BallAuraCapsule = GetComponentInChildren<GameObject>();
-        vfx_BallAuraTrail = vfx_BallAuraCapsule.GetComponentInChildren<GameObject>();
         myPallo = transform.parent.gameObject;
         myPalloScript = myPallo.GetComponent<PalloController>();
         myPalloScript.OnStateChange.AddListener(OnChangeBallState);
+        vfx_BallAuraCapsule = transform.GetChild(0).gameObject;
+        vfx_BallAuraTrail = vfx_BallAuraCapsule.transform.GetChild(0).gameObject;
+        
     }
 
     private void CheckLevel(int level) 
@@ -39,33 +51,35 @@ public class VFX_BallAuraScript : MonoBehaviour
         {
             case 0:
                 vfx_BallAuraCapsule.GetComponent<ParticleSystemRenderer>().material = capsuleMaterials[0];
-                vfx_BallAuraTrail.GetComponent<ParticleSystemRenderer>().material = trailMaterials[0];
+                vfx_BallAuraTrail.GetComponent<TrailRenderer>().material = trailMaterials[0];
                 break;
 
             case 1:
                 vfx_BallAuraCapsule.GetComponent<ParticleSystemRenderer>().material = capsuleMaterials[1];
-                vfx_BallAuraTrail.GetComponent<ParticleSystemRenderer>().material = trailMaterials[1];
+                vfx_BallAuraTrail.GetComponent<TrailRenderer>().material = trailMaterials[1];
                 break;
 
             case 2:
                 vfx_BallAuraCapsule.GetComponent<ParticleSystemRenderer>().material = capsuleMaterials[2];
-                vfx_BallAuraTrail.GetComponent<ParticleSystemRenderer>().material = trailMaterials[2];
+                vfx_BallAuraTrail.GetComponent<TrailRenderer>().material = trailMaterials[2];
                 break;
 
             case 3:
                 vfx_BallAuraCapsule.GetComponent<ParticleSystemRenderer>().material = capsuleMaterials[3];
-                vfx_BallAuraTrail.GetComponent<ParticleSystemRenderer>().material = trailMaterials[3];
+                vfx_BallAuraTrail.GetComponent<TrailRenderer>().material = trailMaterials[3];
                 break;
         }
     }
 
     private void OnChangeBallState(PalloController.BallStates state) 
-    { 
+    {
+        Debug.Log(state);
         if(state == PalloController.BallStates.thrown) 
         {
             Vector3 direction;
             CheckLevel(myPalloScript.SpeedTier);
             direction = gameObject.transform.InverseTransformDirection(myPallo.GetComponent<Rigidbody>().velocity);
+            Debug.LogWarning(direction);
             transform.forward = direction;
             vfx_BallAuraCapsule.SetActive(true);
         }
