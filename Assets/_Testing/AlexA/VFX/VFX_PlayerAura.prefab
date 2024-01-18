@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &5358039091763193097
 Transform:
   m_ObjectHideFlags: 0
@@ -4821,7 +4821,7 @@ ParticleSystemRenderer:
   m_VertexStreams: 000103040522
   m_UseCustomTrailVertexStreams: 0
   m_TrailVertexStreams: 00010304
-  m_Mesh: {fileID: -2124705421725058983, guid: 1268d11758d1f0c47815de4754d4df6f, type: 3}
+  m_Mesh: {fileID: 4711208715938537054, guid: 149795f1d3a32914697e1e31cb23b0e9, type: 3}
   m_Mesh1: {fileID: 0}
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
@@ -4898,7 +4898,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4014602413874261889
 Transform:
   m_ObjectHideFlags: 0
@@ -9702,7 +9702,7 @@ ParticleSystemRenderer:
   m_VertexStreams: 000103040522
   m_UseCustomTrailVertexStreams: 0
   m_TrailVertexStreams: 00010304
-  m_Mesh: {fileID: 4711208715938537054, guid: 4cbd986adebcdff4993c8c3a752a8ad5, type: 3}
+  m_Mesh: {fileID: 70948873267775455, guid: 649efb32c1b48674db6466b81ae08397, type: 3}
   m_Mesh1: {fileID: 0}
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
