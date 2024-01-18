@@ -16,8 +16,8 @@ namespace VFX
 
         private Player myPlayer;
 
-        private float maxSize;
-        private float minSize;
+        [SerializeField]private float maxSize;
+        [SerializeField]private float minSize;
         private float currentSize;
         private bool isCharging;
 
@@ -98,8 +98,8 @@ namespace VFX
         private void OnChargingUpdate() 
         {
             if (isCharging) 
-            { 
-                vfx_PlayerAuraCapsule.transform.DOScale(maxSize, myPlayer.maxChargeTime);
+            {
+                vfx_PlayerAuraCapsule.transform.localScale = Vector3.Lerp(Vector3.one * minSize, Vector3.one * maxSize, myPlayer.maxChargeTime);
             }
         }
 
