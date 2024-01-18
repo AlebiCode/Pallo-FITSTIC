@@ -4,8 +4,9 @@ using Controllers;
 
 namespace StateMachine
 {
-    [RequireComponent(typeof(CharacterController))]
+    [RequireComponent(typeof(PlayerInput))]
     [RequireComponent(typeof(Rigidbody))]
+    [RequireComponent(typeof(CharacterController))]
 
     public class PlayerController : MonoBehaviour
     {
