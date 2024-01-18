@@ -17,6 +17,7 @@ namespace Controllers
 
         [SerializeField] private PalloTrigger parryHitbox;
         [SerializeField] private Transform handsocket;
+        [SerializeField] private PlayerAnimation playerAnimation;
 
         public bool playerIsBeingRejected = false;
 
@@ -57,9 +58,17 @@ namespace Controllers
             BallThrow();
 
             if (Input.GetKeyDown(KeyCode.Mouse1))
+            {
+                playerAnimation.SetLayerWeight(1, 1);
+                playerAnimation.PlayAnimation(PlayerAnimation.takeIntro);
                 parryHitbox.SetActivationStatus(true);
+            }
             else if (Input.GetKeyUp(KeyCode.Mouse1))
+            {
+                playerAnimation.SetLayerWeight(1, 1);
+                playerAnimation.PlayAnimation(IsHoldingBall ? PlayerAnimation.takeOutroBall : PlayerAnimation.takeOutroNoBall);
                 parryHitbox.SetActivationStatus(false);
+            }
         }
 
        
@@ -69,6 +78,10 @@ namespace Controllers
             directionInput.y = Input.GetAxis("Vertical");
 
             transform.position += new Vector3(directionInput.x, 0, directionInput.y) * speed * Time.deltaTime;
+
+            //playerAnimation.SetLegLayerWeight(directionInput.magnitude);
+            Vector3 relativeDir = transform.InverseTransformDirection(directionInput);
+            playerAnimation.LegMovementParameters(relativeDir);
         }
         private void PlayerRotation()
         {
@@ -87,6 +100,7 @@ namespace Controllers
             {
                 heldPallo.Throw(transform.forward * (MinThrowForce + (Mathf.Min(throwChargeTime, maxChargeTime) * (maxThrowForce - MinThrowForce) / maxChargeTime)) + Vector3.up * 1.2f);
                 heldPallo = null;
+                playerAnimation.SetLayerWeight(1, 0);
             }
             else if (Input.GetKey(KeyCode.Mouse0))
             {
@@ -125,6 +139,8 @@ namespace Controllers
             heldPallo = palloController;
             throwChargeTime = 0;
             heldPallo.Hold(handsocket);
+
+            playerAnimation.SetLayerWeight(1, 1);
         }
 
         private float velocityChange = 0;
