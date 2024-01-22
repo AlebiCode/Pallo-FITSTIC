@@ -25,10 +25,12 @@ namespace StateMachine
 
         //movement
         public float playerSpeed = 5f;
+        public float slowPlayerSpeed = 2f;
         public float dodgePlayerSpeed = 30f;
         public Vector2 movementInput = Vector2.zero;
         public Vector2 rotationInput = Vector2.zero;
-        public Vector3 MovementDirectionFromInput => new Vector3(movementInput.x, 0, movementInput.y);
+        public Vector3 MovementDirectionFromInput => new Vector3(movementInput.x, 0, movementInput.y).normalized;
+        public Vector3 RotationDirectionFromInput => new Vector3(rotationInput.x, 0, rotationInput.y);
 
         //throw
         [SerializeField] public float currentChargeTime = 0;

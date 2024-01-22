@@ -45,14 +45,14 @@ namespace StateMachine
 
 		private void HandleRotation()
 		{
-			if (player.rotationInput != Vector3.zero)
+			if (player.RotationDirectionFromInput != Vector3.zero)
 			{
-				Vector3 rotationVector = player.transform.position + player.rotationInput;
+				Vector3 rotationVector = player.transform.position + player.RotationDirectionFromInput;
 				player.transform.LookAt(rotationVector, Vector3.up);
 			}
-			else if (player.movementInput != Vector3.zero)
+			else if (player.MovementDirectionFromInput != Vector3.zero)
 			{
-				Vector3 moveVector = player.transform.position + player.movementInput;
+				Vector3 moveVector = player.transform.position + player.MovementDirectionFromInput;
 				player.transform.LookAt(moveVector, Vector3.up);
 			}
 		}
