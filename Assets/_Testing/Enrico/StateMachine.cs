@@ -12,7 +12,7 @@ namespace StateMachine
 
 		public State_IDLE idle;
 		public State_MOVE move;
-		public State_AIMTHROW aimthrow; //throw is a keyword, have to use throww
+		public State_AIMTHROW aimthrow;
 		public State_DODGE dodge;
 		public State_PARRY parry;
 		public State_STUN stun;
@@ -45,7 +45,7 @@ namespace StateMachine
 			currentState.Exit();
 			previousState = currentState;
 			currentState = state;
-			player.currentState = currentState.ToString();
+			player.currentState = currentState.ToString(); //debug
 			currentState.Enter();
 		}
 	}

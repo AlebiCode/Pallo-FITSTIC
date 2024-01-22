@@ -16,16 +16,21 @@ namespace StateMachine
 		public bool CanMove =>  player.stateMachine.currentState == player.stateMachine.idle;
 
         public bool CanThrow => player.IsHoldingBall &&
-                                (player.stateMachine.currentState == player.stateMachine.move);
+                                (player.stateMachine.currentState == player.stateMachine.idle ||
+                                 player.stateMachine.currentState == player.stateMachine.move);
 
-        public bool CanDodge => player.stateMachine.currentState == player.stateMachine.move;
+        public bool CanDodge => 
+                                (player.stateMachine.currentState == player.stateMachine.idle ||
+                                 player.stateMachine.currentState == player.stateMachine.move);
 
         public bool CanParry => !player.IsHoldingBall &&
-                                (player.stateMachine.currentState == player.stateMachine.move);
+                                (player.stateMachine.currentState == player.stateMachine.idle ||
+                                 player.stateMachine.currentState == player.stateMachine.move);
 
-        public bool CanStun =>  player.stateMachine.currentState == player.stateMachine.move    ||
-                                player.stateMachine.currentState == player.stateMachine.aimthrow  ||
-                                player.stateMachine.currentState == player.stateMachine.dodge   ||
+        public bool CanStun =>  player.stateMachine.currentState == player.stateMachine.idle     ||
+                                player.stateMachine.currentState == player.stateMachine.move     ||
+                                player.stateMachine.currentState == player.stateMachine.aimthrow ||
+                                player.stateMachine.currentState == player.stateMachine.dodge    ||
                                 player.stateMachine.currentState == player.stateMachine.parry;
 
 		#endregion

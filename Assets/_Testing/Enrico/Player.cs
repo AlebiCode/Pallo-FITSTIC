@@ -24,12 +24,13 @@ namespace StateMachine
         public bool usingGamePad;
 
         //movement
+        public float controllerDeadzone = 0.1f;
         public float regularSpeed = 5f;
         public float slowSpeed = 2f;
         public float dodgeSpeed = 15f;
         public Vector2 movementInput = Vector2.zero;
         public Vector2 rotationInput = Vector2.zero;
-        public Vector3 MovementDirectionFromInput => new Vector3(movementInput.x, 0, movementInput.y).normalized;
+
         private float rotateSmoothing = 3f;
 
         //throw
@@ -39,7 +40,6 @@ namespace StateMachine
         [SerializeField] public float throwHeight = 1.2f;
         [SerializeField] public float holdBallCooldown = 0;
         [SerializeField] public float holdBallCooldownDuration = 2f;
-        public float MinThrowForce => PalloController.SPEED_TIERS[1];
 
         //dodge
         public float dodgeMaxDuration = .6f;
@@ -62,8 +62,14 @@ namespace StateMachine
         }
 
         //properties
+
+        public Vector3 MovementDirectionFromInput => new Vector3(movementInput.x, 0, movementInput.y).normalized;
+        private bool GottaMove => Mathf.Abs(movementInput.x) > controllerDeadzone ||
+                                 Mathf.Abs(movementInput.y) > controllerDeadzone ||
+                                 stateMachine.currentState == stateMachine.dodge ||
+                                 stateMachine.currentState == stateMachine.stun;
         public bool IsHoldingBall => heldPallo;
-        public bool IsChargingShot => currentChargeTime != 0;
+        public float MinThrowForce => PalloController.SPEED_TIERS[1];
         public Vector3 ThrowVelocity
         {
             get
@@ -77,7 +83,7 @@ namespace StateMachine
 
         #endregion
 
-        void Start()
+        void Awake()
         {
             stateMachine = new StateMachine(this);
 
@@ -85,6 +91,7 @@ namespace StateMachine
             playerController = gameObject.GetComponent<PlayerController>();
             controller = gameObject.GetComponent<CharacterController>();
             mainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
+            handsocket = GameObject.Find("HandSocket").GetComponentInChildren<Transform>(); 
         }
 
         void Update()
@@ -96,7 +103,10 @@ namespace StateMachine
 
 		public void HandleMovement(Vector3 direction, float speed)
         {
-            controller.Move(direction * speed * Time.deltaTime);
+            if (GottaMove)
+			{
+                controller.Move(direction * speed * Time.deltaTime);
+            }
         }
 
         public void HandleRotation()
@@ -113,7 +123,7 @@ namespace StateMachine
 
         private void GamepadRotation()
         {
-            if (Mathf.Abs(rotationInput.x) > 0 || Mathf.Abs(rotationInput.y) > 0) // forse > controllerDeadzone invece di > 0?
+            if (Mathf.Abs(rotationInput.x) > controllerDeadzone || Mathf.Abs(rotationInput.y) > controllerDeadzone)
             {
                 Vector3 playerDirection = Vector3.right * rotationInput.x + Vector3.forward * rotationInput.y;
                 if (playerDirection.sqrMagnitude > 0.0f)
@@ -122,7 +132,7 @@ namespace StateMachine
                     transform.rotation = Quaternion.RotateTowards(transform.rotation, newRotation, rotateSmoothing * Time.deltaTime);
                 }
             }
-            else if (movementInput != Vector2.zero)
+            else if (Mathf.Abs(movementInput.x) > controllerDeadzone || Mathf.Abs(movementInput.y) > controllerDeadzone)
             {
                 transform.LookAt(transform.position + MovementDirectionFromInput, Vector3.up);
             }

@@ -18,7 +18,7 @@ namespace StateMachine
 		public override void Enter()
 		{
 			base.Enter();
-			dodgeDirection = player.MovementDirectionFromInput;
+			dodgeDirection = player.transform.forward;
 			player.transform.LookAt(player.transform.position + dodgeDirection, Vector3.up);
 			dodgeCurrentSpeed = player.dodgeSpeed;
 			dodgeCurrentTime = player.dodgeMaxDuration;
@@ -48,5 +48,4 @@ namespace StateMachine
 			dodgeCurrentSpeed -= 2 * Time.deltaTime;
 		}
 	}
-
 }

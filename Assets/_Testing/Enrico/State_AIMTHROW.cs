@@ -24,8 +24,6 @@ namespace StateMachine
 			player.heldPallo = null;
 			player.currentChargeTime = 0;
 			player.holdBallCooldown = player.holdBallCooldownDuration;
-
-			Debug.Log("Throw complete");
 		}
 
 		public override void Update()

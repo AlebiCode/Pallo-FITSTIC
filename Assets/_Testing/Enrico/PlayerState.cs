@@ -5,7 +5,7 @@ using UnityEngine;
 namespace StateMachine
 {
 	public delegate void PlayerEvent(Player player);
-	public abstract class PlayerState : IState
+	public abstract class PlayerState
 	{
 		public event PlayerEvent OnEnter;
 		public event PlayerEvent OnExit;
@@ -14,7 +14,6 @@ namespace StateMachine
 		public PlayerState(Player player)
 		{
 			this.player = player;
-
 		}
 
 		public virtual void Enter()
