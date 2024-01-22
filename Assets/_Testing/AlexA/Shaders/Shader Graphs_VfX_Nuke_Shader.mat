@@ -64,7 +64,7 @@ Material:
     - _SimpleNoise: 69.3
     - _SrcBlend: 1
     - _Surface: 0
-    - _VertexOffset: 0.75
+    - _VertexOffset: 0
     - _ZTest: 4
     - _ZWrite: 1
     - _ZWriteControl: 0
