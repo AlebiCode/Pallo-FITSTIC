@@ -24,13 +24,13 @@ namespace StateMachine
         public bool usingGamePad;
 
         //movement
-        public float playerSpeed = 5f;
-        public float slowPlayerSpeed = 2f;
-        public float dodgePlayerSpeed = 30f;
+        public float regularSpeed = 5f;
+        public float slowSpeed = 2f;
+        public float dodgeSpeed = 15f;
         public Vector2 movementInput = Vector2.zero;
         public Vector2 rotationInput = Vector2.zero;
         public Vector3 MovementDirectionFromInput => new Vector3(movementInput.x, 0, movementInput.y).normalized;
-        public Vector3 RotationDirectionFromInput => new Vector3(rotationInput.x, 0, rotationInput.y);
+        private float rotateSmoothing = 3f;
 
         //throw
         [SerializeField] public float currentChargeTime = 0;
@@ -92,6 +92,56 @@ namespace StateMachine
             stateMachine.currentState?.Update();
         }
 
+		#region helper methods
+
+		public void HandleMovement(Vector3 direction, float speed)
+        {
+            controller.Move(direction * speed * Time.deltaTime);
+        }
+
+        public void HandleRotation()
+        {
+            if (usingGamePad)
+            {
+                GamepadRotation();
+            }
+            else
+            {
+                KeyboardRotation();
+            }
+        }
+
+        private void GamepadRotation()
+        {
+            if (Mathf.Abs(rotationInput.x) > 0 || Mathf.Abs(rotationInput.y) > 0) // forse > controllerDeadzone invece di > 0?
+            {
+                Vector3 playerDirection = Vector3.right * rotationInput.x + Vector3.forward * rotationInput.y;
+                if (playerDirection.sqrMagnitude > 0.0f)
+                {
+                    Quaternion newRotation = Quaternion.LookRotation(playerDirection, Vector3.up);
+                    transform.rotation = Quaternion.RotateTowards(transform.rotation, newRotation, rotateSmoothing * Time.deltaTime);
+                }
+            }
+            else if (movementInput != Vector2.zero)
+            {
+                transform.LookAt(transform.position + MovementDirectionFromInput, Vector3.up);
+            }
+        }
+
+        private void KeyboardRotation()
+        {
+            Ray cameraRay = mainCamera.ScreenPointToRay(rotationInput);
+            Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
+            float rayLength;
+
+            if (groundPlane.Raycast(cameraRay, out rayLength))
+            {
+                Vector3 pointToLook = cameraRay.GetPoint(rayLength);
+                Debug.DrawLine(cameraRay.origin, pointToLook, Color.red);
+                LookAt(pointToLook);
+            }
+        }
+
         public void LookAt(Vector3 lookPoint)
         {
             Vector3 heightCorrectedPoint = new Vector3(lookPoint.x, transform.position.y, lookPoint.z);
@@ -121,13 +171,17 @@ namespace StateMachine
             }
         }
 
-        //TODO trasformare in unityEvent
+
         public void KillPlayer()
         {
+            //TODO trasformare in unityEvent
+
             Debug.Log("player is killed!");
             //TODO rimuovi destroy e togli una vita
             Destroy(this.gameObject);
         }
-    }
+
+		#endregion
+	}
 }
 

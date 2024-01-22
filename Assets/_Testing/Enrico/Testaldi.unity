@@ -21577,6 +21577,12 @@ Transform:
   - {fileID: 2067484032}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &1861360574 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6776094235086696806, guid: 70a95a6770f4180438a7696aaaea4a4d,
+    type: 3}
+  m_PrefabInstance: {fileID: 7453756835658024433}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1943053803
 GameObject:
   m_ObjectHideFlags: 0
@@ -24915,6 +24921,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3190273712004053839, guid: 70a95a6770f4180438a7696aaaea4a4d,
+        type: 3}
+      propertyPath: dodgeSpeed
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 3190273712004053839, guid: 70a95a6770f4180438a7696aaaea4a4d,
+        type: 3}
+      propertyPath: handsocket
+      value: 
+      objectReference: {fileID: 1861360574}
+    - target: {fileID: 3190273712004053839, guid: 70a95a6770f4180438a7696aaaea4a4d,
+        type: 3}
+      propertyPath: dodgeMaxDuration
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 3432618987493807280, guid: 70a95a6770f4180438a7696aaaea4a4d,
         type: 3}

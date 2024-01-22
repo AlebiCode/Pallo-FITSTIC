@@ -12,14 +12,15 @@ namespace StateMachine
 
 		public State_DODGE(Player owner) : base(owner)
 		{
-			dodgeCurrentSpeed = player.dodgePlayerSpeed;
+
 		}
 
 		public override void Enter()
 		{
 			base.Enter();
 			dodgeDirection = player.MovementDirectionFromInput;
-			dodgeCurrentSpeed = player.dodgePlayerSpeed;
+			player.transform.LookAt(player.transform.position + dodgeDirection, Vector3.up);
+			dodgeCurrentSpeed = player.dodgeSpeed;
 			dodgeCurrentTime = player.dodgeMaxDuration;
 		}
 
@@ -41,7 +42,7 @@ namespace StateMachine
 
 		private void Dodge()
 		{
-			player.controller.Move(dodgeDirection * Time.deltaTime * dodgeCurrentSpeed);
+			player.HandleMovement(dodgeDirection, dodgeCurrentSpeed);
 
 			dodgeCurrentTime -= 2 * Time.deltaTime;
 			dodgeCurrentSpeed -= 2 * Time.deltaTime;
