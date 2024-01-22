@@ -653,7 +653,7 @@ PrefabInstance:
     - target: {fileID: 5444666323427859797, guid: 67c60c4e2a48fdf429e7ae94a58b04c8,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.12
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5444666323427859797, guid: 67c60c4e2a48fdf429e7ae94a58b04c8,
         type: 3}
@@ -24940,7 +24940,7 @@ PrefabInstance:
     - target: {fileID: 3432618987493807280, guid: 70a95a6770f4180438a7696aaaea4a4d,
         type: 3}
       propertyPath: m_DefaultControlScheme
-      value: GamePad
+      value: Keyboard
       objectReference: {fileID: 0}
     - target: {fileID: 5182468902345241891, guid: 70a95a6770f4180438a7696aaaea4a4d,
         type: 3}

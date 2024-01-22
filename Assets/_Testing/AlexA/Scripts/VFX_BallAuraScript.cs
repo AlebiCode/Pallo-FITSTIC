@@ -97,7 +97,7 @@ public class VFX_BallAuraScript : MonoBehaviour
 
             if (currentPosition - previousPosition != Vector3.zero)
             {
-                transform.forward = currentPosition - previousPosition;
+                transform.forward = previousPosition - currentPosition;
             }
         }
     }
