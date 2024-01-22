@@ -13,11 +13,7 @@ namespace StateMachine
         private Player player;
 
 		#region properties
-		public bool CanMove =>  player.stateMachine.currentState == player.stateMachine.idle    ||
-                                player.stateMachine.currentState == player.stateMachine.throww  ||
-                                player.stateMachine.currentState == player.stateMachine.dodge   ||
-                                player.stateMachine.currentState == player.stateMachine.parry   ||
-                                player.stateMachine.currentState == player.stateMachine.stun;
+		public bool CanMove =>  player.stateMachine.currentState == player.stateMachine.idle;
 
         public bool CanThrow => player.IsHoldingBall &&
                                 (player.stateMachine.currentState == player.stateMachine.move);
@@ -28,7 +24,7 @@ namespace StateMachine
                                 (player.stateMachine.currentState == player.stateMachine.move);
 
         public bool CanStun =>  player.stateMachine.currentState == player.stateMachine.move    ||
-                                player.stateMachine.currentState == player.stateMachine.throww  ||
+                                player.stateMachine.currentState == player.stateMachine.aimthrow  ||
                                 player.stateMachine.currentState == player.stateMachine.dodge   ||
                                 player.stateMachine.currentState == player.stateMachine.parry;
 
@@ -50,6 +46,14 @@ namespace StateMachine
         public void OnMove(InputAction.CallbackContext context)
         {
             player.movementInput = context.ReadValue<Vector2>();
+
+            if (CanMove)
+                player.stateMachine.ChangeState(player.stateMachine.move);
+
+            if (context.phase == InputActionPhase.Canceled && player.stateMachine.currentState == player.stateMachine.move)
+			{
+                player.stateMachine.ChangeState(player.stateMachine.idle);
+            }
         }
 
         public void OnRotation(InputAction.CallbackContext context)
@@ -60,14 +64,12 @@ namespace StateMachine
         public void OnThrow(InputAction.CallbackContext context)
         {
             if (CanThrow)
-            {
-                player.stateMachine.ChangeState(player.stateMachine.throww);
-            }
+                player.stateMachine.ChangeState(player.stateMachine.aimthrow);
 
-            if (context.phase == InputActionPhase.Canceled && player.stateMachine.currentState == player.stateMachine.throww)
+            if (context.phase == InputActionPhase.Canceled && player.stateMachine.currentState == player.stateMachine.aimthrow)
             {
                 player.heldPallo.Throw(player.ThrowVelocity);
-                player.stateMachine.ChangeState(player.stateMachine.move);
+                player.stateMachine.ChangeState(player.stateMachine.idle);
             }
         }
 

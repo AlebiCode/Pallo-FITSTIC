@@ -37,7 +37,7 @@ namespace StateMachine
 			Dodge();
 
 			if (dodgeCurrentTime <= 0)
-				player.stateMachine.ChangeState(player.stateMachine.move);
+				player.stateMachine.ChangeState(player.stateMachine.idle);
 		}
 
 		private void Dodge()

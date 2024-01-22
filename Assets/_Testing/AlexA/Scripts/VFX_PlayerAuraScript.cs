@@ -41,8 +41,8 @@ namespace VFX
 
         private void OnDisable()
         {
-            myPlayer.stateMachine.throww.OnEnter -= OnChargingStarted;
-            myPlayer.stateMachine.throww.OnExit -= OnChargingCancelled;
+            myPlayer.stateMachine.aimthrow.OnEnter -= OnChargingStarted;
+            myPlayer.stateMachine.aimthrow.OnExit -= OnChargingCancelled;
         }
 
         private void Update()
@@ -58,8 +58,8 @@ namespace VFX
         private void Init()
         {
             myPlayer = gameObject.GetComponentInParent<Player>();
-            myPlayer.stateMachine.throww.OnEnter += OnChargingStarted;
-            myPlayer.stateMachine.throww.OnExit += OnChargingCancelled;
+            myPlayer.stateMachine.aimthrow.OnEnter += OnChargingStarted;
+            myPlayer.stateMachine.aimthrow.OnExit += OnChargingCancelled;
             vfx_PlayerAuraCapsule = transform.Find("PlayerAuraCapsule").gameObject;
             vfx_PlayerAuraBase = transform.Find("PlayerAuraBase").gameObject;
         }

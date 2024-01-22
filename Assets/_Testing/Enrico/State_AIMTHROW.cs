@@ -4,9 +4,9 @@ using UnityEngine;
 
 namespace StateMachine
 {
-	public class State_THROW : PlayerState
+	public class State_AIMTHROW : PlayerState
 	{
-		public State_THROW(Player owner) : base(owner)
+		public State_AIMTHROW(Player owner) : base(owner)
 		{
 
 		}

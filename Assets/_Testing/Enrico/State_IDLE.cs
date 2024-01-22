@@ -14,6 +14,9 @@ namespace StateMachine
 		public override void Enter()
 		{
 			base.Enter();
+
+			if (player.movementInput != Vector2.zero)
+				player.stateMachine.ChangeState(player.stateMachine.move);
 		}
 
 		public override void Exit()
@@ -24,7 +27,8 @@ namespace StateMachine
 		public override void Update()
 		{
 			base.Update();
-			player.stateMachine.ChangeState(player.stateMachine.move);
+
+			player.HandleRotation();
 		}
 	}
 }
