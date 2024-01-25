@@ -24,6 +24,8 @@ namespace Controllers
 
         public enum BallStates { held, thrown, bouncing }
 
+        PlayerData playerHolding = null;
+
         [Header("Components")]
         [SerializeField] private new SphereCollider collider;
         [SerializeField] private new Rigidbody rigidbody;
@@ -47,6 +49,7 @@ namespace Controllers
         public int SpeedTier => speedTier;
         public BallStates GetBallState => ballState;
         public bool IsHeld => ballState == BallStates.held;
+        public PlayerData PlayerHoldingIt => playerHolding;
         public bool CollisionsActive => enabled;
         private float HorizontalVelocityMagnitude => new Vector2(velocity.x, velocity.y).magnitude;
         private BallStates BallState

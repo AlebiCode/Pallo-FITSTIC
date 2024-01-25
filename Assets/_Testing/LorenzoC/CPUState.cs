@@ -33,6 +33,7 @@ public abstract class  CPUState
 public enum NEWPLAYERSTATES {
     IDLE,
     GOINGFORBALL,
+    CHASING,
     ATTACKING,
     BACKINGOFF,
     RAGDOLL,

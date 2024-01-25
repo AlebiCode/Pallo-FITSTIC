@@ -12,7 +12,7 @@ namespace LorenzoCastelli {
         public PlayerData player;
         public CPUStateMachine stateMachine;
         [SerializeField] private NEWPLAYERSTATES state;
-        private NavMeshAgent agent;
+        private NavMeshAgent ai;
         /*[SerializeField] private EnemyStatistics stats;
         [SerializeField] private Animator animator;
         [SerializeField] private Attack attack;
@@ -30,17 +30,18 @@ namespace LorenzoCastelli {
         //public Animator Animator => animator;
 
         public NEWPLAYERSTATES State { get => state; set => state = value; }
-        public NavMeshAgent Agent { get => agent; set => agent = value; }
+        public NavMeshAgent Ai { get => ai; set => ai = value; }
 
         #endregion
 
 
 
         private void Awake() {
-            Agent = GetComponent<NavMeshAgent>();
+            Ai = GetComponent<NavMeshAgent>();
             Dictionary<NEWPLAYERSTATES, CPUState> dict = new() {
                 { NEWPLAYERSTATES.IDLE, new CPU_Idle(this) },
                 { NEWPLAYERSTATES.GOINGFORBALL, new CPU_GoingForBall(this) },
+                { NEWPLAYERSTATES.CHASING, new CPU_Chasing(this) },
                 { NEWPLAYERSTATES.ATTACKING, new CPU_Attacking(this) },
                 { NEWPLAYERSTATES.BACKINGOFF, new CPU_BackingOff(this) },
                 { NEWPLAYERSTATES.BACKINGOFF, new CPU_Death(this) }

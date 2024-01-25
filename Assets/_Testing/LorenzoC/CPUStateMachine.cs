@@ -7,26 +7,25 @@ namespace LorenzoCastelli {
 
 public class CPUStateMachine : MonoBehaviour
 {
-        private GameLogic instance;
         private Dictionary<NEWPLAYERSTATES, CPUState> stateDictionary;
         private CPUState currentState;
         private CPUBehaviour owner;
 
+
         #region Context Variables
         private Vector3 lastPositionOnPath;
         private Vector3 targetNode;
-        private GameObject aggroedObject;
+        private GameObject targetObject;
         private bool targetIsPlayer;
         #endregion
 
         #region Get/Set
         public Vector3 LastTargetPosition { get { return lastPositionOnPath; } set { lastPositionOnPath = value; } }
         public Vector3 TargetPosition { get { return targetNode; } set { targetNode = value; } }
-        public GameObject CurrentTarget { get { return aggroedObject; } set { aggroedObject = value; } }
+        public GameObject CurrentTarget { get { return targetObject; } set { targetObject = value; } }
 
         public bool IsTargetPlayer {get { return targetIsPlayer; } set { targetIsPlayer = value; } }
 
-        public GameLogic Instance { get { return instance; } }
         public Dictionary<NEWPLAYERSTATES, CPUState> StateDictionary { get => stateDictionary; private set => stateDictionary = value; }
         #endregion
 
@@ -57,6 +56,7 @@ public class CPUStateMachine : MonoBehaviour
 
 
         public void DecideAction() {
+            CheckForNewTarget();
             int coin = Random.Range(0, 9);
             if (coin <= 4) {
                 currentState = StateDictionary[NEWPLAYERSTATES.BACKINGOFF];
@@ -66,6 +66,10 @@ public class CPUStateMachine : MonoBehaviour
                 owner.State = NEWPLAYERSTATES.ATTACKING;
             }
             currentState.Init();
+        }
+
+        private void CheckForNewTarget() {
+            //GameLogic.instance.GetClosestMostImportantPlayer();
         }
 
         /*public Vector3 GetClosestNode() {

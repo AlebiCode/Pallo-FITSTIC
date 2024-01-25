@@ -18,6 +18,10 @@ namespace LorenzoCastelli {
 
         public List<PlayerData> playerInGame = new List<PlayerData>();
 
+        public Transform[] arenaAreas;
+
+        private GameObject[] areasOccupied;
+
         public static GameLogic instance;
         public enum GAMESTATES {
             START = 0,
@@ -34,6 +38,12 @@ namespace LorenzoCastelli {
             } else {
                 instance = this;
             }
+            GameObject[] temp = new GameObject[arenaAreas.Length];
+           
+           for (int i=0; i< arenaAreas.Length; i++) {
+                temp[i] = null;
+            }
+            areasOccupied = temp;
         }
 
         public void ForceLookTarget(PlayerData initializer) {
@@ -225,5 +235,49 @@ namespace LorenzoCastelli {
                 }
             }
         }
+
+        public GameObject ReturnClosestEnemyFromBall() {
+            PlayerData target = null;
+            float distance=0.5f;
+            foreach(PlayerData player in playerInGame) {
+                if (Vector3.Distance(player.transform.position, pallo.transform.position) < distance) {
+                    target = player;
+                    distance = Vector3.Distance(player.transform.position, pallo.transform.position);
+                }
+            }
+            if (distance >= 0.5) {
+                return null;
+            } else {
+                return target.gameObject;
+            }
+        }
+
+        public void ClearPlayerInArea(GameObject player) {
+            for (int i = 0; i < arenaAreas.Length; i++) { 
+                if (player == areasOccupied[i]) {
+                    areasOccupied[i] = null;
+                    return;
+                }
+            }
+            Debug.LogWarning("Player " + player + " was not in the area");
+            }
+
+        public Transform FindFarestPoint(GameObject caller , GameObject from) {
+            float distance = 0;
+            Transform finalPos = from.transform;
+            int areaToOccupy=-1;
+            for (int i = 0; i < arenaAreas.Length; i++) { 
+                if ((Vector3.Distance(finalPos.position, arenaAreas[i].position) > distance) && (!areasOccupied[i])) {
+                    distance = Vector3.Distance(finalPos.position, arenaAreas[i].position);
+                    finalPos = arenaAreas[i];
+                    areaToOccupy = i;
+                }
+            }
+            if (areaToOccupy > -1) {
+            areasOccupied[areaToOccupy] = caller;
+            }
+            return finalPos;
+        }
+
     }
 }

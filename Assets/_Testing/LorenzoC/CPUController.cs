@@ -7,17 +7,21 @@ using LorenzoCastelli;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.AI;
+using Random = UnityEngine.Random;
 
 namespace LorenzoCastelli {
 
     public class CPUController : PlayerControlsGeneric {
 
 
+
+        private bool reachedMyDestination = false;
         public PLAYERSTATES state = PLAYERSTATES.EMPTYHANDED;
         public float maxAttackTime = 4;
         public float currentAttackTime = 0;
         public float maxBackoffTime = 4;
         public float currentBackOffTime = 0;
+        private bool closeToTarget = false;
         private bool roamingToLocation = false;
         private Vector3 targetRoamingPos;
 
@@ -68,7 +72,17 @@ namespace LorenzoCastelli {
 
 
         public override void PlayerMovement() {
-            switch (state) {
+                if ((closeToTarget) && (playerData.IsHoldingBall()) && currentLookTarget) {
+                    transform.RotateAround(currentLookTarget.transform.position, transform.TransformDirection(Vector3.forward + Vector3.right), 0.5f * Time.deltaTime);
+                    return;
+                }
+                if (Vector3.Distance(currentMoveLocationTarget, transform.position ) < 0.1f) {
+                reachedMyDestination = true;
+            } else {
+                ai.SetDestination(currentMoveLocationTarget);
+            }
+
+            /*switch (state) {
                 case PLAYERSTATES.BACKINGOFF:
                     BackingOff();
                     break;
@@ -120,7 +134,7 @@ namespace LorenzoCastelli {
 
                 default:
                     break;
-            }
+            }*/
         }
 
         private void Roam() {
@@ -200,7 +214,7 @@ namespace LorenzoCastelli {
                 currentBackOffTime += Time.deltaTime;
                 if (currentBackOffTime > maxBackoffTime) {
                     currentBackOffTime = 0;
-                    ChangeState(PLAYERSTATES.EMPTYHANDED);
+                    Coinflip();
                     return;
                 }
             } else {
@@ -269,10 +283,61 @@ namespace LorenzoCastelli {
 
         // Update is called once per frame
         void Update() {
+            UpdateAI(); // Controllare se: HoiLpALLO; VadoAPrendereIlPallo; MiNascondoDalPallo
             PlayerMovement();
             PlayerRotation();
             BallThrow();
         }
+
+        private void UpdateAI() {
+            if (playerData.IsHoldingBall()) {
+                GameLogic.instance.ClearPlayerInArea(this.gameObject);
+                //HO IL PALLO
+                if (currentLookTarget == null) {
+                    currentLookTarget = GameLogic.instance.FindInterestingPlayer(playerData).gameObject;
+                }
+                if (Vector3.Distance(currentLookTarget.transform.position, this.transform.position) <= 0.5f) {
+                    closeToTarget = true;
+
+                } else {
+                    closeToTarget = false;
+                    currentMoveLocationTarget = currentLookTarget.transform.position;
+                    ai.SetDestination(currentMoveLocationTarget);
+                }
+                return;
+            }
+            if (!GameLogic.instance.pallo.IsHeld) {
+                //IL PALLO è LIBERO
+                //SONO LA PERSONA PIù VICINO ALLA PALLA
+                GameObject ClosestPlayer = GameLogic.instance.ReturnClosestEnemyFromBall();
+                if ((ClosestPlayer) && (ClosestPlayer == this.gameObject)) {
+                    GameLogic.instance.ClearPlayerInArea(this.gameObject);
+                    currentLookTarget = GameLogic.instance.pallo.gameObject;
+                    currentMoveLocationTarget = GameLogic.instance.pallo.transform.position;
+                } else {
+                    GameLogic.instance.ClearPlayerInArea(this.gameObject);
+                    //DECIDO SE ANDARE PER LA PALLA O RETROCEDERE
+                    if (Random.Range(0, 9) <= 4) {
+                        //VADO PER PALLA
+                        currentMoveLocationTarget = GameLogic.instance.pallo.transform.position;
+                    } else {
+                        //VADO NEL PUNTO PIù LONTANO
+                        currentMoveLocationTarget = GameLogic.instance.FindFarestPoint(this.gameObject, GameLogic.instance.pallo.gameObject).position;
+                    }
+                }
+            } else {
+                // Il PALLO NON è LIBERO
+                if (Random.Range(0, 9) <= 4) {
+                    // VADO PER IL PLAYER
+                    currentMoveLocationTarget = GameLogic.instance.pallo.PlayerHoldingIt.gameObject.transform.position;
+                } else {
+                    //MI ALLONTANO
+                    currentMoveLocationTarget = GameLogic.instance.FindFarestPoint(this.gameObject, GameLogic.instance.pallo.PlayerHoldingIt.gameObject).position;
+                }
+            }
+        }
+
+
 
         private void OnTriggerEnter(Collider other) {
             if ((other.GetComponent<PalloController>() != null) && (!other.GetComponent<PalloController>().IsHeld)) {

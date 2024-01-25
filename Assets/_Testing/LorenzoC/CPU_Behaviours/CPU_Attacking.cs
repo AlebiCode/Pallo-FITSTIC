@@ -6,6 +6,7 @@ namespace LorenzoCastelli {
 
 public class CPU_Attacking : CPUState
 {
+        
         public int maxAttackTime = 10;
         public int currentAttackTime;
 
@@ -31,13 +32,24 @@ public class CPU_Attacking : CPUState
             currentAttackTime += (int)Time.deltaTime;
             if (currentAttackTime > 10) {
                 owner.stateMachine.DecideAction();
+                return;
+            } else {
+                if ((!GameLogic.instance.IsPlayerClose(owner.GetComponent<PlayerData>(), owner.stateMachine.CurrentTarget.GetComponent<PlayerData>()) || (!owner.stateMachine.CurrentTarget.GetComponent<PlayerData>().IsHoldingBall()))) {
+                    //Se è ancora vicino al nemico con la palla fai il coin flip
+                    owner.stateMachine.ChangeState(NEWPLAYERSTATES.IDLE);
+                    return;
+                } else {
+                    if (Vector3.Distance(owner.stateMachine.CurrentTarget.transform.position, owner.transform.position) <= 0.5f){
+                        //attacco
+                        owner.stateMachine.DecideAction();
+                    } else {
+                    owner.Ai.SetDestination(owner.stateMachine.CurrentTarget.transform.position);
+                    }
+                }
             }
         }
         private void EndAttack() {
-                if ((!GameLogic.instance.IsPlayerClose(owner.GetComponent<PlayerData>(), owner.stateMachine.CurrentTarget.GetComponent<PlayerData>()) || (!owner.stateMachine.CurrentTarget.GetComponent<PlayerData>().IsHoldingBall()))){
-                //Se è ancora vicino al nemico con la palla fai il coin flip
-                owner.stateMachine.ChangeState(NEWPLAYERSTATES.IDLE);
-            }
+                
           
             }
            // owner.stateMachine.ChangeState(NEWPLAYERSTATES.Recovering);
