@@ -291,8 +291,8 @@ namespace LorenzoCastelli {
 
         private void UpdateAI() {
             if (playerData.IsHoldingBall()) {
-                GameLogic.instance.ClearPlayerInArea(this.gameObject);
                 //HO IL PALLO
+                GameLogic.instance.ClearPlayerInArea(this.gameObject);
                 if (currentLookTarget == null) {
                     currentLookTarget = GameLogic.instance.FindInterestingPlayer(playerData).gameObject;
                 }

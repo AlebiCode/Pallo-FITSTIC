@@ -49,7 +49,7 @@ namespace Controllers
         public int SpeedTier => speedTier;
         public BallStates GetBallState => ballState;
         public bool IsHeld => ballState == BallStates.held;
-        public PlayerData PlayerHoldingIt => playerHolding;
+        public PlayerData PlayerHoldingIt { get { return playerHolding; } set { playerHolding = value; } }
         public bool CollisionsActive => enabled;
         private float HorizontalVelocityMagnitude => new Vector2(velocity.x, velocity.y).magnitude;
         private BallStates BallState
@@ -192,6 +192,7 @@ namespace Controllers
             this.velocity = speed;// * SPEED_TIERS[speedTier];
 
             onSpeedTierChange.Invoke(speedTier);    //da fare per bene
+            playerHolding = null;
             //UpdateSpeedTier();
         }
 

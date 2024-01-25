@@ -18,9 +18,9 @@ namespace LorenzoCastelli {
 
         public List<PlayerData> playerInGame = new List<PlayerData>();
 
-        public Transform[] arenaAreas;
+        public Transform[] arenaAreasPositions;
 
-        private GameObject[] areasOccupied;
+        public GameObject[] areasOccupied;
 
         public static GameLogic instance;
         public enum GAMESTATES {
@@ -38,9 +38,9 @@ namespace LorenzoCastelli {
             } else {
                 instance = this;
             }
-            GameObject[] temp = new GameObject[arenaAreas.Length];
+            GameObject[] temp = new GameObject[arenaAreasPositions.Length];
            
-           for (int i=0; i< arenaAreas.Length; i++) {
+           for (int i=0; i< arenaAreasPositions.Length; i++) {
                 temp[i] = null;
             }
             areasOccupied = temp;
@@ -212,9 +212,9 @@ namespace LorenzoCastelli {
 
         public PlayerData FindInterestingPlayer(PlayerData player) {
             PlayerData target = null;
-            float maxHeavyPoints = 0;
+            float maxHeavyPoints = -100;
             foreach (PlayerData pd in playerInGame) {
-                if ((pd != player) && (CalculateHeavyPoint(pd) / Vector3.Distance(player.transform.position, pd.transform.position) >= maxHeavyPoints)) {
+                if ((pd != player) && (CalculateHeavyPoint(pd) + Vector3.Distance(player.transform.position, pd.transform.position) >= maxHeavyPoints)) {
                     target = pd;
                     maxHeavyPoints = CalculateHeavyPoint(pd);
                 }
@@ -223,7 +223,7 @@ namespace LorenzoCastelli {
         }
 
         private float CalculateHeavyPoint(PlayerData pd) {
-            return pd.importance / pd.currentHp;
+            return pd.importance - pd.currentHp;
         }
 
 
@@ -253,23 +253,24 @@ namespace LorenzoCastelli {
         }
 
         public void ClearPlayerInArea(GameObject player) {
-            for (int i = 0; i < arenaAreas.Length; i++) { 
+            for (int i = 0; i < arenaAreasPositions.Length; i++) { 
                 if (player == areasOccupied[i]) {
                     areasOccupied[i] = null;
+                    //Debug.LogWarning("Cleared " + player + " from area" + areasOccupied[i]);
                     return;
-                }
+                } 
             }
-            Debug.LogWarning("Player " + player + " was not in the area");
+
             }
 
         public Transform FindFarestPoint(GameObject caller , GameObject from) {
             float distance = 0;
             Transform finalPos = from.transform;
             int areaToOccupy=-1;
-            for (int i = 0; i < arenaAreas.Length; i++) { 
-                if ((Vector3.Distance(finalPos.position, arenaAreas[i].position) > distance) && (!areasOccupied[i])) {
-                    distance = Vector3.Distance(finalPos.position, arenaAreas[i].position);
-                    finalPos = arenaAreas[i];
+            for (int i = 0; i < arenaAreasPositions.Length; i++) { 
+                if ((Vector3.Distance(finalPos.position, arenaAreasPositions[i].position) > distance) && (!areasOccupied[i])) {
+                    distance = Vector3.Distance(finalPos.position, arenaAreasPositions[i].position);
+                    finalPos = arenaAreasPositions[i];
                     areaToOccupy = i;
                 }
             }

@@ -21718,12 +21718,13 @@ MonoBehaviour:
   - {fileID: 812749031}
   - {fileID: 2091928107}
   playerInGame: []
-  arenaAreas:
+  arenaAreasPositions:
   - {fileID: 1971241904}
   - {fileID: 1024315512}
   - {fileID: 1334992020}
   - {fileID: 376153409}
   - {fileID: 1690668999}
+  areasOccupied: []
 --- !u!1001 &1707532229
 PrefabInstance:
   m_ObjectHideFlags: 0
