@@ -214,9 +214,10 @@ namespace LorenzoCastelli {
             PlayerData target = null;
             float maxHeavyPoints = -100;
             foreach (PlayerData pd in playerInGame) {
-                if ((pd != player) && (CalculateHeavyPoint(pd) + Vector3.Distance(player.transform.position, pd.transform.position) >= maxHeavyPoints)) {
+                float curHeavyPoints = CalculateHeavyPoint(pd) + Vector3.Distance(player.transform.position, pd.transform.position);
+                if ((pd != player) && (curHeavyPoints >= maxHeavyPoints)) {
                     target = pd;
-                    maxHeavyPoints = CalculateHeavyPoint(pd);
+                    maxHeavyPoints = curHeavyPoints;
                 }
             }
             return target;
@@ -290,6 +291,54 @@ namespace LorenzoCastelli {
             areasOccupied[areaToOccupy] = caller;
             }
             return finalPos;
+        }
+
+        public Vector3 FindFarestPointV2(GameObject ballPosition, PlayerData excludePlayer) {
+            float distance = 0;
+            Transform finalPos = arenaAreasPositions[0];
+            for (int i = 0; i < arenaAreasPositions.Length; i++) {
+
+                //controllo che non sia gia occupata
+                bool someOneIsNearThisArea = false;
+                foreach (PlayerData pd in playerInGame) {
+                    if (excludePlayer != pd) {
+                        if (Vector3.Distance(pd.transform.position, arenaAreasPositions[i].position) <2) {
+                            Debug.Log(excludePlayer.gameObject + " is close to area " + i, excludePlayer.gameObject);
+                            someOneIsNearThisArea = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (someOneIsNearThisArea)
+                    continue;
+
+                //se non è occupata la prendo come destinazione
+                float curDist = Vector3.Distance(ballPosition.transform.position, arenaAreasPositions[i].position);
+                if (curDist> distance) {
+                    distance = curDist;
+                    finalPos = arenaAreasPositions[i];
+                }
+                
+            }
+            return finalPos.position;
+        }
+
+        public PlayerData GetClosestPlayerToBall() {
+            float distance = Mathf.Infinity;
+            PlayerData closestPlayer = null;
+
+
+            foreach (PlayerData pd in playerInGame) {
+                //se non è occupata la prendo come destinazione
+                float curDist = Vector3.Distance(pallo.transform.position, pd.transform.position);
+                if (curDist < distance) {
+                    distance = curDist;
+                    closestPlayer = pd;
+                }
+            }
+
+            return closestPlayer;
         }
 
     }

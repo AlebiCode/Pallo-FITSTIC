@@ -13,7 +13,7 @@ namespace LorenzoCastelli {
 
     public class CPUController : PlayerControlsGeneric {
 
-
+        private static readonly float ORBIT_DISTANCE = 3.5f;
 
         private bool reachedMyDestination = false;
         public PLAYERSTATES state = PLAYERSTATES.EMPTYHANDED;
@@ -38,7 +38,7 @@ namespace LorenzoCastelli {
         public LayerMask collisionLayers;
 
 
-        private NavMeshAgent ai = new NavMeshAgent();
+        private NavMeshAgent ai;
 
         public GameObject frontPoint;
 
@@ -74,69 +74,34 @@ namespace LorenzoCastelli {
 
 
         public override void PlayerMovement() {
-                if ((closeToTarget) && (playerData.IsHoldingBall()) && currentLookTarget) {
-                    transform.RotateAround(currentLookTarget.transform.position, transform.TransformDirection(Vector3.forward + Vector3.right), 0.5f * Time.deltaTime);
+
+            if (playerData.IsHoldingBall()) {//ho la palla
+                if (!currentLookTarget) {
+                    Debug.LogError("Non ho un bersaglio; La funzione non assegna currentLookTarget correttamente!");
+                    currentMoveLocationTarget = transform.position;
                     return;
                 }
-                if (Vector3.Distance(currentMoveLocationTarget, transform.position ) < 0.1f) {
-                reachedMyDestination = true;
-            } else {
-                ai.SetDestination(currentMoveLocationTarget);
+
+                if (closeToTarget) {//sono vicino al target
+                    //se sono vicino all'ultima destinazione
+                    //calcolo la prossima destinazione come posizione a lato del target (randomicamente alla sua dx o sx)
+                    if (Vector3.Distance(transform.position, currentMoveLocationTarget) < ORBIT_DISTANCE / 2) {
+                        Vector3 vettore_nemico_me = (currentLookTarget.transform.position - transform.position).normalized;
+                        Vector3 side_vector = Vector3.Cross(vettore_nemico_me, Vector3.up);
+                        bool leftMovement = Random.Range(0, 100) > 50;
+                        currentMoveLocationTarget = leftMovement ?
+                            currentLookTarget.transform.position + side_vector :
+                            currentLookTarget.transform.position - side_vector;
+                    }
+                    //transform.RotateAround(currentLookTarget.transform.position, transform.TransformDirection(Vector3.forward + Vector3.right), 0.5f * Time.deltaTime);//non serve
+                } else {//sono lontano dal target
+                    //se sono lontano dal target, mi ci avvicino
+                    currentMoveLocationTarget = currentLookTarget.transform.position;
+                }
             }
-
-            /*switch (state) {
-                case PLAYERSTATES.BACKINGOFF:
-                    BackingOff();
-                    break;
-                case PLAYERSTATES.ATTACKING:
-                    AttackingState();
-                    break;
-                case PLAYERSTATES.GOINGFORBALL:
-                    if (!GameLogic.instance.pallo.IsHeld) {
-                        currentMoveLocationTarget = GameLogic.instance.pallo.transform.position;
-                        ai.SetDestination(currentMoveLocationTarget);
-                        break;
-                    } else {
-                        ChangeState(PLAYERSTATES.EMPTYHANDED);
-                        break;
-                    }
-                    
-                case PLAYERSTATES.WITHBALL:
-                    if (!currentLookTarget.GetComponent<PalloController>()) {
-                        //
-                        if (Vector3.Distance(currentLookTarget.transform.position, this.transform.position) <= 0.5f) {
-                            transform.RotateAround(currentLookTarget.transform.position, transform.TransformDirection(Vector3.forward + Vector3.right), 0.5f * Time.deltaTime);
-                        } else {
-                            currentMoveLocationTarget = currentLookTarget.transform.position;
-                            ai.SetDestination(currentMoveLocationTarget);
-                        }
-
-                    } else {
-                        currentMoveLocationTarget = GameLogic.instance.FindInterestingPlayer(this.playerData).gameObject.transform.position;
-                    }
-                    break;
-                case PLAYERSTATES.EMPTYHANDED:
-                    if ((GameLogic.instance.pallo.IsHeld) && (!currentLookTarget)) {
-                        if (GameLogic.instance.GetClosestMostImportantPlayer(playerData)) {
-                            //se sono vicino ad uno con la palla decido cosa fare
-                            LookTarget(GameLogic.instance.GetClosestMostImportantPlayer(playerData).gameObject);
-                            Coinflip();
-                            break;
-                        } else {
-                            Roam();
-                            break;
-                        }
-                    } else if (!GameLogic.instance.pallo.IsHeld) {
-                        ChangeState(PLAYERSTATES.GOINGFORBALL);
-                        break;
-                    } else {
-                        Roam();
-                        break;
-                    }
-
-                default:
-                    break;
-            }*/
+            else {//non ho la palla
+                //currentMoveLocationTarget = currentLookTarget.transform.position;
+            }
         }
 
         private void Roam() {
@@ -173,98 +138,18 @@ namespace LorenzoCastelli {
             }
         }
 
-        private void AttackingState() {
-            if ((currentLookTarget)&& (currentLookTarget.GetComponent<PlayerData>().IsHoldingBall())) {
-               // if (Vector3.Distance(currentLookTarget.transform.position, transform.position) <= 0.5f) {
-                //Se è vicino ma non abbastanza vicino raggiungilo
-                //ATTACCO 
-                currentMoveLocationTarget=currentLookTarget.transform.position;
-                    ai.SetDestination(currentMoveLocationTarget);
-                    currentAttackTime += Time.deltaTime;
-                    if (currentAttackTime >= maxAttackTime) {
-                        currentAttackTime = 0;
-                        ChangeState(PLAYERSTATES.EMPTYHANDED);
-                        return;
-                    }
-                if (Vector3.Distance(currentLookTarget.transform.position, transform.position) <= 0.3f) {
-                    float temp = Vector3.Distance(currentLookTarget.transform.position, transform.position);
-                        Debug.Log("Player " + gameObject.name + " Is attacking " + currentLookTarget.name);
-                        currentAttackTime = 0;
-                        ChangeState(PLAYERSTATES.EMPTYHANDED);
-                        return;
-                    }
-
-           // }
-            } else {
-                currentAttackTime = 0;
-                ChangeState(PLAYERSTATES.EMPTYHANDED);
-                return;
-            }
-            
-        }
-
-        public void BackingOff() {
-            if ((currentLookTarget) && (currentLookTarget.GetComponent<PlayerData>().IsHoldingBall())) {
-                // Calculate the direction from this GameObject to the target
-                Vector3 direction = transform.position - currentLookTarget.transform.position;
-
-                // Normalize the direction to get a unit vector
-                direction.Normalize();
-
-                ai.SetDestination(direction*1.5f);
-                currentMoveLocationTarget = direction* 1.5f;
-                currentBackOffTime += Time.deltaTime;
-                if (currentBackOffTime > maxBackoffTime) {
-                    currentBackOffTime = 0;
-                    Coinflip();
-                    return;
-                }
-            } else {
-                currentBackOffTime = 0;
-                ChangeState(PLAYERSTATES.EMPTYHANDED);
-                return;
-            }
-            
-        }
-
-        public void MoveTo(Vector3 position) {
-            ai.SetDestination(position);
-        }
+        
 
 #endregion
 
         #region ROTATION AND LOOK
-        private void LookForTarget() {
-            //SE NON STO GUARDANDO NESSUNO CERCA UN NUOVO TARGET
-
-            PlayerData target = GameLogic.instance.GetClosestMostImportantPlayer(playerData);
-                //PRIORITà AI PLAYER CON LA PALLA/IMPORTANZA
-                if (!target) {
-                    if ((Vector3.Distance(GameLogic.instance.pallo.gameObject.transform.position, this.transform.position) <= distanceLimit) && (!playerData.IsHoldingBall())) {
-                        currentLookTarget = GameLogic.instance.pallo.gameObject;
-                }
-            } else {
-                currentLookTarget = target.gameObject;
-            }
-        }
 
         public override void PlayerRotation() {
-            if (!currentLookTarget) {
-                //NON HO UN BERSAGLIO
-                if (playerData.IsHoldingBall() && currentLookTarget.GetComponent<PalloController>()) {
-                    //STO TENENDO LA PALLA
-                    currentLookTarget = GameLogic.instance.FindInterestingPlayer(this.GetComponent<PlayerData>()).gameObject;
-                } else {
-                    LookForTarget();
-                }
-                //if (gameObject.GetComponent<PlayerData>())
-            } else {
-                if (Vector3.Distance(currentLookTarget.transform.position, this.transform.position) > distanceLimit) /*|| (currentTarget.GetComponent<PalloController>().IsHeld))*/ {
-                    currentLookTarget = null;
-                } else {
-                    LookTarget(currentLookTarget);
-                }
-            }
+
+            if (!GameLogic.instance.pallo.IsHeld)//guarda palla 
+                LookTarget(GameLogic.instance.pallo.gameObject);
+            else if (currentLookTarget)//guarda target
+                LookTarget(currentLookTarget);
         }
 
 
@@ -285,71 +170,87 @@ namespace LorenzoCastelli {
 
         // Update is called once per frame
         void Update() {
+
+            UpdateDestination();//invia ogni tot secondi la destinazione al navmesh
+
             UpdateAI(); // Controllare se: HoiLpALLO; VadoAPrendereIlPallo; MiNascondoDalPallo
             PlayerMovement();
             PlayerRotation();
             BallThrow();
+
         }
 
+        bool isAggressive = true;
+        float nextAggressiveStateChange = 0;
+        void ChangeAggressiveState() {
+            if (Time.time> nextAggressiveStateChange) {
+                isAggressive = !isAggressive;
+                nextAggressiveStateChange = Time.time + Random.Range(3, 6);
+            }
+        }
+
+        private void UpdateDestination() {
+
+            if (Time.time > nextUpdateDest) {
+                ai.SetDestination(currentMoveLocationTarget);//aggiornare questa ogni farme non è il top
+                nextUpdateDest = Time.time + .2f;//entra in questo if ogni .5 secondi
+            }
+        }
+
+        float nextUpdateDest = 0;
+        float nextUpdateTarget = 0;
+
         private void UpdateAI() {
-           
-            if (playerData.IsHoldingBall()) {
-                //HO IL PALLO
-                if (currentLookTarget == null) {
-                    currentLookTarget = GameLogic.instance.FindInterestingPlayer(playerData).gameObject;
-                }
-                if (Vector3.Distance(currentLookTarget.transform.position, this.transform.position) <= 0.5f) {
+
+            ChangeAggressiveState();
+
+            if (Time.time> nextUpdateTarget) {
+                nextUpdateTarget = Time.time + 1;
+                currentLookTarget = GameLogic.instance.FindInterestingPlayer(playerData).gameObject;
+            }
+
+
+            if (playerData.IsHoldingBall()) {//IO HO IL PALLO
+
+                //check close to target
+                if (Vector3.Distance(currentLookTarget.transform.position, this.transform.position) <= ORBIT_DISTANCE) {
                     closeToTarget = true;
                     Debug.Log(this.gameObject + "orbito target");
                 } else {
                     closeToTarget = false;
-                    currentMoveLocationTarget = currentLookTarget.transform.position;
-                    ai.SetDestination(currentMoveLocationTarget);
                     Debug.Log(this.gameObject + "vado per il target");
                 }
-                return;
             }
-            if (!GameLogic.instance.pallo.IsHeld) {
-                //IL PALLO è LIBERO
-                //SONO LA PERSONA PIù VICINO ALLA PALLA
-                GameObject ClosestPlayer = GameLogic.instance.ReturnClosestEnemyFromBall();
-                if ((ClosestPlayer) && (ClosestPlayer == this.gameObject)) {
-                    if (GameLogic.instance.IsPlayerInArea(this.gameObject)) {
-                    GameLogic.instance.ClearPlayerInArea(this.gameObject);
+            else if (GameLogic.instance.pallo.IsHeld) {//QUALCUN ALTRO HA LA PALLA
 
-                    }
+                if (isAggressive) {
+                    //se sono aggressivo vado a priori verso il giocatore con la palla
+                    currentMoveLocationTarget = GameLogic.instance.pallo.gameObject.transform.position;
+                }
+                else {
+                    Vector3 farrestArea = GameLogic.instance.FindFarestPointV2(GameLogic.instance.pallo.gameObject, playerData);
+                    currentMoveLocationTarget = farrestArea;
+                }
+                
+            } else {//NESSUNO HA LA PALLA
 
-                    currentLookTarget = GameLogic.instance.pallo.gameObject;
-                    currentMoveLocationTarget = GameLogic.instance.pallo.transform.position;
-                    Debug.Log(this.gameObject + "vado per il pallo perché sono vicino");
+                if (isAggressive) {
+                    //se sono aggressivo vado a priori verso la palla
+                    currentMoveLocationTarget = GameLogic.instance.pallo.gameObject.transform.position;
                 } else {
-                    GameLogic.instance.ClearPlayerInArea(this.gameObject);
-                    //DECIDO SE ANDARE PER LA PALLA O RETROCEDERE
-                    if (Random.Range(0, 9) <= 4) {
-                        //VADO PER PALLA
-                        Debug.Log(this.gameObject + "va' per pallo!");
+                    PlayerData closestPlayerToBall = GameLogic.instance.GetClosestPlayerToBall();
+
+                    if (playerData == closestPlayerToBall)//io sono il piu vicino
+                    {
                         currentMoveLocationTarget = GameLogic.instance.pallo.transform.position;
-                    } else {
-                        //VADO NEL PUNTO PIù LONTANO
-                        Debug.Log(this.gameObject + "scappa");
-                        currentMoveLocationTarget = GameLogic.instance.FindFarestPoint(this.gameObject, GameLogic.instance.pallo.gameObject).position;
+                    } else {//scappo / sono corragioso
+                        Vector3 farrestArea = GameLogic.instance.FindFarestPointV2(GameLogic.instance.pallo.gameObject, playerData);
+                        currentMoveLocationTarget = farrestArea;
                     }
                 }
-            } else {
-                // Il PALLO NON è LIBERO
-                if (Random.Range(0, 9) <= 4) {
-                    // VADO PER IL PLAYER
-                    currentMoveLocationTarget = GameLogic.instance.pallo.PlayerHoldingIt.gameObject.transform.position;
-                    Debug.Log(this.gameObject + "vado per il target con la palla");
-                } else {
-                    //MI ALLONTANO
-                    currentMoveLocationTarget = GameLogic.instance.FindFarestPoint(this.gameObject, GameLogic.instance.pallo.PlayerHoldingIt.gameObject).position;
-                    Debug.Log(this.gameObject + "si allontana dal player con la palla");
-                }
             }
-            
-            
         }
+
 
 
 
