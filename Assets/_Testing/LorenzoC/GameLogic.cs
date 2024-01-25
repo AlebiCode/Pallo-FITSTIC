@@ -238,18 +238,30 @@ namespace LorenzoCastelli {
 
         public GameObject ReturnClosestEnemyFromBall() {
             PlayerData target = null;
-            float distance=0.5f;
+            float distance=100f;
             foreach(PlayerData player in playerInGame) {
                 if (Vector3.Distance(player.transform.position, pallo.transform.position) < distance) {
                     target = player;
                     distance = Vector3.Distance(player.transform.position, pallo.transform.position);
                 }
             }
-            if (distance >= 0.5) {
+            if (distance >= 100f) {
                 return null;
             } else {
                 return target.gameObject;
             }
+        }
+
+        public bool IsPlayerInArea(GameObject player) {
+            for (int i = 0; i < arenaAreasPositions.Length; i++) {
+                if (player == areasOccupied[i]) {
+                    return true;
+                    //Debug.LogWarning("Cleared " + player + " from area" + areasOccupied[i]);
+                    
+                }
+            }
+            return false;
+
         }
 
         public void ClearPlayerInArea(GameObject player) {

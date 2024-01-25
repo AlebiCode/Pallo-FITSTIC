@@ -46,6 +46,8 @@ namespace LorenzoCastelli {
         public Vector3 currentMoveLocationTarget;
         public float distanceLimit = 0.5f;
         public float turningSpeed = 10f;
+        private bool moving = false;
+        private Transform areaPos;
 
 
         public void ChangeState(PLAYERSTATES newstate) {
@@ -290,19 +292,20 @@ namespace LorenzoCastelli {
         }
 
         private void UpdateAI() {
+           
             if (playerData.IsHoldingBall()) {
                 //HO IL PALLO
-                GameLogic.instance.ClearPlayerInArea(this.gameObject);
                 if (currentLookTarget == null) {
                     currentLookTarget = GameLogic.instance.FindInterestingPlayer(playerData).gameObject;
                 }
                 if (Vector3.Distance(currentLookTarget.transform.position, this.transform.position) <= 0.5f) {
                     closeToTarget = true;
-
+                    Debug.Log(this.gameObject + "orbito target");
                 } else {
                     closeToTarget = false;
                     currentMoveLocationTarget = currentLookTarget.transform.position;
                     ai.SetDestination(currentMoveLocationTarget);
+                    Debug.Log(this.gameObject + "vado per il target");
                 }
                 return;
             }
@@ -311,17 +314,24 @@ namespace LorenzoCastelli {
                 //SONO LA PERSONA PIù VICINO ALLA PALLA
                 GameObject ClosestPlayer = GameLogic.instance.ReturnClosestEnemyFromBall();
                 if ((ClosestPlayer) && (ClosestPlayer == this.gameObject)) {
+                    if (GameLogic.instance.IsPlayerInArea(this.gameObject)) {
                     GameLogic.instance.ClearPlayerInArea(this.gameObject);
+
+                    }
+
                     currentLookTarget = GameLogic.instance.pallo.gameObject;
                     currentMoveLocationTarget = GameLogic.instance.pallo.transform.position;
+                    Debug.Log(this.gameObject + "vado per il pallo perché sono vicino");
                 } else {
                     GameLogic.instance.ClearPlayerInArea(this.gameObject);
                     //DECIDO SE ANDARE PER LA PALLA O RETROCEDERE
                     if (Random.Range(0, 9) <= 4) {
                         //VADO PER PALLA
+                        Debug.Log(this.gameObject + "va' per pallo!");
                         currentMoveLocationTarget = GameLogic.instance.pallo.transform.position;
                     } else {
                         //VADO NEL PUNTO PIù LONTANO
+                        Debug.Log(this.gameObject + "scappa");
                         currentMoveLocationTarget = GameLogic.instance.FindFarestPoint(this.gameObject, GameLogic.instance.pallo.gameObject).position;
                     }
                 }
@@ -330,11 +340,15 @@ namespace LorenzoCastelli {
                 if (Random.Range(0, 9) <= 4) {
                     // VADO PER IL PLAYER
                     currentMoveLocationTarget = GameLogic.instance.pallo.PlayerHoldingIt.gameObject.transform.position;
+                    Debug.Log(this.gameObject + "vado per il target con la palla");
                 } else {
                     //MI ALLONTANO
                     currentMoveLocationTarget = GameLogic.instance.FindFarestPoint(this.gameObject, GameLogic.instance.pallo.PlayerHoldingIt.gameObject).position;
+                    Debug.Log(this.gameObject + "si allontana dal player con la palla");
                 }
             }
+            
+            
         }
 
 
