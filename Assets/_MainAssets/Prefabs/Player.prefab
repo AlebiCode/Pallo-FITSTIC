@@ -132,6 +132,7 @@ GameObject:
   - component: {fileID: 137958421845275390}
   - component: {fileID: 5395636888077563458}
   - component: {fileID: 4819429865053605069}
+  - component: {fileID: 2328551866364925733}
   m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
@@ -170,26 +171,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentState: 
-  playerController: {fileID: 0}
-  controller: {fileID: 0}
-  handsocket: {fileID: 6776094235086696806}
-  heldPallo: {fileID: 0}
-  playerSpeed: 5
-  slowPlayerSpeed: 2
-  dodgePlayerSpeed: 13
-  movementInput: {x: 0, y: 0, z: 0}
-  rotationInput: {x: 0, y: 0, z: 0}
-  currentChargeTime: 0
-  maxChargeTime: 1
-  maxThrowForce: 10
-  throwHeight: 1.2
-  holdBallCooldown: 0
-  holdBallCooldownDuration: 2
-  dodgeDirection: {x: 0, y: 0, z: 0}
-  dodgeCurrentSpeed: 0
-  dodgeMaxDuration: 0.5
-  dodgeCurrentTime: 0
   currentHp: 0
+  palloLayermask:
+    serializedVersion: 2
+    m_Bits: 128
+  speedRegular: 5
+  speedSlow: 2
+  speedDodge: 15
+  movementInput: {x: 0, y: 0}
+  rotationInput: {x: 0, y: 0}
+  usingGamePad: 0
+  controllerDeadzone: 0.01
+  throwChargeMax: 1
+  holdBallCooldown: 0
+  dodgeDuration: 0.6
+  dodgeCooldown: 1
+  isInvincibile: 0
+  parryDuration: 0.5
+  parryPercentage: 60
+  parryRange: 2
+  parryCooldown: 1
 --- !u!114 &2465648903373995494
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -457,6 +458,27 @@ MonoBehaviour:
   onPalloExit:
     m_PersistentCalls:
       m_Calls: []
+--- !u!95 &2328551866364925733
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5182468902345241891}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1001 &7050097534908113806
 PrefabInstance:
   m_ObjectHideFlags: 0
