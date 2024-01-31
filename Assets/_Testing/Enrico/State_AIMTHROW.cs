@@ -21,18 +21,18 @@ namespace StateMachine
 			base.Exit();
 
 			//reset variables
-			player.heldPallo = null;
-			player.currentChargeTime = 0;
-			player.holdBallCooldown = player.holdBallCooldownDuration;
+			player.HeldPallo = null;
+			player.ThrowChargeCurrent = 0;
+			player.HoldBallCooldownCurrent = player.holdBallCooldown;
 		}
 
 		public override void Update()
 		{
 			base.Update();
 
-			player.currentChargeTime += Time.deltaTime;
+			player.ThrowChargeCurrent += Time.deltaTime;
 
-			player.HandleMovement(player.MovementDirectionFromInput, player.slowSpeed);
+			player.HandleMovement(player.MovementDirectionFromInput, player.speedSlow);
 			player.HandleRotation();
 		}
 	}

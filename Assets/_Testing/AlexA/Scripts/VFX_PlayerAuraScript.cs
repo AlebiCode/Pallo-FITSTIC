@@ -41,8 +41,8 @@ namespace VFX
 
         private void OnDisable()
         {
-            myPlayer.stateMachine.aimthrow.OnEnter -= OnChargingStarted;
-            myPlayer.stateMachine.aimthrow.OnExit -= OnChargingCancelled;
+            myPlayer.StateMachine.aimthrow.OnEnter -= OnChargingStarted;
+            myPlayer.StateMachine.aimthrow.OnExit -= OnChargingCancelled;
         }
 
         private void Update()
@@ -58,8 +58,8 @@ namespace VFX
         private void Init()
         {
             myPlayer = gameObject.GetComponentInParent<Player>();
-            myPlayer.stateMachine.aimthrow.OnEnter += OnChargingStarted;
-            myPlayer.stateMachine.aimthrow.OnExit += OnChargingCancelled;
+            myPlayer.StateMachine.aimthrow.OnEnter += OnChargingStarted;
+            myPlayer.StateMachine.aimthrow.OnExit += OnChargingCancelled;
             vfx_PlayerAuraCapsule = transform.Find("PlayerAuraCapsule").gameObject;
             vfx_PlayerAuraBase = transform.Find("PlayerAuraBase").gameObject;
         }
@@ -89,7 +89,7 @@ namespace VFX
 
         private void OnChargingStarted(Player owner) 
         {
-            CheckThrowLevel(myPlayer.heldPallo.SpeedTier);
+            CheckThrowLevel(myPlayer.HeldPallo.SpeedTier);
             vfx_PlayerAuraCapsule.SetActive(true);
             vfx_PlayerAuraBase.SetActive(true);
             isCharging = true;
@@ -99,7 +99,7 @@ namespace VFX
         {
             if (isCharging) 
             {
-                vfx_PlayerAuraCapsule.transform.localScale = Vector3.Lerp(Vector3.one * minSize, Vector3.one * maxSize, myPlayer.maxChargeTime);
+                vfx_PlayerAuraCapsule.transform.localScale = Vector3.Lerp(Vector3.one * minSize, Vector3.one * maxSize, myPlayer.throwChargeMax);
             }
         }
 

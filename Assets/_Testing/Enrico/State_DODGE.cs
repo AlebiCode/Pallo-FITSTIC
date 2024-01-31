@@ -7,8 +7,8 @@ namespace StateMachine
 	public class State_DODGE : PlayerState
 	{
 		public Vector3 dodgeDirection;
-		public float dodgeCurrentSpeed = 0f;
-		public float dodgeCurrentTime = 0f;
+		public float dodgeSpeedCurrent = 0f;
+		public float dodgeDurationCurrent = 0f;
 
 		public State_DODGE(Player owner) : base(owner)
 		{
@@ -20,14 +20,14 @@ namespace StateMachine
 			base.Enter();
 			dodgeDirection = player.transform.forward;
 			player.transform.LookAt(player.transform.position + dodgeDirection, Vector3.up);
-			dodgeCurrentSpeed = player.dodgeSpeed;
-			dodgeCurrentTime = player.dodgeMaxDuration;
+			dodgeSpeedCurrent = player.speedDodge;
+			dodgeDurationCurrent = player.dodgeDuration;
 		}
 
 		public override void Exit()
 		{
 			base.Exit();
-			player.dodgeCurrentCooldown = player.dodgeCooldownTimer;
+			player.DodgeCooldownCurrent = player.dodgeCooldown;
 		}
 
 		public override void Update()
@@ -36,16 +36,16 @@ namespace StateMachine
 
 			Dodge();
 
-			if (dodgeCurrentTime <= 0)
-				player.stateMachine.ChangeState(player.stateMachine.idle);
+			dodgeDurationCurrent -= 2 * Time.deltaTime;
+
+			if (dodgeDurationCurrent <= 0)
+				player.StateMachine.ChangeState(player.StateMachine.idle);
 		}
 
 		private void Dodge()
 		{
-			player.HandleMovement(dodgeDirection, dodgeCurrentSpeed);
-
-			dodgeCurrentTime -= 2 * Time.deltaTime;
-			dodgeCurrentSpeed -= 2 * Time.deltaTime;
+			player.HandleMovement(dodgeDirection, dodgeSpeedCurrent);
+			dodgeSpeedCurrent -= 2 * Time.deltaTime;
 		}
 	}
 }

@@ -4,46 +4,37 @@ using Controllers;
 
 namespace StateMachine
 {
-    [RequireComponent(typeof(PlayerInput))]
-    [RequireComponent(typeof(Rigidbody))]
-    [RequireComponent(typeof(CharacterController))]
-
     public class PlayerController : MonoBehaviour
     {
         private Player player;
 
 		#region properties
-		public bool CanMove =>  player.stateMachine.currentState == player.stateMachine.idle;
+		public bool CanMove =>  player.StateMachine.currentState == player.StateMachine.idle;
 
-        public bool CanThrow => player.IsHoldingBall &&
-                                (player.stateMachine.currentState == player.stateMachine.idle ||
-                                 player.stateMachine.currentState == player.stateMachine.move);
+        public bool CanThrow => player.IsHoldingBall                                                &&
+                                (player.StateMachine.currentState == player.StateMachine.idle       ||
+                                 player.StateMachine.currentState == player.StateMachine.move);
 
-        public bool CanDodge => 
-                                (player.stateMachine.currentState == player.stateMachine.idle ||
-                                 player.stateMachine.currentState == player.stateMachine.move);
+        public bool CanDodge => player.DodgeCooldownCurrent <= 0                                    &&
+                                (player.StateMachine.currentState == player.StateMachine.idle       ||
+                                 player.StateMachine.currentState == player.StateMachine.move);
 
-        public bool CanParry => !player.IsHoldingBall &&
-                                (player.stateMachine.currentState == player.stateMachine.idle ||
-                                 player.stateMachine.currentState == player.stateMachine.move);
+        public bool CanParry => player.DodgeCooldownCurrent <= 0                                    &&
+                                !player.IsHoldingBall                                               &&
+                                (player.StateMachine.currentState == player.StateMachine.idle       ||
+                                 player.StateMachine.currentState == player.StateMachine.move);
 
-        public bool CanStun =>  player.stateMachine.currentState == player.stateMachine.idle     ||
-                                player.stateMachine.currentState == player.stateMachine.move     ||
-                                player.stateMachine.currentState == player.stateMachine.aimthrow ||
-                                player.stateMachine.currentState == player.stateMachine.dodge    ||
-                                player.stateMachine.currentState == player.stateMachine.parry;
+        public bool CanStun =>  player.StateMachine.currentState == player.StateMachine.idle        ||
+                                player.StateMachine.currentState == player.StateMachine.move        ||
+                                player.StateMachine.currentState == player.StateMachine.aimthrow    ||
+                                player.StateMachine.currentState == player.StateMachine.dodge       ||
+                                player.StateMachine.currentState == player.StateMachine.parry;
 
 		#endregion
         
 		private void Start()
         {
             player = gameObject.GetComponent<Player>();
-        }
-
-        void Update()
-        {
-            if (!player.IsHoldingBall && player.holdBallCooldown > 0)
-                player.holdBallCooldown -= Time.deltaTime;
         }
 
         #region onInput
@@ -53,11 +44,11 @@ namespace StateMachine
             player.movementInput = context.ReadValue<Vector2>();
 
             if (CanMove)
-                player.stateMachine.ChangeState(player.stateMachine.move);
+                player.StateMachine.ChangeState(player.StateMachine.move);
 
-            if (context.phase == InputActionPhase.Canceled && player.stateMachine.currentState == player.stateMachine.move)
+            if (context.phase == InputActionPhase.Canceled && player.StateMachine.currentState == player.StateMachine.move)
 			{
-                player.stateMachine.ChangeState(player.stateMachine.idle);
+                player.StateMachine.ChangeState(player.StateMachine.idle);
             }
         }
 
@@ -69,25 +60,25 @@ namespace StateMachine
         public void OnThrow(InputAction.CallbackContext context)
         {
             if (CanThrow)
-                player.stateMachine.ChangeState(player.stateMachine.aimthrow);
+                player.StateMachine.ChangeState(player.StateMachine.aimthrow);
 
-            if (context.phase == InputActionPhase.Canceled && player.stateMachine.currentState == player.stateMachine.aimthrow)
+            if (context.phase == InputActionPhase.Canceled && player.StateMachine.currentState == player.StateMachine.aimthrow)
             {
-                player.heldPallo.Throw(player.ThrowVelocity);
-                player.stateMachine.ChangeState(player.stateMachine.idle);
+                player.HeldPallo.Throw(player.ThrowVelocity);
+                player.StateMachine.ChangeState(player.StateMachine.idle);
             }
         }
 
         public void OnParry(InputAction.CallbackContext context)
         {
             if (CanParry)
-                player.stateMachine.ChangeState(player.stateMachine.parry);
+                player.StateMachine.ChangeState(player.StateMachine.parry);
         }
 
         public void OnDodge(InputAction.CallbackContext context)
         {
 			if (CanDodge)
-                player.stateMachine.ChangeState(player.stateMachine.dodge);
+                player.StateMachine.ChangeState(player.StateMachine.dodge);
         }
 
         #endregion

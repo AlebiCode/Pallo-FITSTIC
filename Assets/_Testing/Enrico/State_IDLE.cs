@@ -16,7 +16,7 @@ namespace StateMachine
 			base.Enter();
 
 			if (player.movementInput != Vector2.zero)
-				player.stateMachine.ChangeState(player.stateMachine.move);
+				player.StateMachine.ChangeState(player.StateMachine.move);
 		}
 
 		public override void Exit()

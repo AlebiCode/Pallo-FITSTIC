@@ -1,12 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using Controllers;
 
 namespace StateMachine
 {
     [RequireComponent(typeof(PlayerController))]
     [RequireComponent(typeof(Animator))]
+    [RequireComponent(typeof(PlayerInput))]
+    [RequireComponent(typeof(Rigidbody))]
+    [RequireComponent(typeof(CharacterController))]
 
     public class Player : MonoBehaviour
     {
@@ -15,40 +19,69 @@ namespace StateMachine
         public string currentState; //debug
 
         //linked classes
-        public StateMachine stateMachine;
-        public PlayerController playerController;
-        public CharacterController controller;
-        public Transform handsocket;
-        public PalloController heldPallo;
-        public Camera mainCamera;
-        public bool usingGamePad;
-
-        //movement
-        public float controllerDeadzone = 0.1f;
-        public float regularSpeed = 5f;
-        public float slowSpeed = 2f;
-        public float dodgeSpeed = 15f;
-        public Vector2 movementInput = Vector2.zero;
-        public Vector2 rotationInput = Vector2.zero;
-
-        private float rotateSmoothing = 3f;
-
-        //throw
-        [SerializeField] public float currentChargeTime = 0;
-        [SerializeField] public float maxChargeTime = 1;
-        [SerializeField] public float maxThrowForce = 10;
-        [SerializeField] public float throwHeight = 1.2f;
-        [SerializeField] public float holdBallCooldown = 0;
-        [SerializeField] public float holdBallCooldownDuration = 2f;
-
-        //dodge
-        public float dodgeMaxDuration = .6f;
-        public float dodgeCooldownTimer = 1f;
-        public float dodgeCurrentCooldown = 0f;
+        private StateMachine        stateMachine;
+        private PlayerController    playerController;
+        private CharacterController controller;
+        private Transform           handsocket;
+        private PalloController     heldPallo;
+        private Camera              mainCamera;
 
         //hp
         public int currentHp;
-        public int CurrentHp
+        public LayerMask palloLayermask;
+
+        [Header("Movement")]  
+        public float    speedRegular = 5f;
+        public float    speedSlow = 2f;
+        public float    speedDodge = 15f;
+        public Vector2  movementInput = Vector2.zero;
+        public Vector2  rotationInput = Vector2.zero;
+        public bool     usingGamePad;
+        public float    controllerDeadzone = 0.01f;
+        private float   rotateSmoothing = 3f;
+
+        [Header("Throw")]
+        public float throwChargeMax = 1f;
+        public float holdBallCooldown = 2f;
+        private float throwChargeCurrent = 0f;
+        private float throwForceMax = 10f;
+        private float throwHeight = 1.2f;
+        private float holdBallCooldownCurrent = 0f;
+
+        [Header("Dodge")]
+        public float dodgeDuration = .6f; //durata dodge
+        public float dodgeCooldown = 1f; //durata dodge cooldown
+		private float dodgeCooldownCurrent = 0f;
+
+        [Header("Parry")]
+        public bool isInvincibile = false;
+        public float parryDuration = 0.5f; //quanto a lungo dura l'azione del parry
+        public float parryPercentage = 60f; //percentuale del parry in cui sei invincibile
+        public float parryRange = 2f; //quanto lontano raggiunge il parry
+        public float parryCooldown = 1f;
+        private float parryCooldownCurrent = 0f;
+
+        //properties
+        public StateMachine StateMachine            { get => stateMachine; set => stateMachine = value; }
+        public PlayerController PlayerController    { get => PlayerController; set => PlayerController = value; }
+        public PalloController HeldPallo            { get => heldPallo; set => heldPallo = value; }
+		public Transform Handsocket                 { get => handsocket; set => handsocket = value; }
+        public float DodgeCooldownCurrent           { get => dodgeCooldownCurrent; set => dodgeCooldownCurrent = value; }
+        public float ParryCooldownCurrent           { get => parryCooldownCurrent; set => parryCooldownCurrent = value; }
+        public float HoldBallCooldownCurrent        { get => holdBallCooldownCurrent; set => holdBallCooldownCurrent = value; }
+        public float ThrowChargeCurrent             { get => throwChargeCurrent; set => throwChargeCurrent = value; }
+        
+        public Vector3  ThrowVelocity
+        {
+            get
+            {
+                return transform.forward *
+                (ThrowForceMin + (Mathf.Min(throwChargeCurrent, throwChargeMax)
+                * (throwForceMax - ThrowForceMin) / throwChargeMax))
+                + Vector3.up * throwHeight;
+            }
+        }
+        public int      CurrentHp
         {
             get { return currentHp; }
 
@@ -60,30 +93,18 @@ namespace StateMachine
                     currentHp = value;
             }
         }
+        private bool    IsMovementValid =>              Mathf.Abs(movementInput.x) > controllerDeadzone ||
+                                                     Mathf.Abs(movementInput.y) > controllerDeadzone ||
+                                                     stateMachine.currentState == stateMachine.dodge ||
+                                                     stateMachine.currentState == stateMachine.stun;
+        public Vector3  MovementDirectionFromInput => new Vector3(movementInput.x, 0, movementInput.y).normalized;
+        public float    ThrowForceMin => PalloController.SPEED_TIERS[1];
+        public bool     IsHoldingBall => heldPallo;
 
-        //properties
 
-        public Vector3 MovementDirectionFromInput => new Vector3(movementInput.x, 0, movementInput.y).normalized;
-        private bool GottaMove => Mathf.Abs(movementInput.x) > controllerDeadzone ||
-                                 Mathf.Abs(movementInput.y) > controllerDeadzone ||
-                                 stateMachine.currentState == stateMachine.dodge ||
-                                 stateMachine.currentState == stateMachine.stun;
-        public bool IsHoldingBall => heldPallo;
-        public float MinThrowForce => PalloController.SPEED_TIERS[1];
-        public Vector3 ThrowVelocity
-        {
-            get
-            {
-                return transform.forward *
-                (MinThrowForce + (Mathf.Min(currentChargeTime, maxChargeTime)
-                * (maxThrowForce - MinThrowForce) / maxChargeTime))
-                + Vector3.up * throwHeight;
-            }
-        }
+		#endregion
 
-        #endregion
-
-        void Awake()
+		void Awake()
         {
             stateMachine = new StateMachine(this);
 
@@ -91,19 +112,42 @@ namespace StateMachine
             playerController = gameObject.GetComponent<PlayerController>();
             controller = gameObject.GetComponent<CharacterController>();
             mainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
-            handsocket = GameObject.Find("HandSocket").GetComponentInChildren<Transform>(); 
+            Handsocket = GameObject.Find("HandSocket").GetComponentInChildren<Transform>(); 
         }
 
         void Update()
         {
             stateMachine.currentState?.Update();
+
+            HandleCooldowns();
         }
 
-		#region helper methods
+        #region helper methods
 
-		public void HandleMovement(Vector3 direction, float speed)
+        private void HandleCooldowns()
         {
-            if (GottaMove)
+            //dodge cooldown
+            if (DodgeCooldownCurrent > 0)
+            {
+                DodgeCooldownCurrent -= Time.deltaTime;
+            }
+
+            //parry cooldown
+            if (ParryCooldownCurrent > 0)
+            {
+                ParryCooldownCurrent -= Time.deltaTime;
+            }
+
+            //hold ball cooldown
+            if (HoldBallCooldownCurrent > 0 && !IsHoldingBall)
+			{
+                HoldBallCooldownCurrent -= Time.deltaTime;
+            }
+        }
+
+        public void HandleMovement(Vector3 direction, float speed)
+        {
+            if (IsMovementValid)
 			{
                 controller.Move(direction * speed * Time.deltaTime);
             }
@@ -160,13 +204,11 @@ namespace StateMachine
 
         private void PalloContact(PalloController pallo)
 		{
-            /*
             if (holdBallCooldown <= 0)
             {
-                
-            }*/
-            heldPallo = pallo;
-            heldPallo.Hold(handsocket);
+                heldPallo = pallo;
+                heldPallo.Hold(Handsocket);
+            }
         }
 
         public void TakeDamage(int amount)
