@@ -85,15 +85,21 @@ public class UIPanel : MonoBehaviour
     private void MoveLeft(bool disableOnComplete) {
         if (disableOnComplete)
             rectTransform.DOAnchorPosX(rectTransform.anchoredPosition.x - width, moveTime).OnComplete(delegate () { gameObject.SetActive(false); });
-        else
+        else {
+
+            FindObjectOfType<ParallaxManager>().Move(Direction.Left);
             rectTransform.DOAnchorPosX(rectTransform.anchoredPosition.x - width, moveTime);
+        }
     }
 
     private void MoveRight(bool disableOnComplete) {
         if (disableOnComplete)
             rectTransform.DOAnchorPosX(rectTransform.anchoredPosition.x + width, moveTime).OnComplete(delegate () { gameObject.SetActive(false); });
-        else
+        else {
+            FindObjectOfType<ParallaxManager>().Move(Direction.Right);
             rectTransform.DOAnchorPosX(rectTransform.anchoredPosition.x + width, moveTime);
+        }
+            
     }
 
     public void MoveToScreen() {
