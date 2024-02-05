@@ -74,7 +74,6 @@ public class VFX_BallAuraScript : MonoBehaviour
 
     private void OnChangeBallState(PalloController.BallStates state) 
     {
-        Debug.Log(state);
         if(state == PalloController.BallStates.thrown) 
         {
             CheckLevel(myPalloScript.SpeedTier);

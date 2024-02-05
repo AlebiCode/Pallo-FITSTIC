@@ -1,6 +1,8 @@
+using AleBorghesi;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditor.ShaderGraph;
 using UnityEngine;
 
 namespace Controllers
@@ -15,6 +17,7 @@ namespace Controllers
         [SerializeField] private float speed = 1;
         [SerializeField] private int maxHealthPoints = 100;
 
+        [SerializeField] private IKTesting ikControl;
         [SerializeField] private PalloTrigger parryHitbox;
         [SerializeField] private Transform handsocket;
         [SerializeField] private PlayerAnimation playerAnimation;
@@ -35,7 +38,8 @@ namespace Controllers
             } 
         }
 
-        private Vector2 directionInput;
+        private Vector3 directionInput;
+        private Vector3 relativeDir;
         private PalloController heldPallo;
         private float throwChargeTime = 0;
 
@@ -55,17 +59,17 @@ namespace Controllers
         {
             PlayerMovement();
             PlayerRotation();
+            float angle = Vector3.SignedAngle(transform.forward, relativeDir, Vector3.up);
+            ikControl.SetLowerBodyRotation(angle);
             BallThrow();
 
             if (Input.GetKeyDown(KeyCode.Mouse1))
             {
-                playerAnimation.SetLayerWeight(1, 1);
                 playerAnimation.PlayAnimation(PlayerAnimation.takeIntro);
                 parryHitbox.SetActivationStatus(true);
             }
             else if (Input.GetKeyUp(KeyCode.Mouse1))
             {
-                playerAnimation.SetLayerWeight(1, 1);
                 playerAnimation.PlayAnimation(IsHoldingBall ? PlayerAnimation.takeOutroBall : PlayerAnimation.takeOutroNoBall);
                 parryHitbox.SetActivationStatus(false);
             }
@@ -75,13 +79,13 @@ namespace Controllers
         private void PlayerMovement()
         {
             directionInput.x = Input.GetAxis("Horizontal");
-            directionInput.y = Input.GetAxis("Vertical");
+            directionInput.z = Input.GetAxis("Vertical");
 
-            transform.position += new Vector3(directionInput.x, 0, directionInput.y) * speed * Time.deltaTime;
+            transform.position += new Vector3(directionInput.x, 0, directionInput.z) * speed * Time.deltaTime;
 
             //playerAnimation.SetLegLayerWeight(directionInput.magnitude);
-            Vector3 relativeDir = transform.InverseTransformDirection(directionInput);
-            playerAnimation.LegMovementParameters(relativeDir);
+            relativeDir = transform.InverseTransformDirection(directionInput);
+            playerAnimation.LegMovementParameters(relativeDir.x, relativeDir.z);
         }
         private void PlayerRotation()
         {
@@ -100,7 +104,6 @@ namespace Controllers
             {
                 heldPallo.Throw(transform.forward * (MinThrowForce + (Mathf.Min(throwChargeTime, maxChargeTime) * (maxThrowForce - MinThrowForce) / maxChargeTime)) + Vector3.up * 1.2f);
                 heldPallo = null;
-                playerAnimation.SetLayerWeight(1, 0);
             }
             else if (Input.GetKey(KeyCode.Mouse0))
             {
@@ -139,8 +142,6 @@ namespace Controllers
             heldPallo = palloController;
             throwChargeTime = 0;
             heldPallo.Hold(handsocket);
-
-            playerAnimation.SetLayerWeight(1, 1);
         }
 
         private float velocityChange = 0;

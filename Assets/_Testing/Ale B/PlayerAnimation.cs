@@ -58,15 +58,19 @@ public class PlayerAnimation
         animator.Play(hashValue);
     }
 
+    public void SetTopLayerWeight(float weight)
+    {
+        SetLayerWeight(1, weight);
+    }
     public void SetLayerWeight(int layer, float weight)
     {
         animator.SetLayerWeight(layer, weight);
     }
 
-    public void LegMovementParameters(Vector2 direction)
+    public void LegMovementParameters(float x, float z)
     {
-        animator.SetFloat("Horizontal", direction.x);
-        animator.SetFloat("Vertical", direction.y);
+        animator.SetFloat("Horizontal", x);
+        animator.SetFloat("Vertical", z);
     }
 
 }

@@ -14,16 +14,41 @@ namespace StateMachine
 		public override void Enter()
 		{
 			base.Enter();
+			Debug.Log("Enter Stun pushforce: " + player.PushForce);
+			LosePallo();
+			player.LookAt(new Vector3(-player.PushDirection.x, 0f, -player.PushDirection.z));
+			player.IsInvincibile = true;
 		}
 
 		public override void Exit()
 		{
 			base.Exit();
+			player.IsInvincibile = false;
 		}
 
 		public override void Update()
 		{
 			base.Update();
+
+			player.HandleMovement(player.PushDirection, player.PushForce);
+
+			player.PushForce -= player.PushDeterioration * Time.deltaTime;
+
+			if (player.PushForce <= player.speedSlow)
+			{
+				player.StateMachine.ChangeState(player.StateMachine.idle);
+			}
+		}
+
+		private void LosePallo()
+		{
+			if (player.HeldPallo)
+			{
+				player.HeldPallo.Drop();
+				player.HeldPallo = null;
+				player.ThrowChargeCurrent = 0;
+				player.HoldBallCooldownCurrent = player.holdBallCooldown;
+			}
 		}
 	}
 }
