@@ -18,7 +18,7 @@ MonoBehaviour:
     m_Value: 0
   cropToFit:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 1
 --- !u!114 &-7641057746148173238
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -65,7 +65,7 @@ MonoBehaviour:
     m_Value: {x: 0.5, y: 0.5}
   intensity:
     m_OverrideState: 1
-    m_Value: 0.176
+    m_Value: 0.24
   smoothness:
     m_OverrideState: 1
     m_Value: 0.174
@@ -152,13 +152,13 @@ MonoBehaviour:
     m_Value: 0
   focusDistance:
     m_OverrideState: 1
-    m_Value: 12.71
+    m_Value: 16.1
   aperture:
     m_OverrideState: 1
-    m_Value: 6
+    m_Value: 8
   focalLength:
     m_OverrideState: 1
-    m_Value: 204
+    m_Value: 280
   bladeCount:
     m_OverrideState: 1
     m_Value: 9
@@ -368,8 +368,8 @@ MonoBehaviour:
     m_OverrideState: 0
     m_Value: {x: 1, y: 1, z: 1, w: 0.034854874}
   gain:
-    m_OverrideState: 0
-    m_Value: {x: 1, y: 1, z: 1, w: -0.1593362}
+    m_OverrideState: 1
+    m_Value: {x: 1, y: 1, z: 1, w: 0.1895329}
 --- !u!114 &4359625386667611643
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -404,22 +404,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5e1dc532bcb41949b58bc4f2abfbb7e, type: 3}
   m_Name: LensDistortion
   m_EditorClassIdentifier: 
-  active: 0
+  active: 1
   intensity:
-    m_OverrideState: 1
-    m_Value: -0.197
+    m_OverrideState: 0
+    m_Value: 0.344
   xMultiplier:
-    m_OverrideState: 0
-    m_Value: 1
+    m_OverrideState: 1
+    m_Value: 0.448
   yMultiplier:
-    m_OverrideState: 0
-    m_Value: 1
+    m_OverrideState: 1
+    m_Value: 0.785
   center:
     m_OverrideState: 0
     m_Value: {x: 0.5, y: 0.5}
   scale:
     m_OverrideState: 0
-    m_Value: 1
+    m_Value: 5
 --- !u!114 &7709562721324243386
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -435,10 +435,10 @@ MonoBehaviour:
   active: 1
   temperature:
     m_OverrideState: 1
-    m_Value: -10.1
+    m_Value: 0
   tint:
     m_OverrideState: 0
-    m_Value: 69.6
+    m_Value: 19.5
 --- !u!114 &9031914087667125447
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -466,4 +466,4 @@ MonoBehaviour:
     m_Value: 3
   saturation:
     m_OverrideState: 1
-    m_Value: 4
+    m_Value: 6
