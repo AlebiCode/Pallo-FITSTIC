@@ -53,7 +53,7 @@ namespace Controllers
         public bool IsHeld => ballState == BallStates.held;
         public PlayerData PlayerHoldingIt { get { return playerHolding; } set { playerHolding = value; } }
         public bool CollisionsActive => enabled;
-        private Vector3 Velocity => velocity;
+        public Vector3 Velocity => velocity;
         private BallStates BallState
         {
             get { return ballState; }

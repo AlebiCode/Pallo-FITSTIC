@@ -215,8 +215,8 @@ namespace StateMachine
                 case PalloController.BallStates.thrown:
                     Debug.Log("Pushed");
                     GetPushed(
-                        pallo.GetComponent<Rigidbody>().velocity.normalized,
-                        PalloController.SPEED_TIERS[pallo.SpeedTier]);
+                        pallo.Velocity,
+                        PalloController.SPEED_TIERS[pallo.SpeedTier]); ;
                     Debug.Log("Speedtier: " + pallo.SpeedTier);
                     break;
 

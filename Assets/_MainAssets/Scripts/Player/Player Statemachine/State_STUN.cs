@@ -29,7 +29,7 @@ namespace StateMachine
 		public override void Update()
 		{
 			base.Update();
-
+			Debug.Log("pushDirection :" + player.PushDirection + "; pushForce :" + player.PushForce);
 			player.HandleMovement(player.PushDirection, player.PushForce);
 
 			player.PushForce -= player.PushDeterioration * Time.deltaTime;
