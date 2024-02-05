@@ -223,14 +223,14 @@ namespace LorenzoCastelli {
             }
             else if (GameLogic.instance.pallo.IsHeld) {//QUALCUN ALTRO HA LA PALLA
 
-                if (isAggressive) {
+                /*if (isAggressive) {
                     //se sono aggressivo vado a priori verso il giocatore con la palla
                     currentMoveLocationTarget = GameLogic.instance.pallo.gameObject.transform.position;
                 }
-                else {
+                else {*/
                     Vector3 farrestArea = GameLogic.instance.FindFarestPointV2(GameLogic.instance.pallo.gameObject, playerData);
                     currentMoveLocationTarget = farrestArea;
-                }
+                //}
                 
             } else {//NESSUNO HA LA PALLA
 
