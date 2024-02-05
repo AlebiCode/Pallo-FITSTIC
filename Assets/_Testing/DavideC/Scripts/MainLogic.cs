@@ -14,7 +14,6 @@ namespace DavideCTest
         [SerializeField] private GameObject palloModel;
         [SerializeField] private Vector3 palloSpawnLocation = new Vector3(0f,5f,0f);
 
-
         [SerializeField] private GameObject playerModel;
         [SerializeField] private Vector3 playerSpawnLocation = new Vector3(0f, 3f, 0f);
         [SerializeField] private Transform playerContainer;
@@ -32,7 +31,6 @@ namespace DavideCTest
             {
                 instance = this;
             }
-
         }
 
         private void Update()

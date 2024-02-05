@@ -11,6 +11,8 @@ namespace StateMachine
     [RequireComponent(typeof(PlayerInput))]
     [RequireComponent(typeof(Rigidbody))]
     [RequireComponent(typeof(CharacterController))]
+    [RequireComponent(typeof(PalloTrigger))]
+    [RequireComponent(typeof(PlayerAnimation))]
 
     public class Player : MonoBehaviour
     {
@@ -25,8 +27,12 @@ namespace StateMachine
         private Transform           handsocket;
         private PalloController     heldPallo;
         private Camera              mainCamera;
+        private PlayerAnimation     playerAnimation;
 
         //hp
+        private Vector3 pushDirection;
+        private float pushForce;
+        private float pushDeterioration = 2f;
         public int currentHp;
         public LayerMask palloLayermask;
 
@@ -54,14 +60,15 @@ namespace StateMachine
 		private float dodgeCooldownCurrent = 0f;
 
         [Header("Parry")]
-        public bool isInvincibile = false;
         public float parryDuration = 0.5f; //quanto a lungo dura l'azione del parry
         public float parryPercentage = 60f; //percentuale del parry in cui sei invincibile
         public float parryRange = 2f; //quanto lontano raggiunge il parry
         public float parryCooldown = 1f;
+        public bool isInvincibile = false;
         private float parryCooldownCurrent = 0f;
 
         //properties
+        public PlayerAnimation PlayerAnimation => playerAnimation;
         public StateMachine StateMachine            { get => stateMachine; set => stateMachine = value; }
         public PlayerController PlayerController    { get => PlayerController; set => PlayerController = value; }
         public PalloController HeldPallo            { get => heldPallo; set => heldPallo = value; }
@@ -70,7 +77,10 @@ namespace StateMachine
         public float ParryCooldownCurrent           { get => parryCooldownCurrent; set => parryCooldownCurrent = value; }
         public float HoldBallCooldownCurrent        { get => holdBallCooldownCurrent; set => holdBallCooldownCurrent = value; }
         public float ThrowChargeCurrent             { get => throwChargeCurrent; set => throwChargeCurrent = value; }
-        
+		public bool IsInvincibile                   { get => isInvincibile; set => isInvincibile = value; }
+		public Vector3 PushDirection                { get => pushDirection; set => pushDirection = value; }
+		public float PushForce                      { get => pushForce; set => pushForce = value; }
+		public float PushDeterioration              { get => pushDeterioration; set => pushDeterioration = value; }
         public Vector3  ThrowVelocity
         {
             get
@@ -93,14 +103,13 @@ namespace StateMachine
                     currentHp = value;
             }
         }
-        private bool    IsMovementValid =>              Mathf.Abs(movementInput.x) > controllerDeadzone ||
-                                                     Mathf.Abs(movementInput.y) > controllerDeadzone ||
-                                                     stateMachine.currentState == stateMachine.dodge ||
-                                                     stateMachine.currentState == stateMachine.stun;
+        private bool IsMovementValid =>             Mathf.Abs(movementInput.x) > controllerDeadzone ||
+                                                    Mathf.Abs(movementInput.y) > controllerDeadzone ||
+                                                    StateMachine.currentState == StateMachine.dodge ||
+                                                    StateMachine.currentState == StateMachine.stun;
         public Vector3  MovementDirectionFromInput => new Vector3(movementInput.x, 0, movementInput.y).normalized;
         public float    ThrowForceMin => PalloController.SPEED_TIERS[1];
         public bool     IsHoldingBall => heldPallo;
-
 
 		#endregion
 
@@ -204,12 +213,36 @@ namespace StateMachine
 
         private void PalloContact(PalloController pallo)
 		{
-            if (holdBallCooldown <= 0)
-            {
-                heldPallo = pallo;
-                heldPallo.Hold(Handsocket);
+			switch (pallo.GetBallState)
+			{
+                case PalloController.BallStates.thrown:
+                    Debug.Log("Pushed");
+                    GetPushed(
+                        pallo.Velocity,
+                        PalloController.SPEED_TIERS[pallo.SpeedTier]); ;
+                    Debug.Log("Speedtier: " + pallo.SpeedTier);
+                    break;
+
+                case PalloController.BallStates.bouncing:
+                    Debug.Log("Pick up");
+                    if (holdBallCooldown <= 0)
+                    {
+                        heldPallo = pallo;
+                        heldPallo.Hold(Handsocket);
+                    }
+                    break;
             }
         }
+
+        private void GetPushed(Vector3 pushDirection, float pushForce)
+		{
+            if (!IsInvincibile)
+			{
+                PushDirection = pushDirection;
+                PushForce = pushForce;
+                stateMachine.ChangeState(stateMachine.stun);
+			}
+		}
 
         public void TakeDamage(int amount)
         {
@@ -222,7 +255,6 @@ namespace StateMachine
                 this.KillPlayer();
             }
         }
-
 
         public void KillPlayer()
         {

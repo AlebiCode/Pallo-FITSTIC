@@ -27,7 +27,10 @@ namespace StateMachine
 
 			player.HandleMovement(player.MovementDirectionFromInput, player.speedRegular);
 			player.HandleRotation();
-		}
-	}
+
+			Vector3 leg = player.transform.InverseTransformDirection(player.MovementDirectionFromInput);
+            player.PlayerAnimation.LegMovementParameters(leg.x, leg.z);
+        }
+    }
 }
 

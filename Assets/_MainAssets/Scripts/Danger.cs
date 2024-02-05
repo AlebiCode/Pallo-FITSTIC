@@ -49,8 +49,6 @@ public class Danger : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        //if (collision.collider.GetType() == typeof(CapsuleCollider))
-        //{
             if (collision.gameObject.layer == 6)
             {
                 DangerBehavior();
@@ -60,16 +58,10 @@ public class Danger : MonoBehaviour
                 //aggiungi logica palla contro trappola
                 //DangerBehaviorForBall();
             }
-        //}
-    }
-
-    private void DangerBehaviorForBall()
-    {
     }
 
     private void DangerBehavior()
     {
-        
         if (isActive)
         {
             var playersHit = Physics.OverlapSphere(this.transform.position, explosionRadius, 1 << 6 );
@@ -81,6 +73,8 @@ public class Danger : MonoBehaviour
                     switch(dangerConfig.DangerType)
                     {
                         case DangerTypesEnum.Red:
+                            // Comportamento del RedDanger
+                            // Porta a zero la vita del personaggio vicino
 
                             player.gameObject.GetComponentInChildren<TestPlayerController>().KillPlayer();
 
@@ -88,12 +82,12 @@ public class Danger : MonoBehaviour
 
                             Destroy(this.gameObject);
 
-                            // Comportamento del RedDanger
-                            // Porta a zero la vita del personaggio vicino
                             break;
 
                         case DangerTypesEnum.Purple:
-
+                            // Comportamento del PurpleDanger
+                            // Diminuisce la stamina di valore X
+                            // Respinge il personaggio vicino
 
                             StaminaDecrese(player);
 
@@ -101,20 +95,16 @@ public class Danger : MonoBehaviour
 
                             Debug.Log("damage taken = " + dangerConfig.explosionDamage);
 
-                            // Comportamento del PurpleDanger
-                            // Diminuisce la stamina di valore X
-                            // Respinge il personaggio vicino
                             break;
 
                         case DangerTypesEnum.Yellow:
-
+                            // Comportamento del YellowDanger
+                            // Diminuisce la stamina di valore X del personaggio vicino
 
                             StaminaDecrese(player);
 
                             Debug.Log("damage taken = " + dangerConfig.explosionDamage);
 
-                            // Comportamento del YellowDanger
-                            // Diminuisce la stamina di valore X del personaggio vicino
                             break;
                     }
                 }
@@ -140,7 +130,6 @@ public class Danger : MonoBehaviour
         _player.gameObject.GetComponentInChildren<TestPlayerController>().HitScaling();
 
         _player.gameObject.GetComponentInChildren<TestPlayerController>().TakeDamage(dangerConfig.explosionDamage);
-
     }
 
     private void FixedUpdate()

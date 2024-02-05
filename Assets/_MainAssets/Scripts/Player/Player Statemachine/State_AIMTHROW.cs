@@ -19,11 +19,7 @@ namespace StateMachine
 		public override void Exit()
 		{
 			base.Exit();
-
-			//reset variables
-			player.HeldPallo = null;
-			player.ThrowChargeCurrent = 0;
-			player.HoldBallCooldownCurrent = player.holdBallCooldown;
+			ResetCharge();
 		}
 
 		public override void Update()
@@ -34,6 +30,13 @@ namespace StateMachine
 
 			player.HandleMovement(player.MovementDirectionFromInput, player.speedSlow);
 			player.HandleRotation();
+		}
+
+		private void ResetCharge()
+		{
+			player.HeldPallo = null;
+			player.ThrowChargeCurrent = 0;
+			player.HoldBallCooldownCurrent = player.holdBallCooldown;
 		}
 	}
 }

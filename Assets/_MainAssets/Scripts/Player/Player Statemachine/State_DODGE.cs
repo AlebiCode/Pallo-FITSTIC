@@ -22,6 +22,7 @@ namespace StateMachine
 			player.transform.LookAt(player.transform.position + dodgeDirection, Vector3.up);
 			dodgeSpeedCurrent = player.speedDodge;
 			dodgeDurationCurrent = player.dodgeDuration;
+			player.PlayerAnimation.PlayAnimation(PlayerAnimation.dashForwardIntro);
 		}
 
 		public override void Exit()
@@ -39,8 +40,11 @@ namespace StateMachine
 			dodgeDurationCurrent -= 2 * Time.deltaTime;
 
 			if (dodgeDurationCurrent <= 0)
+			{
 				player.StateMachine.ChangeState(player.StateMachine.idle);
-		}
+                player.PlayerAnimation.PlayAnimation(PlayerAnimation.dashForwardOutro);
+            }
+        }
 
 		private void Dodge()
 		{

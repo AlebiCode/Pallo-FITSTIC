@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using LorenzoCastelli;  
 using StateMachine;
 using UnityEngine;
@@ -23,7 +24,7 @@ namespace Controllers
         private const float GRAVITY = 9.81f;
         public static readonly float[] SPEED_TIERS = { 4.5f, 7.5f, 10f, 12f };
 
-        public enum BallStates { held, thrown, bouncing }
+        public enum BallStates { respawning, held, thrown, bouncing }
 
         PlayerData playerHolding = null;
 
@@ -52,7 +53,7 @@ namespace Controllers
         public bool IsHeld => ballState == BallStates.held;
         public PlayerData PlayerHoldingIt { get { return playerHolding; } set { playerHolding = value; } }
         public bool CollisionsActive => enabled;
-        private float HorizontalVelocityMagnitude => new Vector2(velocity.x, velocity.y).magnitude;
+        public Vector3 Velocity => velocity;
         private BallStates BallState
         {
             get { return ballState; }
@@ -60,6 +61,7 @@ namespace Controllers
                 ballState = value;
                 switch (ballState)
                 {
+                    case BallStates.respawning:
                     case BallStates.thrown:
                     case BallStates.bouncing:
                         enabled = true;
@@ -98,7 +100,6 @@ namespace Controllers
             Physics.SphereCast(transform.position, collider.radius, velocity, out spherecastInfo, velocity.magnitude * Time.deltaTime, collisionLayermask, QueryTriggerInteraction.Collide);
             if (spherecastInfo.collider)
             {
-                Debug.Log("Hit " + spherecastInfo.collider.name);
                 PalloTriggerCheck(spherecastInfo.collider.GetComponent<PalloTrigger>());
                 if (!spherecastInfo.collider.isTrigger)
                 {
@@ -192,9 +193,34 @@ namespace Controllers
             collider.enabled = true;
             this.velocity = speed;// * SPEED_TIERS[speedTier];
 
+            this.speedTier = speedTier;
             onSpeedTierChange.Invoke(speedTier);    //da fare per bene
             playerHolding = null;
             //UpdateSpeedTier();
+        }
+
+        public void Respawn(Vector3 point, float height)
+        {
+            float respawnTime = 2;
+            ballState = BallStates.respawning;
+            velocity = (new Vector3(point.x, transform.position.y, point.z) - transform.position) / respawnTime;
+            velocity.y = Mathf.Sqrt(-2.0f * GRAVITY * height);
+            //rigidbody2D.velocity = new Vector2(0, Mathf.Sqrt(-2.0f * Physics2D.gravity.y * jumpHeight))
+        }
+        public void Respawn(Vector3 point)
+        {
+            Respawn(point, 10);
+        }
+        public void Respawn(Transform pos)
+        {
+            Respawn(pos.transform.position, 10);
+		}
+        public void Drop()
+		{
+            BallState = BallStates.bouncing;
+            transform.SetParent(null);
+            collider.enabled = true;
+            playerHolding = null;
         }
 
         /*
