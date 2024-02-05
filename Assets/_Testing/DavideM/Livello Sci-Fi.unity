@@ -5620,8 +5620,12 @@ MonoBehaviour:
   rb: {fileID: 412976998}
   speed: 1
   maxHealthPoints: 100
-  playerIsBeingRejected: 0
+  ikControl: {fileID: 0}
+  parryHitbox: {fileID: 0}
   handsocket: {fileID: 0}
+  playerAnimation:
+    animator: {fileID: 0}
+  playerIsBeingRejected: 0
 --- !u!54 &412976998
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -6467,13 +6471,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 961739749}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.64944756, y: 0.0007924886, z: -0.0009278851, w: 0.7604055}
-  m_LocalPosition: {x: 0, y: 18.19, z: -3.33}
+  m_LocalRotation: {x: 0.5, y: 0, z: 0, w: 0.8660254}
+  m_LocalPosition: {x: 0, y: 18, z: -11}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 81, y: 0, z: -0.14}
+  m_LocalEulerAnglesHint: {x: 60, y: 0, z: 0}
 --- !u!1 &963404217
 GameObject:
   m_ObjectHideFlags: 0

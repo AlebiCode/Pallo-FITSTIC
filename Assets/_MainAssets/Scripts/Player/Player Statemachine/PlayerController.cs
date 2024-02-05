@@ -41,7 +41,7 @@ namespace StateMachine
 
         public void OnMove(InputAction.CallbackContext context)
         {
-            player.movementInput = context.ReadValue<Vector2>();
+            player.MovementInput = context.ReadValue<Vector2>();
 
             if (CanMove)
                 player.StateMachine.ChangeState(player.StateMachine.move);
@@ -54,7 +54,7 @@ namespace StateMachine
 
         public void OnRotation(InputAction.CallbackContext context)
         {
-            player.rotationInput = context.ReadValue<Vector2>();
+            player.RotationInput = context.ReadValue<Vector2>();
         }
 
         public void OnThrow(InputAction.CallbackContext context)

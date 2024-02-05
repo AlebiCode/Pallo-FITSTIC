@@ -9,7 +9,6 @@ namespace StateMachine
     [RequireComponent(typeof(PlayerController))]
     [RequireComponent(typeof(Animator))]
     [RequireComponent(typeof(PlayerInput))]
-    [RequireComponent(typeof(Rigidbody))]
     [RequireComponent(typeof(CharacterController))]
     [RequireComponent(typeof(PalloTrigger))]
     [RequireComponent(typeof(PlayerAnimation))]
@@ -22,32 +21,27 @@ namespace StateMachine
 
         //linked classes
         private StateMachine        stateMachine;
-        private PlayerController    playerController;
         private CharacterController controller;
         private Transform           handsocket;
         private PalloController     heldPallo;
         private Camera              mainCamera;
         [SerializeField]
         private PlayerAnimation     playerAnimation;
+        public LayerMask            palloLayermask;
 
         //hp
-        private Vector3 pushDirection;
-        private float pushForce;
-        private float pushDeterioration = 2f;
         public int currentHp;
-        public LayerMask palloLayermask;
 
         [Header("Movement")]  
         public float    speedRegular = 5f;
-        public float    speedSlow = 2f;
-        public float    speedDodge = 15f;
-        public Vector2  movementInput = Vector2.zero;
-        public Vector2  rotationInput = Vector2.zero;
-        public bool     usingGamePad;
         public float    controllerDeadzone = 0.01f;
+        private Vector2 movementInput = Vector2.zero;
+        private Vector2 rotationInput = Vector2.zero;
+        private bool    usingGamePad;
         private float   rotateSmoothing = 3f;
 
         [Header("Throw")]
+        public float speedSlow = 2f;
         public float throwChargeMax = 1f;
         public float holdBallCooldown = 2f;
         private float throwChargeCurrent = 0f;
@@ -56,8 +50,10 @@ namespace StateMachine
         private float holdBallCooldownCurrent = 0f;
 
         [Header("Dodge")]
+        public float speedDodge = 15f;
         public float dodgeDuration = .6f; //durata dodge
         public float dodgeCooldown = 1f; //durata dodge cooldown
+        public float dodgeDecrease = 2f; //quanto velocemente diminuisce la velocità di dodge
 		private float dodgeCooldownCurrent = 0f;
 
         [Header("Parry")]
@@ -68,12 +64,20 @@ namespace StateMachine
         public bool isInvincibile = false;
         private float parryCooldownCurrent = 0f;
 
+        [Header("Stun")]
+        public float pushFactor = 2f;
+        public float pushDecrease = 2f;
+        private Vector3 pushDirection;
+        private float pushForce;
+
         //properties
         public PlayerAnimation PlayerAnimation => playerAnimation;
         public StateMachine StateMachine            { get => stateMachine; set => stateMachine = value; }
         public PlayerController PlayerController    { get => PlayerController; set => PlayerController = value; }
         public PalloController HeldPallo            { get => heldPallo; set => heldPallo = value; }
 		public Transform Handsocket                 { get => handsocket; set => handsocket = value; }
+		public Vector2 MovementInput                { get => movementInput; set => movementInput = value; }
+		public Vector2 RotationInput                { get => rotationInput; set => rotationInput = value; }
         public float DodgeCooldownCurrent           { get => dodgeCooldownCurrent; set => dodgeCooldownCurrent = value; }
         public float ParryCooldownCurrent           { get => parryCooldownCurrent; set => parryCooldownCurrent = value; }
         public float HoldBallCooldownCurrent        { get => holdBallCooldownCurrent; set => holdBallCooldownCurrent = value; }
@@ -81,7 +85,7 @@ namespace StateMachine
 		public bool IsInvincibile                   { get => isInvincibile; set => isInvincibile = value; }
 		public Vector3 PushDirection                { get => pushDirection; set => pushDirection = value; }
 		public float PushForce                      { get => pushForce; set => pushForce = value; }
-		public float PushDeterioration              { get => pushDeterioration; set => pushDeterioration = value; }
+		public float PushDecrease              { get => pushDecrease; set => pushDecrease = value; }
         public Vector3  ThrowVelocity
         {
             get
@@ -104,13 +108,14 @@ namespace StateMachine
                     currentHp = value;
             }
         }
-        private bool IsMovementValid =>             Mathf.Abs(movementInput.x) > controllerDeadzone ||
-                                                    Mathf.Abs(movementInput.y) > controllerDeadzone ||
+        private bool IsMovementValid =>             Mathf.Abs(MovementInput.x) > controllerDeadzone ||
+                                                    Mathf.Abs(MovementInput.y) > controllerDeadzone ||
                                                     StateMachine.currentState == StateMachine.dodge ||
                                                     StateMachine.currentState == StateMachine.stun;
-        public Vector3  MovementDirectionFromInput => new Vector3(movementInput.x, 0, movementInput.y).normalized;
+        public Vector3  MovementDirectionFromInput => new Vector3(MovementInput.x, 0, MovementInput.y).normalized;
         public float    ThrowForceMin => PalloController.SPEED_TIERS[1];
         public bool     IsHoldingBall => heldPallo;
+
 
 		#endregion
 
@@ -119,7 +124,7 @@ namespace StateMachine
             stateMachine = new StateMachine(this);
 
             GetComponent<PalloTrigger>().AddOnEnterListener(PalloContact);
-            playerController = gameObject.GetComponent<PlayerController>();
+            //playerController = gameObject.GetComponent<PlayerController>();
             controller = gameObject.GetComponent<CharacterController>();
             mainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
             Handsocket = GameObject.Find("HandSocket").GetComponentInChildren<Transform>(); 
@@ -179,16 +184,16 @@ namespace StateMachine
 
         private void GamepadRotation()
         {
-            if (Mathf.Abs(rotationInput.x) > controllerDeadzone || Mathf.Abs(rotationInput.y) > controllerDeadzone)
+            if (Mathf.Abs(RotationInput.x) > controllerDeadzone || Mathf.Abs(RotationInput.y) > controllerDeadzone)
             {
-                Vector3 playerDirection = Vector3.right * rotationInput.x + Vector3.forward * rotationInput.y;
+                Vector3 playerDirection = Vector3.right * RotationInput.x + Vector3.forward * RotationInput.y;
                 if (playerDirection.sqrMagnitude > 0.0f)
                 {
                     Quaternion newRotation = Quaternion.LookRotation(playerDirection, Vector3.up);
                     transform.rotation = Quaternion.RotateTowards(transform.rotation, newRotation, rotateSmoothing * Time.deltaTime);
                 }
             }
-            else if (Mathf.Abs(movementInput.x) > controllerDeadzone || Mathf.Abs(movementInput.y) > controllerDeadzone)
+            else if (Mathf.Abs(MovementInput.x) > controllerDeadzone || Mathf.Abs(MovementInput.y) > controllerDeadzone)
             {
                 transform.LookAt(transform.position + MovementDirectionFromInput, Vector3.up);
             }
@@ -196,7 +201,7 @@ namespace StateMachine
 
         private void KeyboardRotation()
         {
-            Ray cameraRay = mainCamera.ScreenPointToRay(rotationInput);
+            Ray cameraRay = mainCamera.ScreenPointToRay(RotationInput);
             Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
             float rayLength;
 
@@ -219,20 +224,21 @@ namespace StateMachine
 			switch (pallo.GetBallState)
 			{
                 case PalloController.BallStates.thrown:
-                    Debug.Log("Pushed");
+
                     GetPushed(
-                        pallo.Velocity,
-                        PalloController.SPEED_TIERS[pallo.SpeedTier]); ;
-                    Debug.Log("Speedtier: " + pallo.SpeedTier);
+                        pallo.Velocity.normalized,
+                        PalloController.SPEED_TIERS[pallo.SpeedTier] * pushFactor);
+
                     break;
 
                 case PalloController.BallStates.bouncing:
-                    Debug.Log("Pick up");
+
                     if (holdBallCooldown <= 0)
                     {
                         heldPallo = pallo;
                         heldPallo.Hold(Handsocket);
                     }
+
                     break;
             }
         }
