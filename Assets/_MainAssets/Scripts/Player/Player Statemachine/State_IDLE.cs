@@ -15,7 +15,7 @@ namespace StateMachine
 		{
 			base.Enter();
 
-			if (player.movementInput != Vector2.zero)
+			if (player.MovementInput != Vector2.zero)
 				player.StateMachine.ChangeState(player.StateMachine.move);
 		}
 

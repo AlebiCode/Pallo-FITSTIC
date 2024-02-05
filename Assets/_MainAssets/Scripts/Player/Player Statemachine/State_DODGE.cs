@@ -37,7 +37,7 @@ namespace StateMachine
 
 			Dodge();
 
-			dodgeDurationCurrent -= 2 * Time.deltaTime;
+			dodgeDurationCurrent -= Time.deltaTime;
 
 			if (dodgeDurationCurrent <= 0)
 			{
@@ -49,7 +49,8 @@ namespace StateMachine
 		private void Dodge()
 		{
 			player.HandleMovement(dodgeDirection, dodgeSpeedCurrent);
-			dodgeSpeedCurrent -= 2 * Time.deltaTime;
+			dodgeSpeedCurrent -= player.dodgeDecrease;
+			Debug.Log("Dodge Current Speed: " + dodgeSpeedCurrent);
 		}
 	}
 }
