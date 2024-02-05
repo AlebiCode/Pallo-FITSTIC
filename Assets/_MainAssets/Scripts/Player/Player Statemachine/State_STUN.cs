@@ -32,7 +32,7 @@ namespace StateMachine
 			Debug.Log("pushDirection :" + player.PushDirection + "; pushForce :" + player.PushForce);
 			player.HandleMovement(player.PushDirection, player.PushForce);
 
-			player.PushForce -= player.PushDeterioration * Time.deltaTime;
+			player.PushForce -= player.PushDecrease;
 
 			if (player.PushForce <= player.speedSlow)
 			{
