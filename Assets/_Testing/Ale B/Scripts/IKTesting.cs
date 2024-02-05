@@ -12,6 +12,8 @@ namespace AleBorghesi
     {
         protected Animator animator;
 
+        [SerializeField] private Transform[] rotTargets;
+        [SerializeField] private Transform kilt;
         private IK_Bone hipsBone;
         public bool ikUpdate = true;
         [Header("BoneHits")]
@@ -19,6 +21,7 @@ namespace AleBorghesi
         public HumanBodyBones DEBUG_StartBottaBone;
         private IK_Bone bottaBone;
         public Vector3 bottaOffset;
+        public Vector3 spineRotationOffset;
 
         void Start()
         {
@@ -32,8 +35,8 @@ namespace AleBorghesi
         {
             if (!ikUpdate)
                 return;
-            animator.SetIKPositionWeight(AvatarIKGoal.RightHand, 1);
-            animator.SetIKPosition(AvatarIKGoal.RightHand, Vector3.one);
+            //animator.SetIKPositionWeight(AvatarIKGoal.RightHand, 1);
+            //animator.SetIKPosition(AvatarIKGoal.RightHand, Vector3.one);
         }
 
 
@@ -45,6 +48,7 @@ namespace AleBorghesi
                 UpdateBottaBonesOffsets();
                 //UpdateBottaBonesOffsetsV2(bottaBone, null, bottaOffset);
             }
+            //UpdateLowerBodyRotation();
         }
 
         private void SimpleBotta()
@@ -123,6 +127,18 @@ namespace AleBorghesi
             }
             return closest;
         }
+
+        private void UpdateLowerBodyRotation()
+        {
+            foreach (var t in rotTargets)
+                t.localEulerAngles += spineRotationOffset;
+            kilt.localEulerAngles = spineRotationOffset;
+        }
+        public void SetLowerBodyRotation(float rot)
+        {
+            spineRotationOffset.y = Mathf.Clamp(rot, -45, 45);
+        }
+
     }
 
 }

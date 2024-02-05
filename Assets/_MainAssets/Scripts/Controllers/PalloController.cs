@@ -18,6 +18,7 @@ namespace Controllers
         //ragionamento fisica: P=m*v. Ptot=p1+p2. [before impact] Ptot=m1*v1+m2*v2, v2=0, Ptot=p1. [after impact] p1=p2, m1*v1=m2
 
         private const int OVERLAP_SPHERE_BUFFER_SIZE = 3;
+        private const float RETHROW_POWERUP_WINDOW = 1;
 
         private const float GRAVITY = 9.81f;
         public static readonly float[] SPEED_TIERS = { 4.5f, 7.5f, 10f, 12f };
