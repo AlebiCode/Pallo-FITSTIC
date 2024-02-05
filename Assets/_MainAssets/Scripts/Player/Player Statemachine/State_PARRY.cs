@@ -50,7 +50,7 @@ namespace StateMachine
 			{
 				Parry();
 			}
-
+			
 			parryDurationCurrent -= Time.deltaTime;
 		}
 

@@ -8,8 +8,8 @@ using static UnityEditor.Experimental.GraphView.GraphView;
 public class PalloTrigger : MonoBehaviour
 {
     //[SerializeField] private bool isActive = true;
-    [SerializeField] private UnityEvent<PalloController> onPalloEnter = new UnityEvent<PalloController>();
-    [SerializeField] private UnityEvent<PalloController> onPalloExit = new UnityEvent<PalloController>();
+    [SerializeField] protected UnityEvent<PalloController> onPalloEnter = new UnityEvent<PalloController>();
+    [SerializeField] protected UnityEvent<PalloController> onPalloExit = new UnityEvent<PalloController>();
 
     private void Start()
     {

@@ -132,7 +132,7 @@ namespace Controllers
 
         public void PalloContact(PalloController palloController)
         {
-            if(palloController.GetBallState == PalloController.BallStates.thrown)
+            if(palloController.BallState == PalloController.BallStates.thrown)
                 TakeDamage(10);
             else
                 GrabPallo(palloController);

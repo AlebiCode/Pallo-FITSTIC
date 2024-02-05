@@ -49,12 +49,11 @@ namespace Controllers
         public UnityEvent<int> OnSpeedTierChange => onSpeedTierChange;
 
         public int SpeedTier => speedTier;
-        public BallStates GetBallState => ballState;
         public bool IsHeld => ballState == BallStates.held;
         public PlayerData PlayerHoldingIt { get { return playerHolding; } set { playerHolding = value; } }
         public bool CollisionsActive => enabled;
         public Vector3 Velocity => velocity;
-        private BallStates BallState
+        public BallStates BallState
         {
             get { return ballState; }
             set { 
@@ -198,29 +197,19 @@ namespace Controllers
             playerHolding = null;
             //UpdateSpeedTier();
         }
-
-        public void Respawn(Vector3 point, float height)
-        {
-            float respawnTime = 2;
-            ballState = BallStates.respawning;
-            velocity = (new Vector3(point.x, transform.position.y, point.z) - transform.position) / respawnTime;
-            velocity.y = Mathf.Sqrt(-2.0f * GRAVITY * height);
-            //rigidbody2D.velocity = new Vector2(0, Mathf.Sqrt(-2.0f * Physics2D.gravity.y * jumpHeight))
-        }
-        public void Respawn(Vector3 point)
-        {
-            Respawn(point, 10);
-        }
-        public void Respawn(Transform pos)
-        {
-            Respawn(pos.transform.position, 10);
-		}
         public void Drop()
-		{
+        {
             BallState = BallStates.bouncing;
             transform.SetParent(null);
             collider.enabled = true;
             playerHolding = null;
+            //UpdateSpeedTier();
+        }
+
+        public void Respawn(Vector3 respawnForce)
+        {
+            velocity = respawnForce;
+            BallState = BallStates.respawning;
         }
 
         /*

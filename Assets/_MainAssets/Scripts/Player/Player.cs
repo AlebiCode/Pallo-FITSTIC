@@ -221,7 +221,7 @@ namespace StateMachine
 
         private void PalloContact(PalloController pallo)
 		{
-			switch (pallo.GetBallState)
+			switch (pallo.BallState)
 			{
                 case PalloController.BallStates.thrown:
 
