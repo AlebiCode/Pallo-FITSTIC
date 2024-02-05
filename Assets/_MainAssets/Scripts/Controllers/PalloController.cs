@@ -98,7 +98,6 @@ namespace Controllers
             Physics.SphereCast(transform.position, collider.radius, velocity, out spherecastInfo, velocity.magnitude * Time.deltaTime, collisionLayermask, QueryTriggerInteraction.Collide);
             if (spherecastInfo.collider)
             {
-                Debug.Log("Hit " + spherecastInfo.collider.name);
                 PalloTriggerCheck(spherecastInfo.collider.GetComponent<PalloTrigger>());
                 if (!spherecastInfo.collider.isTrigger)
                 {
@@ -195,6 +194,14 @@ namespace Controllers
             onSpeedTierChange.Invoke(speedTier);    //da fare per bene
             playerHolding = null;
             //UpdateSpeedTier();
+        }
+
+        public void Drop()
+		{
+            BallState = BallStates.bouncing;
+            transform.SetParent(null);
+            collider.enabled = true;
+            playerHolding = null;
         }
 
         /*
