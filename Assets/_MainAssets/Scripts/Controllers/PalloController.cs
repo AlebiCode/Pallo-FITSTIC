@@ -53,7 +53,7 @@ namespace Controllers
         public bool IsHeld => ballState == BallStates.held;
         public PlayerData PlayerHoldingIt { get { return playerHolding; } set { playerHolding = value; } }
         public bool CollisionsActive => enabled;
-        private float HorizontalVelocityMagnitude => new Vector2(velocity.x, velocity.y).magnitude;
+        private Vector3 Velocity => velocity;
         private BallStates BallState
         {
             get { return ballState; }
@@ -203,7 +203,7 @@ namespace Controllers
         {
             float respawnTime = 2;
             ballState = BallStates.respawning;
-            velocity = (new Vector3(point.x, transform.position.y, point.y) - transform.position) / respawnTime;
+            velocity = (new Vector3(point.x, transform.position.y, point.z) - transform.position) / respawnTime;
             velocity.y = Mathf.Sqrt(-2.0f * GRAVITY * height);
             //rigidbody2D.velocity = new Vector2(0, Mathf.Sqrt(-2.0f * Physics2D.gravity.y * jumpHeight))
         }
