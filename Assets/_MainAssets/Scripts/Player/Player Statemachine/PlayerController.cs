@@ -64,6 +64,7 @@ namespace StateMachine
 
             if (context.phase == InputActionPhase.Canceled && player.StateMachine.currentState == player.StateMachine.aimthrow)
             {
+                player.PlayerAnimation.PlayAnimation(PlayerAnimation.throwRightOutro);
                 player.HeldPallo.Throw(player.ThrowVelocity);
                 player.StateMachine.ChangeState(player.StateMachine.idle);
             }

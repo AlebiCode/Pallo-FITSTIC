@@ -12,6 +12,7 @@ namespace StateMachine
     [RequireComponent(typeof(Rigidbody))]
     [RequireComponent(typeof(CharacterController))]
     [RequireComponent(typeof(PalloTrigger))]
+    [RequireComponent(typeof(PlayerAnimation))]
 
     public class Player : MonoBehaviour
     {
@@ -26,6 +27,7 @@ namespace StateMachine
         private Transform           handsocket;
         private PalloController     heldPallo;
         private Camera              mainCamera;
+        private PlayerAnimation     playerAnimation;
 
         //hp
         private Vector3 pushDirection;
@@ -66,6 +68,7 @@ namespace StateMachine
         private float parryCooldownCurrent = 0f;
 
         //properties
+        public PlayerAnimation PlayerAnimation => playerAnimation;
         public StateMachine StateMachine            { get => stateMachine; set => stateMachine = value; }
         public PlayerController PlayerController    { get => PlayerController; set => PlayerController = value; }
         public PalloController HeldPallo            { get => heldPallo; set => heldPallo = value; }

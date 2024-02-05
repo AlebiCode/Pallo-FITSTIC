@@ -24,6 +24,7 @@ namespace StateMachine
 			parryDurationCurrent = player.parryDuration;
 			parryFrames = parryDurationCurrent / 100f * player.parryPercentage;
 			player.IsInvincibile = true;
+			player.PlayerAnimation.PlayAnimation(PlayerAnimation.takeIntro);
 		}
 
 		public override void Exit()
@@ -38,10 +39,11 @@ namespace StateMachine
 
 			if (parryDurationCurrent <= 0)
 			{
-				player.StateMachine.ChangeState(player.StateMachine.idle);
+                player.StateMachine.ChangeState(player.StateMachine.idle);
 			}
 			else if (parryDurationCurrent <= parryFrames)
 			{
+                player.PlayerAnimation.PlayAnimation(PlayerAnimation.takeOutroNoBall);
 				player.IsInvincibile = false;
 			}
 			else
@@ -62,6 +64,7 @@ namespace StateMachine
 				player.HeldPallo = hitPallo;
 				player.HeldPallo.Hold(player.Handsocket);
 				//TODO: parry VFX
+				player.PlayerAnimation.PlayAnimation(PlayerAnimation.takeOutroBall);
 
 				player.StateMachine.ChangeState(player.StateMachine.idle);
 			}
