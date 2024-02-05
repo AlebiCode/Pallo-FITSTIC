@@ -100,7 +100,6 @@ namespace Controllers
             Physics.SphereCast(transform.position, collider.radius, velocity, out spherecastInfo, velocity.magnitude * Time.deltaTime, collisionLayermask, QueryTriggerInteraction.Collide);
             if (spherecastInfo.collider)
             {
-                Debug.Log("Hit " + spherecastInfo.collider.name);
                 PalloTriggerCheck(spherecastInfo.collider.GetComponent<PalloTrigger>());
                 if (!spherecastInfo.collider.isTrigger)
                 {
@@ -215,6 +214,13 @@ namespace Controllers
         public void Respawn(Transform pos)
         {
             Respawn(pos.transform.position, 10);
+		}
+        public void Drop()
+		{
+            BallState = BallStates.bouncing;
+            transform.SetParent(null);
+            collider.enabled = true;
+            playerHolding = null;
         }
 
         /*

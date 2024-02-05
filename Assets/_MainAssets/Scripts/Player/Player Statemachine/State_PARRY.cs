@@ -23,7 +23,7 @@ namespace StateMachine
 			
 			parryDurationCurrent = player.parryDuration;
 			parryFrames = parryDurationCurrent / 100f * player.parryPercentage;
-			player.isInvincibile = true;
+			player.IsInvincibile = true;
 		}
 
 		public override void Exit()
@@ -42,7 +42,7 @@ namespace StateMachine
 			}
 			else if (parryDurationCurrent <= parryFrames)
 			{
-				player.isInvincibile = false;
+				player.IsInvincibile = false;
 			}
 			else
 			{
