@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using LorenzoCastelli;  
 using StateMachine;
 using UnityEngine;
@@ -23,7 +24,7 @@ namespace Controllers
         private const float GRAVITY = 9.81f;
         public static readonly float[] SPEED_TIERS = { 4.5f, 7.5f, 10f, 12f };
 
-        public enum BallStates { held, thrown, bouncing }
+        public enum BallStates { respawning, held, thrown, bouncing }
 
         PlayerData playerHolding = null;
 
@@ -60,6 +61,7 @@ namespace Controllers
                 ballState = value;
                 switch (ballState)
                 {
+                    case BallStates.respawning:
                     case BallStates.thrown:
                     case BallStates.bouncing:
                         enabled = true;
@@ -192,9 +194,27 @@ namespace Controllers
             collider.enabled = true;
             this.velocity = speed;// * SPEED_TIERS[speedTier];
 
+            this.speedTier = speedTier;
             onSpeedTierChange.Invoke(speedTier);    //da fare per bene
             playerHolding = null;
             //UpdateSpeedTier();
+        }
+
+        public void Respawn(Vector3 point, float height)
+        {
+            float respawnTime = 2;
+            ballState = BallStates.respawning;
+            velocity = (new Vector3(point.x, transform.position.y, point.y) - transform.position) / respawnTime;
+            velocity.y = Mathf.Sqrt(-2.0f * GRAVITY * height);
+            //rigidbody2D.velocity = new Vector2(0, Mathf.Sqrt(-2.0f * Physics2D.gravity.y * jumpHeight))
+        }
+        public void Respawn(Vector3 point)
+        {
+            Respawn(point, 10);
+        }
+        public void Respawn(Transform pos)
+        {
+            Respawn(pos.transform.position, 10);
         }
 
         /*
