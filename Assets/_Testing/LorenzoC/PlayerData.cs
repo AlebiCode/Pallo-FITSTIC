@@ -47,8 +47,11 @@ public class PlayerData : MonoBehaviour
 
 
 
-        private void Death() {
+        public void Death() {
             currentHp = 0;
+            GetComponent<Rigidbody>().useGravity = true;
+            GameLogic.instance.RemovePlayer(this);
+            Destroy(this.gameObject);
             //UPDATE DELLA UI
             //RAGDOLL
         }
