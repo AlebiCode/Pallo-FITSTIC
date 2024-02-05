@@ -27,6 +27,7 @@ namespace StateMachine
         private Transform           handsocket;
         private PalloController     heldPallo;
         private Camera              mainCamera;
+        [SerializeField]
         private PlayerAnimation     playerAnimation;
 
         //hp
@@ -159,6 +160,8 @@ namespace StateMachine
             if (IsMovementValid)
 			{
                 controller.Move(direction * speed * Time.deltaTime);
+                Vector3 leg = transform.InverseTransformDirection(MovementDirectionFromInput);
+                PlayerAnimation.LegMovementParameters(leg.x, leg.z);
             }
         }
 
