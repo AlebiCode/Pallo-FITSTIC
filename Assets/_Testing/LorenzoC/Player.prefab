@@ -92,7 +92,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7407853230732808618}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: HandSocket
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -265,9 +265,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b37fc85ea289d041b82f1607250326e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lookDistance: 0.5
   currentHp: 0
   ragdollTreshold: 0
-  handsocket: {fileID: 7407853230732808618}
+  throwChargeTime: 0
+  importance: 0
 --- !u!114 &-4583512960773331150
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -280,6 +282,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22315a5e34647cd4ab6469d7a104a9f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  state: 0
   maxChargeTime: 1
   maxThrowForce: 20
   playerData: {fileID: 2839357871436702340}
