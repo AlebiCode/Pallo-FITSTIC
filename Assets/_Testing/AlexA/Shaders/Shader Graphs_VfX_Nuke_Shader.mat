@@ -61,7 +61,7 @@ Material:
     - _DstBlend: 0
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _SimpleNoise: 69.3
+    - _SimpleNoise: 69.25
     - _SrcBlend: 1
     - _Surface: 0
     - _VertexOffset: 0
@@ -71,5 +71,6 @@ Material:
     m_Colors:
     - _Color: {r: 7.906698, g: 3.181964, b: 0, a: 1}
     - _NoiseSpeed: {r: 0, g: -0.1, b: 0, a: 0}
-    - _NoiseSpeed2: {r: 0, g: -0.05, b: 0, a: 0}
+    - _NoiseSpeed2: {r: 0, g: -0.2, b: 0, a: 0}
+    - _Vector2: {r: 0, g: 0.3, b: 0, a: 0}
   m_BuildTextureStacks: []
