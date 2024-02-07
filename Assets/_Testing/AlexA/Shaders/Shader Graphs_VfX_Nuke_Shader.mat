@@ -61,10 +61,10 @@ Material:
     - _DstBlend: 0
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _SimpleNoise: 69.25
+    - _SimpleNoise: 68.8
     - _SrcBlend: 1
     - _Surface: 0
-    - _VertexOffset: 0
+    - _VertexOffset: 0.89
     - _ZTest: 4
     - _ZWrite: 1
     - _ZWriteControl: 0
