@@ -1368,13 +1368,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1303836547}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -12.1, y: 1, z: -12.9}
+  m_LocalRotation: {x: 0.17802937, y: 0, z: 0, w: 0.98402524}
+  m_LocalPosition: {x: -12.1, y: 9.59, z: -12.9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 20.51, y: 0, z: 0}
 --- !u!114 &1303836551
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2228,6 +2228,41 @@ PrefabInstance:
       propertyPath: looping
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7049231845592339501, guid: 3399bbc90b1353043a797f4323439685,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.36
+      objectReference: {fileID: 0}
+    - target: {fileID: 7049231845592339501, guid: 3399bbc90b1353043a797f4323439685,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.36
+      objectReference: {fileID: 0}
+    - target: {fileID: 7049231845592339501, guid: 3399bbc90b1353043a797f4323439685,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.36
+      objectReference: {fileID: 0}
+    - target: {fileID: 7049231845592339501, guid: 3399bbc90b1353043a797f4323439685,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -11.92
+      objectReference: {fileID: 0}
+    - target: {fileID: 7049231845592339501, guid: 3399bbc90b1353043a797f4323439685,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.71
+      objectReference: {fileID: 0}
+    - target: {fileID: 7049231845592339501, guid: 3399bbc90b1353043a797f4323439685,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 7049231845592339501, guid: 3399bbc90b1353043a797f4323439685,
+        type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7226192895321191155, guid: 3399bbc90b1353043a797f4323439685,
         type: 3}
       propertyPath: m_Name
@@ -2238,8 +2273,59 @@ PrefabInstance:
       propertyPath: looping
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8303607959974453122, guid: 3399bbc90b1353043a797f4323439685,
+        type: 3}
+      propertyPath: lengthInSec
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8303607959974453122, guid: 3399bbc90b1353043a797f4323439685,
+        type: 3}
+      propertyPath: ShapeModule.type
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8303607959974453122, guid: 3399bbc90b1353043a797f4323439685,
+        type: 3}
+      propertyPath: ShapeModule.donutRadius
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8303607959974453122, guid: 3399bbc90b1353043a797f4323439685,
+        type: 3}
+      propertyPath: ShapeModule.radius.value
+      value: 2.07
+      objectReference: {fileID: 0}
+    - target: {fileID: 8303607959974453122, guid: 3399bbc90b1353043a797f4323439685,
+        type: 3}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8303607959974453122, guid: 3399bbc90b1353043a797f4323439685,
+        type: 3}
+      propertyPath: InitialModule.startSpeed.scalar
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8303607959974453122, guid: 3399bbc90b1353043a797f4323439685,
+        type: 3}
+      propertyPath: InitialModule.startLifetime.scalar
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8303607959974453122, guid: 3399bbc90b1353043a797f4323439685,
+        type: 3}
+      propertyPath: InitialModule.startSpeed.minScalar
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8303607959974453122, guid: 3399bbc90b1353043a797f4323439685,
+        type: 3}
+      propertyPath: InitialModule.startLifetime.minScalar
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8303607959974453122, guid: 3399bbc90b1353043a797f4323439685,
+        type: 3}
+      propertyPath: EmissionModule.m_Bursts.Array.data[0].countCurve.scalar
+      value: 100
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 3027541704775248540, guid: 3399bbc90b1353043a797f4323439685, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3399bbc90b1353043a797f4323439685, type: 3}
@@ -2445,6 +2531,11 @@ PrefabInstance:
       propertyPath: m_InitialEventNameOverriden
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8164572566265000029, guid: c1e08660206da1c4ebed9ac1deb5ff0f,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Vector3f.m_Array.Array.data[0].m_Overridden
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2508,6 +2599,12 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5468321984909946862, guid: 14d6298b1b3e7ab40976e6aeb30397db,
+        type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 2534964839176971238, guid: 360064e2aafd9aa4aa1fb2e65831126d,
+        type: 3}
     - target: {fileID: 6832891664018540701, guid: 14d6298b1b3e7ab40976e6aeb30397db,
         type: 3}
       propertyPath: looping
@@ -2518,6 +2615,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: PalloNuke
       objectReference: {fileID: 0}
+    - target: {fileID: 7502171422760123290, guid: 14d6298b1b3e7ab40976e6aeb30397db,
+        type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: -7387706064836869012, guid: 360064e2aafd9aa4aa1fb2e65831126d,
+        type: 3}
     - target: {fileID: 7502171422760123290, guid: 14d6298b1b3e7ab40976e6aeb30397db,
         type: 3}
       propertyPath: m_EnableGPUInstancing

@@ -19,7 +19,7 @@ MonoBehaviour:
     serializedVersion: 2
     x: 493
     y: -190
-    width: 2149
+    width: 2148
     height: 2108
 --- !u!114 &114350483966674976
 MonoBehaviour:
@@ -68,7 +68,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: UnityEngine.Vector3, UnityEngine.CoreModule, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
-      m_SerializableObject: '{"x":0.5,"y":0.5,"z":7.0}'
+      m_SerializableObject: '{"x":0.5,"y":0.5,"z":10.0}'
     min: -Infinity
     max: Infinity
     enumValues: []
@@ -1774,7 +1774,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: UnityEngine.Vector3, UnityEngine.CoreModule, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
-      m_SerializableObject: '{"x":0.5,"y":0.5,"z":7.0}'
+      m_SerializableObject: '{"x":0.5,"y":0.5,"z":10.0}'
     m_Space: 2147483647
   m_Property:
     name: o
@@ -2302,7 +2302,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: UnityEditor.VFX.Vector, Unity.VisualEffectGraph.Editor,
           Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-      m_SerializableObject: '{"vector":{"x":0.0,"y":-9.8100004196167,"z":0.0}}'
+      m_SerializableObject: '{"vector":{"x":0.0,"y":-13.25,"z":0.0}}'
     m_Space: 0
   m_Property:
     name: Force
