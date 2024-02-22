@@ -310,6 +310,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1564978796201760669}
   - component: {fileID: 3521820871874080241}
+  - component: {fileID: 7458936150372608505}
   m_Layer: 5
   m_Name: Character_Portrait
   m_TagString: Untagged
@@ -386,6 +387,25 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &7458936150372608505
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3165351405098648211}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e7d2843bbaf9ce4a8d798b48d2fc6ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  character: {fileID: 0}
+  playerIcons:
+  - {fileID: 3291671969732958433}
+  - {fileID: 337452583056488586}
+  - {fileID: 985017878522706875}
+  - {fileID: 1130997731946930054}
+  sprite: {fileID: 0}
 --- !u!1 &3291671969732958433
 GameObject:
   m_ObjectHideFlags: 0

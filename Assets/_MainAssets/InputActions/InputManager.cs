@@ -268,9 +268,18 @@ public partial class @InputManager: IInputActionCollection2, IDisposable
             ""id"": ""5ca05dd7-707f-48f8-90ab-882b90c33b5f"",
             ""actions"": [
                 {
-                    ""name"": ""New action"",
-                    ""type"": ""Button"",
+                    ""name"": ""Move"",
+                    ""type"": ""Value"",
                     ""id"": ""decea107-76c8-4144-b159-72623bca0111"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Select"",
+                    ""type"": ""Button"",
+                    ""id"": ""9640ee60-2873-4680-a1f3-1e16bc42de9d"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -281,11 +290,55 @@ public partial class @InputManager: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""bffdcd93-776f-4f56-a4e8-114dca762676"",
-                    ""path"": """",
+                    ""path"": ""<Gamepad>/leftStick"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""GamePad"",
-                    ""action"": ""New action"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d077dcfc-de1c-4b3c-a965-3b717970a781"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Select"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3434bf94-8251-4536-bad1-f30ba6b944b6"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Select"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""85129ca2-e76b-4786-b95a-596d64987223"",
+                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Select"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""392e0f57-e782-412d-8616-34a1ef6755a3"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Select"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -331,7 +384,8 @@ public partial class @InputManager: IInputActionCollection2, IDisposable
         m_Gameplay_Dodge = m_Gameplay.FindAction("Dodge", throwIfNotFound: true);
         // MainMenuUI
         m_MainMenuUI = asset.FindActionMap("MainMenuUI", throwIfNotFound: true);
-        m_MainMenuUI_Newaction = m_MainMenuUI.FindAction("New action", throwIfNotFound: true);
+        m_MainMenuUI_Move = m_MainMenuUI.FindAction("Move", throwIfNotFound: true);
+        m_MainMenuUI_Select = m_MainMenuUI.FindAction("Select", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -471,12 +525,14 @@ public partial class @InputManager: IInputActionCollection2, IDisposable
     // MainMenuUI
     private readonly InputActionMap m_MainMenuUI;
     private List<IMainMenuUIActions> m_MainMenuUIActionsCallbackInterfaces = new List<IMainMenuUIActions>();
-    private readonly InputAction m_MainMenuUI_Newaction;
+    private readonly InputAction m_MainMenuUI_Move;
+    private readonly InputAction m_MainMenuUI_Select;
     public struct MainMenuUIActions
     {
         private @InputManager m_Wrapper;
         public MainMenuUIActions(@InputManager wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Newaction => m_Wrapper.m_MainMenuUI_Newaction;
+        public InputAction @Move => m_Wrapper.m_MainMenuUI_Move;
+        public InputAction @Select => m_Wrapper.m_MainMenuUI_Select;
         public InputActionMap Get() { return m_Wrapper.m_MainMenuUI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -486,16 +542,22 @@ public partial class @InputManager: IInputActionCollection2, IDisposable
         {
             if (instance == null || m_Wrapper.m_MainMenuUIActionsCallbackInterfaces.Contains(instance)) return;
             m_Wrapper.m_MainMenuUIActionsCallbackInterfaces.Add(instance);
-            @Newaction.started += instance.OnNewaction;
-            @Newaction.performed += instance.OnNewaction;
-            @Newaction.canceled += instance.OnNewaction;
+            @Move.started += instance.OnMove;
+            @Move.performed += instance.OnMove;
+            @Move.canceled += instance.OnMove;
+            @Select.started += instance.OnSelect;
+            @Select.performed += instance.OnSelect;
+            @Select.canceled += instance.OnSelect;
         }
 
         private void UnregisterCallbacks(IMainMenuUIActions instance)
         {
-            @Newaction.started -= instance.OnNewaction;
-            @Newaction.performed -= instance.OnNewaction;
-            @Newaction.canceled -= instance.OnNewaction;
+            @Move.started -= instance.OnMove;
+            @Move.performed -= instance.OnMove;
+            @Move.canceled -= instance.OnMove;
+            @Select.started -= instance.OnSelect;
+            @Select.performed -= instance.OnSelect;
+            @Select.canceled -= instance.OnSelect;
         }
 
         public void RemoveCallbacks(IMainMenuUIActions instance)
@@ -541,6 +603,7 @@ public partial class @InputManager: IInputActionCollection2, IDisposable
     }
     public interface IMainMenuUIActions
     {
-        void OnNewaction(InputAction.CallbackContext context);
+        void OnMove(InputAction.CallbackContext context);
+        void OnSelect(InputAction.CallbackContext context);
     }
 }
