@@ -1,14 +1,9 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using Controllers;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
-namespace LorenzoCastelli
-{
+namespace LorenzoCastelli {
 
-public class PlayerControll: PlayerControlsGeneric {
+    public class PlayerControll: PlayerControlsGeneric {
 
         public PLAYERSTATES state = PLAYERSTATES.EMPTYHANDED;
 

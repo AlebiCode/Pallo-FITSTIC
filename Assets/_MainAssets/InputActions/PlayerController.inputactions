@@ -212,7 +212,7 @@
                     "path": "<Gamepad>/rightShoulder",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "GamePad",
                     "action": "Dodge",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -236,6 +236,34 @@
                     "processors": "",
                     "groups": "GamePad",
                     "action": "Dodge",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "MainMenuUI",
+            "id": "5ca05dd7-707f-48f8-90ab-882b90c33b5f",
+            "actions": [
+                {
+                    "name": "New action",
+                    "type": "Button",
+                    "id": "decea107-76c8-4144-b159-72623bca0111",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "bffdcd93-776f-4f56-a4e8-114dca762676",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "GamePad",
+                    "action": "New action",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

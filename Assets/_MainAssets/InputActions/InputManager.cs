@@ -234,7 +234,7 @@ public partial class @InputManager: IInputActionCollection2, IDisposable
                     ""path"": ""<Gamepad>/rightShoulder"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": ""GamePad"",
                     ""action"": ""Dodge"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -258,6 +258,34 @@ public partial class @InputManager: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""GamePad"",
                     ""action"": ""Dodge"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""MainMenuUI"",
+            ""id"": ""5ca05dd7-707f-48f8-90ab-882b90c33b5f"",
+            ""actions"": [
+                {
+                    ""name"": ""New action"",
+                    ""type"": ""Button"",
+                    ""id"": ""decea107-76c8-4144-b159-72623bca0111"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""bffdcd93-776f-4f56-a4e8-114dca762676"",
+                    ""path"": """",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""GamePad"",
+                    ""action"": ""New action"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -301,6 +329,9 @@ public partial class @InputManager: IInputActionCollection2, IDisposable
         m_Gameplay_Throw = m_Gameplay.FindAction("Throw", throwIfNotFound: true);
         m_Gameplay_Parry = m_Gameplay.FindAction("Parry", throwIfNotFound: true);
         m_Gameplay_Dodge = m_Gameplay.FindAction("Dodge", throwIfNotFound: true);
+        // MainMenuUI
+        m_MainMenuUI = asset.FindActionMap("MainMenuUI", throwIfNotFound: true);
+        m_MainMenuUI_Newaction = m_MainMenuUI.FindAction("New action", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -436,6 +467,52 @@ public partial class @InputManager: IInputActionCollection2, IDisposable
         }
     }
     public GameplayActions @Gameplay => new GameplayActions(this);
+
+    // MainMenuUI
+    private readonly InputActionMap m_MainMenuUI;
+    private List<IMainMenuUIActions> m_MainMenuUIActionsCallbackInterfaces = new List<IMainMenuUIActions>();
+    private readonly InputAction m_MainMenuUI_Newaction;
+    public struct MainMenuUIActions
+    {
+        private @InputManager m_Wrapper;
+        public MainMenuUIActions(@InputManager wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Newaction => m_Wrapper.m_MainMenuUI_Newaction;
+        public InputActionMap Get() { return m_Wrapper.m_MainMenuUI; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(MainMenuUIActions set) { return set.Get(); }
+        public void AddCallbacks(IMainMenuUIActions instance)
+        {
+            if (instance == null || m_Wrapper.m_MainMenuUIActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_MainMenuUIActionsCallbackInterfaces.Add(instance);
+            @Newaction.started += instance.OnNewaction;
+            @Newaction.performed += instance.OnNewaction;
+            @Newaction.canceled += instance.OnNewaction;
+        }
+
+        private void UnregisterCallbacks(IMainMenuUIActions instance)
+        {
+            @Newaction.started -= instance.OnNewaction;
+            @Newaction.performed -= instance.OnNewaction;
+            @Newaction.canceled -= instance.OnNewaction;
+        }
+
+        public void RemoveCallbacks(IMainMenuUIActions instance)
+        {
+            if (m_Wrapper.m_MainMenuUIActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IMainMenuUIActions instance)
+        {
+            foreach (var item in m_Wrapper.m_MainMenuUIActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_MainMenuUIActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public MainMenuUIActions @MainMenuUI => new MainMenuUIActions(this);
     private int m_KeyboardSchemeIndex = -1;
     public InputControlScheme KeyboardScheme
     {
@@ -461,5 +538,9 @@ public partial class @InputManager: IInputActionCollection2, IDisposable
         void OnThrow(InputAction.CallbackContext context);
         void OnParry(InputAction.CallbackContext context);
         void OnDodge(InputAction.CallbackContext context);
+    }
+    public interface IMainMenuUIActions
+    {
+        void OnNewaction(InputAction.CallbackContext context);
     }
 }
