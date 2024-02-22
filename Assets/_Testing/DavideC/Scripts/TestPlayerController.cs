@@ -45,6 +45,7 @@ namespace DavideCTest
 
         private void Awake()
         {
+            rb = GetComponent<Rigidbody>();
             currentHp = maxHealthPoints;
         }
         private void Update()
@@ -130,7 +131,7 @@ namespace DavideCTest
         RaycastHit castInfo;
         private void PlayerAirborneControl()
         {        
-            Physics.SphereCast(transform.position, GetComponent<Collider>().bounds.extents.x, Vector3.down, out castInfo, transform.position.y - ( GetComponent<Collider>().bounds.extents.y + 0.1f ), 1 << 0);
+            Physics.SphereCast(transform.position, GetComponent<Collider>().bounds.extents.y, Vector3.down, out castInfo,/* transform.position.y -*/ (GetComponent<Collider>().bounds.extents.y + 0.2f), 1 << 0);
 
             if (playerIsBeingRejected)
             {
@@ -142,16 +143,22 @@ namespace DavideCTest
                 }
                 else
                 {
-                    SlowPlayerVerticalSpeed();
+                    if (rb.velocity.y > 0)
+                    {
+                        SlowPlayerVerticalSpeed();
+                    }
 
                     Debug.Log("player being slowed");
                 }              
             }
         }
+
+        public float vel(float rate) => rb.velocity.y - rate;
+
         public void SlowPlayerVerticalSpeed()
         {
-            velocityChange += 0.5f * Time.deltaTime;
-            rb.velocity = new Vector3(rb.velocity.x, -velocityChange, rb.velocity.z);
+            velocityChange /*+*/= 0.5f/* * Time.deltaTime*/;
+            rb.velocity = new Vector3(rb.velocity.x, vel(velocityChange), rb.velocity.z);
         }
         public void StopAirbornePlayer()
         {

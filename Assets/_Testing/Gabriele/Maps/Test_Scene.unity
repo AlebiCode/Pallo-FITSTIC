@@ -478,7 +478,7 @@ Transform:
   m_GameObject: {fileID: 262178698}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 12.99, y: 0, z: -5.56}
+  m_LocalPosition: {x: 12.99, y: 1, z: -5.56}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3288,6 +3288,7 @@ MonoBehaviour:
   rb: {fileID: 412976998}
   speed: 1
   maxHealthPoints: 100
+  ikControl: {fileID: 0}
   parryHitbox: {fileID: 0}
   handsocket: {fileID: 0}
   playerAnimation:
@@ -21108,7 +21109,7 @@ Transform:
   m_GameObject: {fileID: 1363972996}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -14.36, y: 0, z: -3.56}
+  m_LocalPosition: {x: -14.36, y: 1, z: -3.56}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -21531,7 +21532,7 @@ Transform:
   m_GameObject: {fileID: 1727003442}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -3.76, y: 0, z: -0.74}
+  m_LocalPosition: {x: -3.76, y: 1, z: -0.74}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -24616,7 +24617,7 @@ Transform:
   m_GameObject: {fileID: 2064227337}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 7.79, y: 0, z: 5.83}
+  m_LocalPosition: {x: 7.79, y: 1, z: 5.83}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -25083,7 +25084,7 @@ PrefabInstance:
     - target: {fileID: 2844685284333915214, guid: eaae5f4cc0421714abbc1e5d841eb5ac,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.5008375
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2844685284333915214, guid: eaae5f4cc0421714abbc1e5d841eb5ac,
         type: 3}

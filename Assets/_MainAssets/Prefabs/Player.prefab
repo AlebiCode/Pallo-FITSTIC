@@ -178,9 +178,6 @@ MonoBehaviour:
     m_Bits: 128
   currentHp: 0
   speedRegular: 5
-  movementInput: {x: 0, y: 0}
-  rotationInput: {x: 0, y: 0}
-  usingGamePad: 0
   controllerDeadzone: 0.01
   speedSlow: 2
   throwChargeMax: 1

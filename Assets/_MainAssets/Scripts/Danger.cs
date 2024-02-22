@@ -24,7 +24,7 @@ public class Danger : MonoBehaviour
         Yellow = 12,
     }
 
-    [SerializeField] private float explosionForce = 20f;
+    [SerializeField] private float explosionForce = 30f;
     [SerializeField] private float explosionRadius = 2f;
     [SerializeField] private bool isActive = false;
     [SerializeField] private bool isPlayerBeingRejected = false;
@@ -49,15 +49,15 @@ public class Danger : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-            if (collision.gameObject.layer == 6)
-            {
-                DangerBehavior();
-            }
-            if (collision.gameObject.layer == 7)
-            {
-                //aggiungi logica palla contro trappola
-                //DangerBehaviorForBall();
-            }
+        if (collision.gameObject.layer == 6)
+        {
+            DangerBehavior();
+        }
+        if (collision.gameObject.layer == 7)
+        {
+            //aggiungi logica palla contro trappola
+            //DangerBehaviorForBall();
+        }
     }
 
     private void DangerBehavior()
@@ -120,7 +120,7 @@ public class Danger : MonoBehaviour
         //player.attachedRigidbody.AddExplosionForce(explosionForce, this.transform.position, 5f);
 
         Vector3 forcedirection = (new Vector3(_player.transform.position.x, _player.transform.position.y + 1f, _player.transform.position.z) - this.transform.position).normalized;
-        _player.attachedRigidbody.AddForce(forcedirection * explosionForce, ForceMode.Force);
+        _player.attachedRigidbody.AddForce(forcedirection * explosionForce, ForceMode.Impulse);
 
         //Vector3 finalForce = new Vector3(forcedirection.x * atPositionForceHorizontal, forcedirection.y * atPositionForceVertical, forcedirection.z * atPositionForceHorizontal);
     }
