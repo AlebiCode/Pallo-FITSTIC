@@ -14,6 +14,7 @@ namespace StateMachine
 		public override void Enter()
 		{
 			base.Enter();
+			player.PlayerAnimation.PlayAnimation(PlayerAnimation.idle);
 		}
 
 		public override void Exit()

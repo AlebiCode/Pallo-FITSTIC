@@ -14,7 +14,8 @@ namespace StateMachine
 		public override void Enter()
 		{
 			base.Enter();
-			Debug.Log("Enter Stun pushforce: " + player.PushForce);
+
+			player.PlayerAnimation.PlayAnimation(PlayerAnimation.idle);
 			LosePallo();
 			player.LookAt(new Vector3(-player.PushDirection.x, 0f, -player.PushDirection.z));
 			player.IsInvincibile = true;
@@ -29,7 +30,6 @@ namespace StateMachine
 		public override void Update()
 		{
 			base.Update();
-			Debug.Log("pushDirection :" + player.PushDirection + "; pushForce :" + player.PushForce);
 			player.HandleMovement(player.PushDirection, player.PushForce);
 
 			player.PushForce -= player.PushDecrease;
