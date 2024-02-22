@@ -30,9 +30,9 @@ namespace StateMachine
                                 player.StateMachine.currentState == player.StateMachine.dodge       ||
                                 player.StateMachine.currentState == player.StateMachine.parry;
 
-		#endregion
-        
-		private void Start()
+        #endregion
+
+        private void Start()
         {
             player = gameObject.GetComponent<Player>();
         }

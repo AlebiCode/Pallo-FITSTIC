@@ -14,6 +14,7 @@ namespace StateMachine
 		public override void Enter()
 		{
 			base.Enter();
+			player.PlayerAnimation.PlayAnimation(PlayerAnimation.throwLeftIntro);
 		}
 
 		public override void Exit()
@@ -30,6 +31,7 @@ namespace StateMachine
 
 			player.HandleMovement(player.MovementDirectionFromInput, player.speedSlow);
 			player.HandleRotation();
+			player.PlayerAnimation.PlayAnimation(PlayerAnimation.throwLeftCharge);
 		}
 
 		private void ResetCharge()

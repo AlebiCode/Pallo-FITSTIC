@@ -67,7 +67,8 @@ namespace Controllers
                     case BallStates.thrown:
                     case BallStates.bouncing:
                         enabled = true;
-                        StopCoroutine(blowUpCoroutine);
+                        if(blowUpCoroutine != null)
+                            StopCoroutine(blowUpCoroutine);
                         break;
                     case BallStates.held:
                         enabled = false;
