@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Controllers;
+using UnityEngine.InputSystem.Users;
+using vittorio;
 
 namespace StateMachine
 {
@@ -29,6 +31,8 @@ namespace StateMachine
         private PlayerAnimation     playerAnimation;
         public LayerMask            palloLayermask;
 
+        //player
+        public int playerId;
         //hp
         public int currentHp;
 
@@ -69,7 +73,7 @@ namespace StateMachine
         public float pushDecrease = 2f;
         private Vector3 pushDirection;
         private float pushForce;
-
+        
         //properties
         public PlayerAnimation PlayerAnimation => playerAnimation;
         public StateMachine StateMachine            { get => stateMachine; set => stateMachine = value; }
@@ -121,13 +125,12 @@ namespace StateMachine
 
 		void Awake()
         {
-            stateMachine = new StateMachine(this);
+            AwakeInitialization();
+        }
 
-            GetComponent<PalloTrigger>().AddOnEnterListener(PalloContact);
-            //playerController = gameObject.GetComponent<PlayerController>();
-            controller = gameObject.GetComponent<CharacterController>();
-            mainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
-            Handsocket = GameObject.Find("HandSocket").GetComponentInChildren<Transform>(); 
+        private void Start()
+        {
+            AssingPlayerInput();
         }
 
         void Update()
@@ -136,6 +139,49 @@ namespace StateMachine
 
             HandleCooldowns();
         }
+
+        #region Initialization()
+        
+        private void AwakeInitialization()
+        {
+            stateMachine = new StateMachine(this);
+
+            GetComponent<PalloTrigger>().AddOnEnterListener(PalloContact);
+            //playerController = gameObject.GetComponent<PlayerController>();
+            controller = gameObject.GetComponent<CharacterController>();
+            mainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
+            Handsocket = GameObject.Find("HandSocket").GetComponentInChildren<Transform>();
+        }
+
+        private void AssingPlayerInput()
+        {
+            PlayerInput playerInput = GetComponent<PlayerInput>();
+            if (playerInput.devices.Count == 0) //è una ai!
+            {
+
+                return;
+            }
+            if (!MenuManager.Instance)
+            {
+                Debug.LogWarning("MenuManager non è instanziato.");
+                return;
+            }
+            for (int i = 0; i < MenuManager.Instance.menuPlayers.Count; i++)
+            {
+                //if (MenuManager.Instance.menuPlayers[i].playerNum == playerId)
+                if (MenuManager.Instance.menuPlayers[i].playerInput.user == playerInput.user)
+                {
+                    //metodo 1
+                    //MenuManager.Instance.menuPlayers
+                    InputUser.PerformPairingWithDevice(playerInput.devices[0], MenuManager.Instance.menuPlayers[i].playerInput.user);
+                    //metodo 2
+                    //GetComponent<PlayerInput>().SwitchCurrentControlScheme(new InputDevice[0]);
+                    break;
+                }
+            }
+        }
+
+        #endregion
 
         #region helper methods
 
