@@ -1,7 +1,6 @@
 using StateMachine;
 using System.Collections;
 using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
 using UnityEditor.Animations;
 using UnityEngine;
 
@@ -41,6 +40,7 @@ public class PlayerAnimation
     public static readonly int throwRightChargeNoLeg = Animator.StringToHash("throw_l_charge_noleg");
     public static readonly int throwRightOutroNoLeg = Animator.StringToHash("throw_l_outro_noleg");
 
+    //non uso più questi perchè l'animazione di movimento è un blend che avviene continuamente
     /*
     public static readonly int runBack = Animator.StringToHash("run_b");
     public static readonly int runBackBall = Animator.StringToHash("run_b_ball");
@@ -52,27 +52,12 @@ public class PlayerAnimation
     public static readonly int runRightBall = Animator.StringToHash("run_r_ball");
     */
 
-    //[SerializeField] private Player player;
     [SerializeField] private Animator animator;
-
-    //private Coroutine goToIdleCo;
 
     public void PlayAnimation(int hashValue)
     {
         animator.Play(hashValue);
-        /*if (idleStateOnAnimEnd)
-        {
-            if(goToIdleCo != null)
-                player.StopCoroutine(goToIdleCo);
-            player.StartCoroutine(GoToIdleOnAnimEnd(animator.runtimeAnimatorController.clip));
-        }*/
     }
-
-    /*private IEnumerator GoToIdleOnAnimEnd(float time)
-    {
-        yield return new WaitForSeconds(time);
-        animator.Play(player.HeldPallo ? idleBall : idle);
-    }*/
 
     public void SetTopLayerWeight(float weight)
     {

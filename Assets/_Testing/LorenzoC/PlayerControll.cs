@@ -40,7 +40,6 @@ public class PlayerControll: PlayerControlsGeneric {
         private void PlayerInputsMovement() {
             directionInput.x = Input.GetAxis("Horizontal");
             directionInput.y = Input.GetAxis("Vertical");
-
             transform.position += new Vector3(directionInput.x, 0, directionInput.y) * speed * Time.deltaTime;
         }
 
