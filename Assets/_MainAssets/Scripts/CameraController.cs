@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
 public class CameraController : MonoBehaviour
 {
     [SerializeField] private List<Transform> focusTargets = new List<Transform>();
@@ -60,4 +61,4 @@ public class CameraController : MonoBehaviour
         }
     }
 
-}
+}*/

@@ -17,6 +17,7 @@ namespace Controllers
         //come funziona il rallentamento?
         //il check per essere afferrata da un giocatore non è nel player ma nella palla (così uso lo spherecast e evito i clip che possono accadere con ontriggerenter)
         //ragionamento fisica: P=m*v. Ptot=p1+p2. [before impact] Ptot=m1*v1+m2*v2, v2=0, Ptot=p1. [after impact] p1=p2, m1*v1=m2
+        private const float TIME_FOR_BLOWUP_IN_YOUR_FACE = 5.0f;
 
         private const int OVERLAP_SPHERE_BUFFER_SIZE = 3;
         private const float RETHROW_POWERUP_WINDOW = 1;
@@ -37,14 +38,16 @@ namespace Controllers
         [SerializeField] private BallStates ballState = BallStates.thrown;
         [SerializeField] private int speedTier;
 
+        [SerializeField] private UnityEvent ballBlowUp = new UnityEvent();
         private UnityEvent<BallStates> onBallStateChange = new UnityEvent<BallStates>();
         private UnityEvent<int> onSpeedTierChange = new UnityEvent<int>();
 
         private Vector3 velocity;
         private RaycastHit spherecastInfo;
         private Collider[] overlapSphereBuffer = new Collider[OVERLAP_SPHERE_BUFFER_SIZE];
+        private Coroutine blowUpCoroutine = null;
 
-
+        public UnityEvent BallBlowUp => ballBlowUp;
         public UnityEvent<BallStates> OnStateChange => onBallStateChange;
         public UnityEvent<int> OnSpeedTierChange => onSpeedTierChange;
 
@@ -64,9 +67,11 @@ namespace Controllers
                     case BallStates.thrown:
                     case BallStates.bouncing:
                         enabled = true;
+                        StopCoroutine(blowUpCoroutine);
                         break;
                     case BallStates.held:
                         enabled = false;
+                        blowUpCoroutine = StartCoroutine(BlowUpTimerStart());
                         break;
                 }
                 onBallStateChange.Invoke(value);
@@ -210,6 +215,13 @@ namespace Controllers
         {
             velocity = respawnForce;
             BallState = BallStates.respawning;
+        }
+
+        private IEnumerator BlowUpTimerStart()
+        {
+            yield return new WaitForSeconds(TIME_FOR_BLOWUP_IN_YOUR_FACE);
+            ballBlowUp.Invoke();
+            Drop();
         }
 
         /*
