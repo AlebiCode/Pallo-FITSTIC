@@ -8,6 +8,7 @@ public class ArenaSO : ScriptableObject
 {
     public int sceneNumber;
     public string arenaName;
+    public string arenaDescription;
     public Sprite smallPreviewImage;
     public Sprite largePreviewImage;
 }

@@ -8,4 +8,5 @@ public class CharacterSO : ScriptableObject
     public string characterName;
     public Sprite smallPreviewImage;
     public Sprite largePreviewImage;
+    public GameObject prefab;
 }
