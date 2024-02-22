@@ -11,12 +11,16 @@ public class VFX_Flame : MonoBehaviour
     private Light flickeringLight;
     private void Start()
     {
-        flickeringLight = GetComponent<Light>();
-        baseIntensity = flickeringLight.intensity;
+        Init();
     }
     private void Update()
     {
         StartCoroutine(DoFlicker());
+    }
+    private void Init() 
+    {
+        flickeringLight = GetComponent<Light>();
+        baseIntensity = flickeringLight.intensity;
     }
     private IEnumerator DoFlicker() 
     {

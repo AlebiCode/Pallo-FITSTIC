@@ -18,6 +18,7 @@ public class VFX_BallAuraScript : MonoBehaviour
     private Vector3 previousPosition;
 
     private bool isMovingAndActive;
+    private bool isInitialized = false;
     private void OnEnable()
     {
         GetAndListenToMyPallo();
@@ -40,10 +41,14 @@ public class VFX_BallAuraScript : MonoBehaviour
 
     private void Init() 
     {
-        vfx_BallAuraCapsule = transform.GetChild(0).gameObject;
-        vfx_BallAuraTrail = vfx_BallAuraCapsule.transform.GetChild(0).gameObject;
+        if (!isInitialized) 
+        { 
+            vfx_BallAuraCapsule = transform.GetChild(0).gameObject;
+            vfx_BallAuraTrail = vfx_BallAuraCapsule.transform.GetChild(0).gameObject;
 
-        currentPosition = transform.position;  
+            currentPosition = transform.position;
+            isInitialized = false;
+        }
     }
 
     private void CheckLevel(int level) 
