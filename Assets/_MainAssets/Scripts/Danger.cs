@@ -24,10 +24,9 @@ public class Danger : MonoBehaviour
         Yellow = 12,
     }
 
-    [SerializeField] private float explosionForce = 30f;
+    [SerializeField] private float rejectionForce = 30f;
     [SerializeField] private float explosionRadius = 2f;
     [SerializeField] private bool isActive = false;
-    [SerializeField] private bool isPlayerBeingRejected = false;
 
     //[SerializeField] public float atPositionForceHorizontal = 2f;
     //[SerializeField] public float atPositionForceVertical = 5f;
@@ -89,6 +88,8 @@ public class Danger : MonoBehaviour
                             // Diminuisce la stamina di valore X
                             // Respinge il personaggio vicino
 
+                            DangerHitEffect();
+
                             StaminaDecrese(player);
 
                             RejectPlayer(player);
@@ -101,6 +102,8 @@ public class Danger : MonoBehaviour
                             // Comportamento del YellowDanger
                             // Diminuisce la stamina di valore X del personaggio vicino
 
+                            DangerHitEffect();
+
                             StaminaDecrese(player);
 
                             Debug.Log("damage taken = " + dangerConfig.explosionDamage);
@@ -112,15 +115,53 @@ public class Danger : MonoBehaviour
         }
     }
 
+
+    public Coroutine scaleTweenCoroutine;
+    public Tween scalingTween;
+    public Vector3 hitScale = Vector3.one;
+    public Vector3 hitScaleFinal = new Vector3(1.1f, 1.1f, 1.1f);
+    private void DangerHitEffect()
+    {
+            if (scaleTweenCoroutine == null)
+            {
+                scaleTweenCoroutine = StartCoroutine(scalingRoutine());
+            }
+
+            IEnumerator scalingRoutine()
+            {
+                if (this.gameObject != null)
+                {
+                    var danger = this.gameObject;
+                    //scalingTween = player.transform.DOScale(hitScaleFinal, .2f);
+                    if (scalingTween != null && scalingTween.active)
+                    {
+                        scalingTween.Kill(false);
+                        scalingTween = null;
+                    danger.transform.localScale = Vector3.one;
+                    }
+
+                    scalingTween = danger.transform.DOPunchScale(hitScaleFinal, .2f, 6, 0.1f);
+                    yield return new WaitForSeconds(.2f);
+
+                }
+                else
+                {
+                    yield return null;
+                }
+            }
+
+            scaleTweenCoroutine = null;
+    }
+
     private void RejectPlayer(Collider _player)
     {
         if(!_player.GetComponent<TestPlayerController>().playerIsBeingRejected)
             _player.GetComponent<TestPlayerController>().SetPlayerToRejectState();
 
-        //player.attachedRigidbody.AddExplosionForce(explosionForce, this.transform.position, 5f);
+        //player.attachedRigidbody.AddExplosionForce(rejectionForce, this.transform.position, 5f);
 
         Vector3 forcedirection = (new Vector3(_player.transform.position.x, _player.transform.position.y + 1f, _player.transform.position.z) - this.transform.position).normalized;
-        _player.attachedRigidbody.AddForce(forcedirection * explosionForce, ForceMode.Impulse);
+        _player.attachedRigidbody.AddForce(forcedirection * rejectionForce, ForceMode.Impulse);
 
         //Vector3 finalForce = new Vector3(forcedirection.x * atPositionForceHorizontal, forcedirection.y * atPositionForceVertical, forcedirection.z * atPositionForceHorizontal);
     }

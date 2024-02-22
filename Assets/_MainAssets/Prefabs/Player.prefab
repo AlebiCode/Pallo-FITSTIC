@@ -311,6 +311,10 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 45afacd8-1f4c-4094-90bf-ec54c4ebf9b3
     m_ActionName: Gameplay/Dodge[/Keyboard/leftShift]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: decea107-76c8-4144-b159-72623bca0111
+    m_ActionName: MainMenuUI/New action
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: GamePad
   m_DefaultActionMap: Gameplay
@@ -485,7 +489,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: d01d40cdb66830942b10332202d2ac99,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d01d40cdb66830942b10332202d2ac99,
         type: 3}

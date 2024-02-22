@@ -11,6 +11,8 @@ namespace DavideCTest
         public Danger.DangerTypesEnum DangerType = Danger.DangerTypesEnum.None;
         public bool isMovable =  false;
         public int explosionDamage = 20;
+        public GameObject barrelModel;
+        
         
     }
 }

@@ -131,10 +131,10 @@ namespace DavideCTest
         RaycastHit castInfo;
         private void PlayerAirborneControl()
         {        
-            Physics.SphereCast(transform.position, GetComponent<Collider>().bounds.extents.y, Vector3.down, out castInfo,/* transform.position.y -*/ (GetComponent<Collider>().bounds.extents.y + 0.2f), 1 << 0);
 
             if (playerIsBeingRejected)
             {
+                Physics.SphereCast(transform.position, GetComponent<Collider>().bounds.extents.y, Vector3.down, out castInfo,/* transform.position.y -*/ (GetComponent<Collider>().bounds.extents.y + 0.2f), 1 << 0);
                 if (castInfo.collider)
                 {
                     StopAirbornePlayer();
@@ -175,7 +175,7 @@ namespace DavideCTest
         public Coroutine scaleTweenCoroutine;
         public Tween scalingTween;
         public Vector3 hitScale = Vector3.one;
-        public Vector3 hitScaleFinal = new Vector3(1.5f, 1.5f, 1.5f);
+        public Vector3 hitScaleFinal = new Vector3(1.1f, 1.1f, 1.1f);
 
         public void HitScaling()
         {

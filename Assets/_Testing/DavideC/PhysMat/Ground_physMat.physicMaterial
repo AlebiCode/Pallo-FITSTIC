@@ -9,6 +9,6 @@ PhysicMaterial:
   m_Name: Ground_physMat
   dynamicFriction: 0.3
   staticFriction: 0.4
-  bounciness: 0
+  bounciness: 0.2
   frictionCombine: 0
-  bounceCombine: 1
+  bounceCombine: 0

@@ -128,7 +128,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7299551024025674248}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: a0cf122596b32c649abb3e6c23d95d07, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -154,11 +154,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1496f7ce4d94d4d4e883a0dee9e0df17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  explosionForce: 30
+  rejectionForce: 30
   explosionRadius: 3
   isActive: 0
-  isPlayerBeingRejected: 0
   dangerConfig: {fileID: 0}
+  hitScale: {x: 1, y: 1, z: 1}
+  hitScaleFinal: {x: 1.2, y: 1.2, z: 1.2}
 --- !u!54 &457192397777762358
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -167,7 +168,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7299551024025674248}
   serializedVersion: 4
-  m_Mass: 2
+  m_Mass: 4
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
