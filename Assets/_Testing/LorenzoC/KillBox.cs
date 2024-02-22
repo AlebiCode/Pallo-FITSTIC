@@ -5,7 +5,7 @@ using LorenzoCastelli;
 using UnityEngine;
 public class KillBox : MonoBehaviour
 {
-
+    public bool shouldResetDirection = false;
     public Transform palloResetPos;
     private void OnTriggerEnter(Collider other) {
         PlayerData pd = other.GetComponent<PlayerData>();
@@ -15,6 +15,9 @@ public class KillBox : MonoBehaviour
         } else {
             PalloController pc = other.GetComponent<PalloController>();
             if (pc) {
+                if (shouldResetDirection) {
+                pc.BallState = PalloController.BallStates.respawning;
+                }
                 pc.gameObject.transform.position = palloResetPos.position;
             }
         }
