@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &649589762072021603
+--- !u!1001 &792144053780113417
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -16,7 +16,7 @@ PrefabInstance:
     - target: {fileID: 1498884538851562937, guid: b5e9a60c4e4e3d2418a7e76f1d3d40a5,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1498884538851562937, guid: b5e9a60c4e4e3d2418a7e76f1d3d40a5,
         type: 3}
@@ -62,22 +62,32 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: bad98341817ae114da17185903fd7a84, type: 2}
+      objectReference: {fileID: 2100000, guid: 2f9b38becdef94b4b89a1671fda67786, type: 2}
     - target: {fileID: 7116452489658200818, guid: b5e9a60c4e4e3d2418a7e76f1d3d40a5,
         type: 3}
-      propertyPath: isYellow
+      propertyPath: isPurple
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7116452489658200818, guid: b5e9a60c4e4e3d2418a7e76f1d3d40a5,
         type: 3}
       propertyPath: dangerConfig
       value: 
-      objectReference: {fileID: 11400000, guid: cd10b6b1024b97e449c274fa29f47889,
+      objectReference: {fileID: 11400000, guid: 34791fd766e5a0e4d8fa80f1d898b474,
         type: 2}
+    - target: {fileID: 7116452489658200818, guid: b5e9a60c4e4e3d2418a7e76f1d3d40a5,
+        type: 3}
+      propertyPath: explosionForce
+      value: 33
+      objectReference: {fileID: 0}
+    - target: {fileID: 7116452489658200818, guid: b5e9a60c4e4e3d2418a7e76f1d3d40a5,
+        type: 3}
+      propertyPath: explosionForceVertical
+      value: 16.66
+      objectReference: {fileID: 0}
     - target: {fileID: 7299551024025674248, guid: b5e9a60c4e4e3d2418a7e76f1d3d40a5,
         type: 3}
       propertyPath: m_Name
-      value: YellowDanger
+      value: PurpleDanger
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

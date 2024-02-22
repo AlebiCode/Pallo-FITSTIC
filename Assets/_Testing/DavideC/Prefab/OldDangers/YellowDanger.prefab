@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &5843485924765184190
+--- !u!1001 &649589762072021603
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -16,7 +16,7 @@ PrefabInstance:
     - target: {fileID: 1498884538851562937, guid: b5e9a60c4e4e3d2418a7e76f1d3d40a5,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1498884538851562937, guid: b5e9a60c4e4e3d2418a7e76f1d3d40a5,
         type: 3}
@@ -62,22 +62,22 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 11f987a60a2184340ade568f59290e82, type: 2}
+      objectReference: {fileID: 2100000, guid: bad98341817ae114da17185903fd7a84, type: 2}
     - target: {fileID: 7116452489658200818, guid: b5e9a60c4e4e3d2418a7e76f1d3d40a5,
         type: 3}
-      propertyPath: isRed
+      propertyPath: isYellow
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7116452489658200818, guid: b5e9a60c4e4e3d2418a7e76f1d3d40a5,
         type: 3}
       propertyPath: dangerConfig
       value: 
-      objectReference: {fileID: 11400000, guid: 33cf40dfb93c2af41987b019bbb4b600,
+      objectReference: {fileID: 11400000, guid: cd10b6b1024b97e449c274fa29f47889,
         type: 2}
     - target: {fileID: 7299551024025674248, guid: b5e9a60c4e4e3d2418a7e76f1d3d40a5,
         type: 3}
       propertyPath: m_Name
-      value: RedDanger
+      value: YellowDanger
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
