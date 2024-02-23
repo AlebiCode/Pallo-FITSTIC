@@ -166,14 +166,14 @@ namespace StateMachine
                 Debug.LogWarning("MenuManager non è instanziato.");
                 return;
             }
-            for (int i = 0; i < MenuManager.Instance.menuPlayers.Count; i++)
+            for (int i = 0; i < MenuManager.Instance.uiPlayers.Count; i++)
             {
-                //if (MenuManager.Instance.menuPlayers[i].playerNum == playerId)
-                if (MenuManager.Instance.menuPlayers[i].playerInput.user == playerInput.user)
+                //if (MenuManager.Instance.uiPlayers[i].playerNum == playerId)
+                if (MenuManager.Instance.uiPlayers[i].playerInput.user == playerInput.user)
                 {
                     //metodo 1
-                    //MenuManager.Instance.menuPlayers
-                    InputUser.PerformPairingWithDevice(playerInput.devices[0], MenuManager.Instance.menuPlayers[i].playerInput.user);
+                    //MenuManager.Instance.uiPlayers
+                    InputUser.PerformPairingWithDevice(playerInput.devices[0], MenuManager.Instance.uiPlayers[i].playerInput.user);
                     //metodo 2
                     //GetComponent<PlayerInput>().SwitchCurrentControlScheme(new InputDevice[0]);
                     break;

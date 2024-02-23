@@ -10,7 +10,7 @@ public class UIPlayer : MonoBehaviour
     public PlayerInput playerInput;
     public CharacterSO selectedCharacter;
     public ArenaSO selectedArena;
-    public int PlayerNum { get { return MenuManager.players.IndexOf(this); } }
+    public int PlayerNum { get { return MenuManager.Instance.uiPlayers.IndexOf(this); } }
 
 
     private void Awake() {

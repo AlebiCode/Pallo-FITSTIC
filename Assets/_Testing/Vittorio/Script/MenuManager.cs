@@ -10,7 +10,7 @@ namespace vittorio {
     public class MenuManager : MonoBehaviour {
 
         public static MenuManager Instance { get; private set; }
-        public static List<UIPlayer> players = new List<UIPlayer>();
+        public List<UIPlayer> uiPlayers = new List<UIPlayer>();
         public IMultiplayerInteractiveMenu activeMenu;
 
         public Action<int> OnPlayerCountChange;
@@ -24,20 +24,20 @@ namespace vittorio {
             Instance = this;
             DontDestroyOnLoad(gameObject);
 
-            players = FindObjectsByType<UIPlayer>(FindObjectsSortMode.None).ToList();
+            uiPlayers = FindObjectsByType<UIPlayer>(FindObjectsSortMode.None).ToList();
 
 
         }
 
 
         public void AddPlayer(UIPlayer player) {
-            if(players.Contains(player)) return;
+            if(uiPlayers.Contains(player)) return;
 
-            players.Add(player);
+            uiPlayers.Add(player);
         }
 
         public void RemovePlayer(UIPlayer player) {
-            players.Remove(player);
+            uiPlayers.Remove(player);
         }
 
         public void LoadScene(int sceneID) {
