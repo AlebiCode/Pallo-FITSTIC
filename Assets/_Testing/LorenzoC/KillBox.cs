@@ -10,6 +10,9 @@ public class KillBox : MonoBehaviour
     private void OnTriggerEnter(Collider other) {
         PlayerData pd = other.GetComponent<PlayerData>();
         if (pd) {
+            if (pd.IsHoldingBall()) {
+                pd.LoseBall();
+            }
             Debug.Log("Dead");
             pd.Death();
         } else {
