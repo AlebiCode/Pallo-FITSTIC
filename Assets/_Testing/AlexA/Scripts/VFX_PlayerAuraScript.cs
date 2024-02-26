@@ -22,6 +22,7 @@ namespace VFX
 
         private bool isCharging;
         private bool isInitialized = false;
+        private bool isListeningToEvents = false;
 
         private float CurrentSize 
         {
@@ -44,6 +45,7 @@ namespace VFX
 
         private void OnEnable()
         {
+            Init();
         }
         private void OnDisable()
         {
@@ -58,18 +60,11 @@ namespace VFX
         private void Start()
         {
             Init();
-            StartListeningToMyPlayer();
         }
 
         private void Init()
         {
-            if (!isInitialized) 
-            { 
-                myPlayer = gameObject.GetComponentInParent<Player>();
-                vfx_PlayerAuraCapsule = transform.Find("PlayerAuraCapsule").gameObject;
-                vfx_PlayerAuraBase = transform.Find("PlayerAuraBase").gameObject;
-                isInitialized = true;
-            }
+            StartCoroutine(InitCoroutine());
         }
 
         private void CheckThrowLevel(int level)
@@ -121,13 +116,40 @@ namespace VFX
 
         private void StartListeningToMyPlayer() 
         {
-            myPlayer.StateMachine.aimthrow.OnEnter += OnChargingStarted;
-            myPlayer.StateMachine.aimthrow.OnExit += OnChargingCancelled;
+            if (!isListeningToEvents) 
+            { 
+                myPlayer.StateMachine.aimthrow.OnEnter += OnChargingStarted;
+                myPlayer.StateMachine.aimthrow.OnExit += OnChargingCancelled;
+                isListeningToEvents = true;
+            }
         }
         private void StopListeningToMyPlayer()
         {
-            myPlayer.StateMachine.aimthrow.OnEnter -= OnChargingStarted;
-            myPlayer.StateMachine.aimthrow.OnExit -= OnChargingCancelled;
+            if (isListeningToEvents) 
+            { 
+                myPlayer.StateMachine.aimthrow.OnEnter -= OnChargingStarted;
+                myPlayer.StateMachine.aimthrow.OnExit -= OnChargingCancelled;
+                isListeningToEvents = false;
+            }
+        }
+
+        private IEnumerator InitCoroutine() 
+        {
+            if (!isInitialized)
+            {
+                myPlayer = gameObject.GetComponentInParent<Player>();
+                vfx_PlayerAuraCapsule = transform.Find("PlayerAuraCapsule").gameObject;
+                vfx_PlayerAuraBase = transform.Find("PlayerAuraBase").gameObject;
+                isInitialized = true;
+            }
+
+            yield return new WaitForEndOfFrame();
+
+            if(transform.parent.TryGetComponent(out myPlayer)) 
+            { 
+                StartListeningToMyPlayer();
+            }
+
         }
     }
 }

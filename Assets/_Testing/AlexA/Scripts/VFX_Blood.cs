@@ -9,11 +9,15 @@ namespace VFX
     public class VFX_Blood : MonoBehaviour
     {
         private Player myPlayer;
+
         private VisualEffect[] components;
+
         private bool isInitialized = false;
+        private bool isListeningToEvents = false;
 
         private void OnEnable()
         {
+            Init();
         }
         private void OnDisable()
         {
@@ -22,20 +26,10 @@ namespace VFX
         private void Start()
         {
             Init();
-            StartListeningToMyPlayer();
         }
         private void Init() 
         {
-            if (!isInitialized) 
-            {
-                myPlayer = GetComponentInParent<Player>();
-                components = GetComponentsInChildren<VisualEffect>(true);
-                foreach(VisualEffect component in components) 
-                {
-                    component.Stop();
-                }
-                isInitialized = true;
-            }
+            StartCoroutine(InitCoroutine());
         }
         private void GetHitEnter(Player owner) 
         { 
@@ -46,13 +40,39 @@ namespace VFX
         }
         private void StartListeningToMyPlayer() 
         {
-            myPlayer.StateMachine.stun.OnEnter += GetHitEnter;
-
+            if (!isListeningToEvents) 
+            { 
+                myPlayer.StateMachine.stun.OnEnter += GetHitEnter;
+                isListeningToEvents = true;
+            }
         }
         private void StopListeningToMyPlayer()
         {
-            myPlayer.StateMachine.stun.OnEnter -= GetHitEnter;
+            if (isListeningToEvents) 
+            { 
+                myPlayer.StateMachine.stun.OnEnter -= GetHitEnter;
+                isListeningToEvents = false;
+            }
+        }
 
+        private IEnumerator InitCoroutine() 
+        {
+            if (!isInitialized)
+            {
+                components = GetComponentsInChildren<VisualEffect>(true);
+                foreach (VisualEffect component in components)
+                {
+                    component.Stop();
+                    isInitialized = true;
+                }
+            }
+
+            yield return new WaitForEndOfFrame();
+
+            if (transform.parent.TryGetComponent(out myPlayer))
+            {
+                StartListeningToMyPlayer();
+            }
         }
     }
 }

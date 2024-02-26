@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7456974854004843309}
   - component: {fileID: 1796941930627683840}
   m_Layer: 0
-  m_Name: Blood_VFX
+  m_Name: VFX_Blood
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -101,7 +101,7 @@ VisualEffect:
       m_Array: []
     m_Vector3f:
       m_Array:
-      - m_Value: {x: 2, y: 2, z: 6}
+      - m_Value: {x: 4, y: 5, z: 6}
         m_Name: BloodVelocity
         m_Overridden: 1
     m_Vector4f:
@@ -215,7 +215,7 @@ VisualEffect:
       m_Array: []
     m_Vector3f:
       m_Array:
-      - m_Value: {x: 3.44, y: 5, z: 6}
+      - m_Value: {x: 4, y: 5, z: 6}
         m_Name: BloodVelocity
         m_Overridden: 1
     m_Vector4f:

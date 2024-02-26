@@ -19,6 +19,7 @@ public class VFX_BallAuraScript : MonoBehaviour
 
     private bool isMovingAndActive;
     private bool isInitialized = false;
+
     private void OnEnable()
     {
         GetAndListenToMyPallo();
