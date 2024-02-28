@@ -68,7 +68,7 @@ namespace VFX
 
         public IEnumerator ExplodeCoroutine() 
         {
-            transform.parent = null;
+            //transform.parent = null;
             foreach(Transform t in components) 
             { 
                 t.gameObject.SetActive(true);
@@ -83,8 +83,8 @@ namespace VFX
                 t.gameObject.SetActive(false);
             }
 
-            transform.parent = parent;
-            transform.position = transform.parent.position;
+            //transform.parent = parent;
+            //transform.position = transform.parent.position;
         }
     }
 }
