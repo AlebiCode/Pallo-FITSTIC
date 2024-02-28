@@ -69,19 +69,22 @@ namespace VFX
         public IEnumerator ExplodeCoroutine() 
         {
             //transform.parent = null;
+
             foreach(Transform t in components) 
             { 
                 t.gameObject.SetActive(true);
                 t.GetComponent<ParticleSystem>().Play();
             }
 
-            yield return new WaitForSeconds(2f);
+            yield return new WaitForSeconds(3f);
 
             foreach(Transform t in components) 
             {
                 t.GetComponent<ParticleSystem>().Stop();
                 t.gameObject.SetActive(false);
             }
+
+            Destroy(this);
 
             //transform.parent = parent;
             //transform.position = transform.parent.position;

@@ -75,13 +75,17 @@ public class Danger : MonoBehaviour
                         case DangerTypesEnum.Red:
                             // Comportamento del RedDanger
                             // Porta a zero la vita del personaggio vicino
+                            //prima di distruzione esegui VFX and SFX
+
+                            //this.GetComponentInChildren<VFX_Nuke>().Explode();
+
+                            player.gameObject.GetComponentInChildren<TestPlayerController>().HitScaling();
+
 
                             player.gameObject.GetComponentInChildren<TestPlayerController>().KillPlayer();
 
-                            //prima di distruzione esegui VFX and SFX
-                            this.GetComponentInChildren<VFX_Nuke>().Explode();
 
-                            Destroy(this.gameObject, 2);
+                            dangerExplosion(player);
 
                             break;
 
@@ -105,8 +109,8 @@ public class Danger : MonoBehaviour
                             // Diminuisce la stamina di valore X del personaggio vicino
 
                             this.GetComponentInChildren<VFX_Explosion>().Explode();
-                            DangerHitEffect();
 
+                            DangerHitEffect();
 
                             StaminaDecrese(player);
 
@@ -119,6 +123,32 @@ public class Danger : MonoBehaviour
         }
     }
 
+
+    public Coroutine dangerExplosionCoroutine;
+    //public Tween scalingTween;
+    //public Vector3 hitScale = Vector3.one;
+    //public Vector3 hitScaleFinal = new Vector3(1.1f, 1.1f, 1.1f);
+    public void dangerExplosion(Collider player)
+    {
+        if (dangerExplosionCoroutine == null)
+        {
+            dangerExplosionCoroutine = StartCoroutine(scalingRoutine());
+        }
+
+        IEnumerator scalingRoutine()
+        {
+            var danger = this.gameObject;
+
+            this.GetComponentInChildren<VFX_Nuke>().Explode();
+
+            yield return new WaitForSeconds(2f);
+
+            Destroy(this.gameObject);
+
+        }
+
+        dangerExplosionCoroutine = null;
+    }
 
     public Coroutine scaleTweenCoroutine;
     public Tween scalingTween;

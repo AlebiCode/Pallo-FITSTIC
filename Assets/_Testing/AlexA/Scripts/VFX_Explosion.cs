@@ -34,6 +34,7 @@ namespace VFX
         public IEnumerator ExplodeCoroutine()
         {
             //transform.parent = null;
+
             foreach (ParticleSystem p in components)
             {
                 p.gameObject.SetActive(true);

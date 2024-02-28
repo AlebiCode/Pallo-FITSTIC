@@ -97,6 +97,11 @@ PrefabInstance:
       propertyPath: ColorModule.enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 853471762649790915, guid: 14d6298b1b3e7ab40976e6aeb30397db,
+        type: 3}
+      propertyPath: InitialModule.startLifetime.scalar
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 1770337056161156390, guid: 14d6298b1b3e7ab40976e6aeb30397db,
         type: 3}
       propertyPath: ColorModule.enabled
