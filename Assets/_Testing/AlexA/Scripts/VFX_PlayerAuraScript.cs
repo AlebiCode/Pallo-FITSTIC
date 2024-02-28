@@ -19,7 +19,10 @@ namespace VFX
         [SerializeField]private float maxSize;
         [SerializeField]private float minSize;
         private float currentSize;
+
         private bool isCharging;
+        private bool isInitialized = false;
+        private bool isListeningToEvents = false;
 
         private float CurrentSize 
         {
@@ -39,12 +42,16 @@ namespace VFX
             }
         }
 
+
+        private void OnEnable()
+        {
+            Init();
+        }
         private void OnDisable()
         {
-            myPlayer.StateMachine.aimthrow.OnEnter -= OnChargingStarted;
-            myPlayer.StateMachine.aimthrow.OnExit -= OnChargingCancelled;
+            StopListeningToMyPlayer();
         }
-
+        
         private void Update()
         {
             OnChargingUpdate();
@@ -57,11 +64,7 @@ namespace VFX
 
         private void Init()
         {
-            myPlayer = gameObject.GetComponentInParent<Player>();
-            myPlayer.StateMachine.aimthrow.OnEnter += OnChargingStarted;
-            myPlayer.StateMachine.aimthrow.OnExit += OnChargingCancelled;
-            vfx_PlayerAuraCapsule = transform.Find("PlayerAuraCapsule").gameObject;
-            vfx_PlayerAuraBase = transform.Find("PlayerAuraBase").gameObject;
+            StartCoroutine(InitCoroutine());
         }
 
         private void CheckThrowLevel(int level)
@@ -109,6 +112,44 @@ namespace VFX
             vfx_PlayerAuraCapsule.SetActive(false);
             vfx_PlayerAuraBase.SetActive(false);
             vfx_PlayerAuraCapsule.transform.DOScale(minSize, 0f);
+        }
+
+        private void StartListeningToMyPlayer() 
+        {
+            if (!isListeningToEvents) 
+            { 
+                myPlayer.StateMachine.aimthrow.OnEnter += OnChargingStarted;
+                myPlayer.StateMachine.aimthrow.OnExit += OnChargingCancelled;
+                isListeningToEvents = true;
+            }
+        }
+        private void StopListeningToMyPlayer()
+        {
+            if (isListeningToEvents) 
+            { 
+                myPlayer.StateMachine.aimthrow.OnEnter -= OnChargingStarted;
+                myPlayer.StateMachine.aimthrow.OnExit -= OnChargingCancelled;
+                isListeningToEvents = false;
+            }
+        }
+
+        private IEnumerator InitCoroutine() 
+        {
+            if (!isInitialized)
+            {
+                myPlayer = gameObject.GetComponentInParent<Player>();
+                vfx_PlayerAuraCapsule = transform.Find("PlayerAuraCapsule").gameObject;
+                vfx_PlayerAuraBase = transform.Find("PlayerAuraBase").gameObject;
+                isInitialized = true;
+            }
+
+            yield return new WaitForEndOfFrame();
+
+            if(transform.parent.TryGetComponent(out myPlayer)) 
+            { 
+                StartListeningToMyPlayer();
+            }
+
         }
     }
 }

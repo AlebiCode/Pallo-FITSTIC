@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3757121222236090389}
   - component: {fileID: 8415765809444023959}
+  - component: {fileID: 8629876471120977638}
   m_Layer: 0
   m_Name: UIPlayerControl
   m_TagString: Untagged
@@ -46,7 +47,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Actions: {fileID: -944628639613478452, guid: ad1bd7003e04a574a9fe0becbdeeb9e5,
     type: 3}
-  m_NotificationBehavior: 0
+  m_NotificationBehavior: 2
   m_UIInputModule: {fileID: 0}
   m_DeviceLostEvent:
     m_PersistentCalls:
@@ -57,9 +58,76 @@ MonoBehaviour:
   m_ControlsChangedEvent:
     m_PersistentCalls:
       m_Calls: []
-  m_ActionEvents: []
+  m_ActionEvents:
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: e1a7c3aa-ebb2-4aa1-a8d5-4c3e888bd354
+    m_ActionName: Gameplay/Move[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 1e7bb141-5bcd-45e4-8246-01ab726410fa
+    m_ActionName: Gameplay/Rotation[/Mouse/position]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 27576571-793b-4b94-b4d5-89d428a096c7
+    m_ActionName: Gameplay/Throw[/Mouse/leftButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 360431da-e674-4e4a-aa84-dfc169fcec3f
+    m_ActionName: Gameplay/Parry[/Mouse/rightButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 45afacd8-1f4c-4094-90bf-ec54c4ebf9b3
+    m_ActionName: Gameplay/Dodge[/Keyboard/leftShift]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8629876471120977638}
+        m_TargetAssemblyTypeName: UIPlayer, Assembly-CSharp
+        m_MethodName: OnMove
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: decea107-76c8-4144-b159-72623bca0111
+    m_ActionName: MainMenuUI/New action
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8629876471120977638}
+        m_TargetAssemblyTypeName: UIPlayer, Assembly-CSharp
+        m_MethodName: OnSelect
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 9640ee60-2873-4680-a1f3-1e16bc42de9d
+    m_ActionName: MainMenuUI/Select
   m_NeverAutoSwitchControlSchemes: 1
   m_DefaultControlScheme: GamePad
-  m_DefaultActionMap: 5ca05dd7-707f-48f8-90ab-882b90c33b5f
+  m_DefaultActionMap: MainMenuUI
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &8629876471120977638
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 887681489036698093}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4dd9817815f644b4cbe9d6092391dadb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerInput: {fileID: 0}
+  selectedCharacter: {fileID: 0}
+  selectedArena: {fileID: 0}

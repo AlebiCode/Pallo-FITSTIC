@@ -15,3 +15,5 @@ MonoBehaviour:
   DangerType: 12
   isMovable: 1
   explosionDamage: 20
+  barrelModel: {fileID: 5531374935756570681, guid: e62b19b6bf4e1254f9e8e83db10d5934,
+    type: 3}

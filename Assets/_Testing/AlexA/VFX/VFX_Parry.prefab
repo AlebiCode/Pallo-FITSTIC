@@ -9787,7 +9787,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1693273841361595075}
   m_Layer: 0
-  m_Name: ParataVfx
+  m_Name: VFX_Parry
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
