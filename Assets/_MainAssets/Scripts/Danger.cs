@@ -10,6 +10,7 @@ using TMPro;
 using DG.Tweening;
 using static UnityEditor.Experimental.GraphView.GraphView;
 using StateMachine;
+using VFX;
 
 public class Danger : MonoBehaviour
 {
@@ -78,8 +79,9 @@ public class Danger : MonoBehaviour
                             player.gameObject.GetComponentInChildren<TestPlayerController>().KillPlayer();
 
                             //prima di distruzione esegui VFX and SFX
+                            this.GetComponentInChildren<VFX_Nuke>().Explode();
 
-                            Destroy(this.gameObject);
+                            Destroy(this.gameObject, 3);
 
                             break;
 
@@ -103,6 +105,8 @@ public class Danger : MonoBehaviour
                             // Diminuisce la stamina di valore X del personaggio vicino
 
                             DangerHitEffect();
+
+                            this.GetComponentInChildren<VFX_Explosion>().Explode();
 
                             StaminaDecrese(player);
 
@@ -152,6 +156,8 @@ public class Danger : MonoBehaviour
 
             scaleTweenCoroutine = null;
     }
+
+
 
     private void RejectPlayer(Collider _player)
     {
