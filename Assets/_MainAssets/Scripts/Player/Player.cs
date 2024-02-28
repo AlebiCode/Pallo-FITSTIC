@@ -153,7 +153,7 @@ namespace StateMachine
         private void AssingPlayerInput()
         {
             PlayerInput playerInput = GetComponent<PlayerInput>();
-            if (playerInput.devices.Count == 0) //è una ai!
+            if (!playerInput || playerInput.devices.Count == 0) //è una ai!
             {
 
                 return;
@@ -169,7 +169,6 @@ namespace StateMachine
                 if (MenuManager.Instance.uiPlayers[i].playerInput.user == playerInput.user)
                 {
                     //metodo 1
-                    //MenuManager.Instance.uiPlayers
                     InputUser.PerformPairingWithDevice(playerInput.devices[0], MenuManager.Instance.uiPlayers[i].playerInput.user);
                     //metodo 2
                     //GetComponent<PlayerInput>().SwitchCurrentControlScheme(new InputDevice[0]);
