@@ -8,10 +8,7 @@ using vittorio;
 
 namespace StateMachine
 {
-    [RequireComponent(typeof(PlayerController))]
     [RequireComponent(typeof(Animator))]
-    [RequireComponent(typeof(PlayerInput))]
-    [RequireComponent(typeof(CharacterController))]
     [RequireComponent(typeof(PalloTrigger))]
     [RequireComponent(typeof(PlayerAnimation))]
 
