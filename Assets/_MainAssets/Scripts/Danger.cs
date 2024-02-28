@@ -106,6 +106,8 @@ public class Danger : MonoBehaviour
 
                             DangerHitEffect();
 
+                            this.GetComponentInChildren<VFX_Explosion>().Explode();
+
                             StaminaDecrese(player);
 
                             Debug.Log("damage taken = " + dangerConfig.explosionDamage);
