@@ -81,7 +81,7 @@ public class Danger : MonoBehaviour
                             //prima di distruzione esegui VFX and SFX
                             this.GetComponentInChildren<VFX_Nuke>().Explode();
 
-                            Destroy(this.gameObject, 3);
+                            Destroy(this.gameObject, 2);
 
                             break;
 
@@ -104,9 +104,9 @@ public class Danger : MonoBehaviour
                             // Comportamento del YellowDanger
                             // Diminuisce la stamina di valore X del personaggio vicino
 
+                            this.GetComponentInChildren<VFX_Explosion>().Explode();
                             DangerHitEffect();
 
-                            this.GetComponentInChildren<VFX_Explosion>().Explode();
 
                             StaminaDecrese(player);
 

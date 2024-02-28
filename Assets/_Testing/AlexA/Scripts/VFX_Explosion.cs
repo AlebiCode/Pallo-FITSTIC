@@ -11,7 +11,14 @@ namespace VFX
 
         private void Start()
         {
-            components = GetComponentsInChildren<ParticleSystem>();
+
+            components = new ParticleSystem[transform.childCount];
+            for (int i = 0; i < components.Length; i++)
+            {
+                components[i] = transform.GetChild(i).gameObject.GetComponentInChildren<ParticleSystem>();
+            }
+
+            //components = GetComponentsInChildren<ParticleSystem>();
         }
 
         private void Init() 
@@ -26,23 +33,23 @@ namespace VFX
 
         public IEnumerator ExplodeCoroutine()
         {
-            transform.parent = null;
+            //transform.parent = null;
             foreach (ParticleSystem p in components)
             {
                 p.gameObject.SetActive(true);
-                p.Play();
+                p.GetComponent<ParticleSystem>().Play();
             }
 
             yield return new WaitForSeconds(2f);
 
             foreach (ParticleSystem p in components)
             {
-                p.Stop();
+                p.GetComponent<ParticleSystem>().Stop();
                 p.gameObject.SetActive(false);
             }
 
-            transform.parent = parent;
-            transform.position = transform.parent.position;
+            //transform.parent = parent;
+            //transform.position = transform.parent.position;
         }
     }
 }
