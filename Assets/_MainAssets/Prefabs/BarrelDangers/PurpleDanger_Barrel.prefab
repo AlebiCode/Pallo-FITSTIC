@@ -285,6 +285,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2176181288452685232}
     m_Modifications:
+    - target: {fileID: 113524220251576722, guid: c15ae7c9350e55f43a34760de8b6ca94,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 249858318745777509, guid: c15ae7c9350e55f43a34760de8b6ca94,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1811437486426816133, guid: c15ae7c9350e55f43a34760de8b6ca94,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2976090196927927005, guid: c15ae7c9350e55f43a34760de8b6ca94,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -339,6 +354,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: VFX_Explosion
+      objectReference: {fileID: 0}
+    - target: {fileID: 9189351784392815984, guid: c15ae7c9350e55f43a34760de8b6ca94,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
