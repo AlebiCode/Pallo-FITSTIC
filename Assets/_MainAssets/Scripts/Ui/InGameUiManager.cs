@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEngine.Rendering.DebugUI;
 
 public class InGameUiManager : MonoBehaviour
 {
@@ -14,8 +15,10 @@ public class InGameUiManager : MonoBehaviour
     {
         public GameObject deadIcon;
         public Image staminaBar;
+        public Transform lifesParent;
     }
 
+    [SerializeField] private GameObject lifeIconPrefab;
     [SerializeField] private TMP_Text timer;
     [SerializeField] private PlayerSection[] playerSections;
 
@@ -37,11 +40,19 @@ public class InGameUiManager : MonoBehaviour
     public void UpdateHpBar(int player, float hpPercent)
     {
         playerSections[player].staminaBar.transform.localScale = new Vector3(hpPercent, 1, 1);
+        playerSections[player].deadIcon.SetActive(hpPercent > 0);
     }
 
-    public void EnableDeathIcon(int player, bool value = true)
+    public void SetPlayerLifes(int player, int value)
     {
-        playerSections[player].deadIcon.SetActive(value);
+        for (int i = value; i < playerSections[player].lifesParent.childCount; i++)
+        {
+            Destroy(playerSections[player].lifesParent.GetChild(0).gameObject);
+        }
+        for (int i = playerSections[player].lifesParent.childCount; i < value; i++)
+        {
+            Instantiate(lifeIconPrefab, playerSections[player].lifesParent);
+        }
     }
 
 }
