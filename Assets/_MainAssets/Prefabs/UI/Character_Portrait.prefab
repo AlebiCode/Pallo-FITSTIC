@@ -405,7 +405,7 @@ MonoBehaviour:
   - {fileID: 337452583056488586}
   - {fileID: 985017878522706875}
   - {fileID: 1130997731946930054}
-  sprite: {fileID: 0}
+  previewImage: {fileID: 5183568553805798063}
 --- !u!1 &3291671969732958433
 GameObject:
   m_ObjectHideFlags: 0
