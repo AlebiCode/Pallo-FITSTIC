@@ -12,14 +12,14 @@ public class PlayerData : MonoBehaviour
         [Header("General Data")]
         public int maxHp = 100; 
         private int currentHp;
-        private Transform handsocket;
+        public Transform handsocket;
         private PalloController heldPallo;
         public LayerMask palloLayermask;
         public PalloTrigger palloTrigger;
 
 
         [Header("Ambient interactions")]
-        [SerializeField] public PalloTrigger parryHitbox;
+        //[SerializeField] public PalloTrigger parryHitbox;
         public bool playerIsBeingRejected = false;
 
         [Header("Movement")]
@@ -84,13 +84,12 @@ public class PlayerData : MonoBehaviour
         public int importance;
 
         private void Awake() {
-            Handsocket = GameObject.Find("HandSocket").GetComponentInChildren<Transform>();
             currentHp = maxHp;
         }
 
         private void Start() {
             palloTrigger.AddOnEnterListener(PalloContact);
-            parryHitbox.AddOnEnterListener(GrabPallo);
+            //parryHitbox.AddOnEnterListener(GrabPallo);
         }
 
         private void Update() {

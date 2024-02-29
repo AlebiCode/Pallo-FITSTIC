@@ -129,6 +129,7 @@ GameObject:
   - component: {fileID: 4043881405430006721}
   - component: {fileID: 2839357871436702340}
   - component: {fileID: -4583512960773331150}
+  - component: {fileID: 2305973007863010269}
   m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
@@ -249,7 +250,7 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -265,8 +266,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b37fc85ea289d041b82f1607250326e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxHp: 100
+  handsocket: {fileID: 7407853230732808618}
+  palloLayermask:
+    serializedVersion: 2
+    m_Bits: 0
+  palloTrigger: {fileID: 2305973007863010269}
+  playerIsBeingRejected: 0
+  speedRegular: 5
+  speedSlow: 2
+  throwChargeMax: 1
+  holdBallCooldown: 2
+  speedDodge: 15
+  dodgeDuration: 0.6
+  dodgeCooldown: 1
+  dodgeDecrease: 2
+  parryDuration: 0.5
+  parryPercentage: 60
+  parryRange: 2
+  parryCooldown: 1
+  isInvincibile: 0
+  pushFactor: 2
+  pushDecrease: 2
+  playerAnimation:
+    animator: {fileID: 0}
   lookDistance: 0.5
-  currentHp: 0
+  rb: {fileID: 0}
   ragdollTreshold: 0
   throwChargeTime: 0
   importance: 0
@@ -289,3 +314,21 @@ MonoBehaviour:
   rb: {fileID: 4043881405430006721}
   speed: 5
   handsocket: {fileID: 7407853230732808618}
+--- !u!114 &2305973007863010269
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8841909813191583072}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f188414ac4239343befa0bc63824e67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onPalloEnter:
+    m_PersistentCalls:
+      m_Calls: []
+  onPalloExit:
+    m_PersistentCalls:
+      m_Calls: []

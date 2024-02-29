@@ -185,17 +185,17 @@ PrefabInstance:
     - target: {fileID: 5825363628791212157, guid: 70a95a6770f4180438a7696aaaea4a4d,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 6.536105
+      value: -5.5788555
       objectReference: {fileID: 0}
     - target: {fileID: 5825363628791212157, guid: 70a95a6770f4180438a7696aaaea4a4d,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.97296333
+      value: 1.26
       objectReference: {fileID: 0}
     - target: {fileID: 5825363628791212157, guid: 70a95a6770f4180438a7696aaaea4a4d,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 0.5499768
       objectReference: {fileID: 0}
     - target: {fileID: 5825363628791212157, guid: 70a95a6770f4180438a7696aaaea4a4d,
         type: 3}
@@ -237,6 +237,7 @@ PrefabInstance:
     - {fileID: 3432618987493807280, guid: 70a95a6770f4180438a7696aaaea4a4d, type: 3}
     - {fileID: 6415599366444437611, guid: 70a95a6770f4180438a7696aaaea4a4d, type: 3}
     - {fileID: 3190273712004053839, guid: 70a95a6770f4180438a7696aaaea4a4d, type: 3}
+    - {fileID: 2357522153618491951, guid: 70a95a6770f4180438a7696aaaea4a4d, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 5825363628791212157, guid: 70a95a6770f4180438a7696aaaea4a4d,
@@ -261,9 +262,9 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 5699947740060574072}
   m_SourcePrefab: {fileID: 100100000, guid: 70a95a6770f4180438a7696aaaea4a4d, type: 3}
---- !u!95 &1671324709861386711 stripped
+--- !u!95 &4886234019680904895 stripped
 Animator:
-  m_CorrespondingSourceObject: {fileID: 2328551866364925733, guid: 70a95a6770f4180438a7696aaaea4a4d,
+  m_CorrespondingSourceObject: {fileID: 8407783525618391117, guid: 70a95a6770f4180438a7696aaaea4a4d,
     type: 3}
   m_PrefabInstance: {fileID: 3990489857974599410}
   m_PrefabAsset: {fileID: 0}
@@ -325,11 +326,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHp: 100
+  handsocket: {fileID: 7595484238396641172}
   palloLayermask:
     serializedVersion: 2
     m_Bits: 128
-  palloTrigger: {fileID: 0}
-  parryHitbox: {fileID: 8895457862736160638}
+  palloTrigger: {fileID: 8467643127680873023}
   playerIsBeingRejected: 0
   speedRegular: 5
   speedSlow: 2
@@ -347,7 +348,7 @@ MonoBehaviour:
   pushFactor: 2
   pushDecrease: 2
   playerAnimation:
-    animator: {fileID: 1671324709861386711}
+    animator: {fileID: 4886234019680904895}
   lookDistance: 50
   rb: {fileID: 2589508082636544650}
   ragdollTreshold: 10
@@ -366,7 +367,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playeranim:
-    animator: {fileID: 1671324709861386711}
+    animator: {fileID: 0}
   state: 0
   maxAttackTime: 4
   currentAttackTime: 0
@@ -377,7 +378,6 @@ MonoBehaviour:
   playerData: {fileID: 6699728466308703488}
   rb: {fileID: 2589508082636544650}
   speed: 1
-  handsocket: {fileID: 7595484238396641172}
   collisionLayers:
     serializedVersion: 2
     m_Bits: 192

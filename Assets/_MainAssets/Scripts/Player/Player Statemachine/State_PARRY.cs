@@ -57,17 +57,19 @@ namespace StateMachine
 		public void Parry()
 		{
 			Physics.SphereCast(player.transform.position, player.PlayerD.parryRange, Vector3.zero, out hit);
-			hitPallo = hit.collider.gameObject.GetComponent<PalloController>() as PalloController;
+			if (!hit.collider)
+				return;
+			hitPallo = hit.collider.gameObject.GetComponent<PalloController>();
+			if (!hitPallo)
+				return;
 
-			if (hitPallo != null)
-			{
-				player.PlayerD.HeldPallo = hitPallo;
-				player.PlayerD.HeldPallo.Hold(player.PlayerD.Handsocket);
-				//TODO: parry VFX
-				player.PlayerAnimation.PlayAnimation(PlayerAnimation.takeOutroBall);
 
-				player.StateMachine.ChangeState(player.StateMachine.idle);
-			}
+			player.PlayerD.HeldPallo = hitPallo;
+			player.PlayerD.HeldPallo.Hold(player.PlayerD.Handsocket);
+			//TODO: parry VFX
+			player.PlayerAnimation.PlayAnimation(PlayerAnimation.takeOutroBall);
+
+			player.StateMachine.ChangeState(player.StateMachine.idle);
 		}
 	}
 }

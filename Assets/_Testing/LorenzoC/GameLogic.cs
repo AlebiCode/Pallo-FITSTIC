@@ -71,7 +71,7 @@ namespace LorenzoCastelli {
 
         private void EnterStart() {
             timerText.text = "00";
-            Debug.Log("Changing to " + GAMESTATES.PLAYING + " from " + gameState);
+            //Debug.Log("Changing to " + GAMESTATES.PLAYING + " from " + gameState);
             EnterPlaying();
         }
 
@@ -305,7 +305,7 @@ namespace LorenzoCastelli {
                 foreach (PlayerData pd in playerInGame) {
                     if (excludePlayer != pd) {
                         if (Vector3.Distance(pd.transform.position, arenaAreasPositions[i].position) <2) {
-                            Debug.Log(excludePlayer.gameObject + " is close to area " + i, excludePlayer.gameObject);
+                            //Debug.Log(excludePlayer.gameObject + " is close to area " + i, excludePlayer.gameObject);
                             someOneIsNearThisArea = true;
                             break;
                         }

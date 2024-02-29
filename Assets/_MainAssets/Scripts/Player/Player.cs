@@ -9,9 +9,7 @@ using LorenzoCastelli;
 
 namespace StateMachine
 {
-    [RequireComponent(typeof(Animator))]
     [RequireComponent(typeof(PalloTrigger))]
-    [RequireComponent(typeof(PlayerAnimation))]
 
     public class Player : MonoBehaviour
     {
