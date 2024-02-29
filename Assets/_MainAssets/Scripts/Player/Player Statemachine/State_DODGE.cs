@@ -20,15 +20,15 @@ namespace StateMachine
 			base.Enter();
 			dodgeDirection = player.transform.forward;
 			player.transform.LookAt(player.transform.position + dodgeDirection, Vector3.up);
-			dodgeSpeedCurrent = player.speedDodge;
-			dodgeDurationCurrent = player.dodgeDuration;
+			dodgeSpeedCurrent = player.PlayerD.speedDodge;
+			dodgeDurationCurrent = player.PlayerD.dodgeDuration;
 			player.PlayerAnimation.PlayAnimation(PlayerAnimation.dashForwardIntro);
 		}
 
 		public override void Exit()
 		{
 			base.Exit();
-			player.DodgeCooldownCurrent = player.dodgeCooldown;
+			player.PlayerD.DodgeCooldownCurrent = player.PlayerD.dodgeCooldown;
 		}
 
 		public override void Update()
@@ -49,7 +49,7 @@ namespace StateMachine
 		private void Dodge()
 		{
 			player.HandleMovement(dodgeDirection, dodgeSpeedCurrent);
-			dodgeSpeedCurrent -= player.dodgeDecrease;
+			dodgeSpeedCurrent -= player.PlayerD.dodgeDecrease;
 			Debug.Log("Dodge Current Speed: " + dodgeSpeedCurrent);
 		}
 	}

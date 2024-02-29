@@ -21,16 +21,16 @@ namespace StateMachine
 		{
 			base.Enter();
 			
-			parryDurationCurrent = player.parryDuration;
-			parryFrames = parryDurationCurrent / 100f * player.parryPercentage;
-			player.IsInvincibile = true;
+			parryDurationCurrent = player.PlayerD.parryDuration;
+			parryFrames = parryDurationCurrent / 100f * player.PlayerD.parryPercentage;
+			player.PlayerD.IsInvincibile = true;
 			player.PlayerAnimation.PlayAnimation(PlayerAnimation.takeIntro);
 		}
 
 		public override void Exit()
 		{
 			base.Exit();
-			player.ParryCooldownCurrent = player.parryCooldown;
+			player.PlayerD.ParryCooldownCurrent = player.PlayerD.parryCooldown;
 		}
 
 		public override void Update()
@@ -44,7 +44,7 @@ namespace StateMachine
 			else if (parryDurationCurrent <= parryFrames)
 			{
                 player.PlayerAnimation.PlayAnimation(PlayerAnimation.takeOutroNoBall);
-				player.IsInvincibile = false;
+				player.PlayerD.IsInvincibile = false;
 			}
 			else
 			{
@@ -56,13 +56,13 @@ namespace StateMachine
 
 		public void Parry()
 		{
-			Physics.SphereCast(player.transform.position, player.parryRange, Vector3.zero, out hit);
+			Physics.SphereCast(player.transform.position, player.PlayerD.parryRange, Vector3.zero, out hit);
 			hitPallo = hit.collider.gameObject.GetComponent<PalloController>() as PalloController;
 
 			if (hitPallo != null)
 			{
-				player.HeldPallo = hitPallo;
-				player.HeldPallo.Hold(player.Handsocket);
+				player.PlayerD.HeldPallo = hitPallo;
+				player.PlayerD.HeldPallo.Hold(player.PlayerD.Handsocket);
 				//TODO: parry VFX
 				player.PlayerAnimation.PlayAnimation(PlayerAnimation.takeOutroBall);
 

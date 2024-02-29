@@ -23,6 +23,8 @@ namespace LorenzoCastelli {
         public GameObject[] areasOccupied;
 
         public static GameLogic instance;
+
+        public Transform PalloPosition => pallo.transform;
         public enum GAMESTATES {
             START = 0,
             PLAYING = 1,
@@ -224,7 +226,7 @@ namespace LorenzoCastelli {
         }
 
         private float CalculateHeavyPoint(PlayerData pd) {
-            return pd.importance - pd.currentHp;
+            return pd.importance - pd.CurrentHp;
         }
 
 

@@ -24,7 +24,7 @@ namespace Controllers
 
         public bool playerIsBeingRejected = false;
 
-        private int currentHp;
+        public int currentHp;
         public int CurrentHp 
         {
             get { return currentHp; }

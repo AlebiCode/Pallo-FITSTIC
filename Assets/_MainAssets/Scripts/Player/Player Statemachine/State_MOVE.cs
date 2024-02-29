@@ -26,7 +26,7 @@ namespace StateMachine
 		{
 			base.Update();
 
-			player.HandleMovement(player.MovementDirectionFromInput, player.speedRegular);
+			player.HandleMovement(player.MovementDirectionFromInput, player.PlayerD.speedRegular);
 			player.HandleRotation();
         }
     }

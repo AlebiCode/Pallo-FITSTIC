@@ -4,6 +4,7 @@ using UnityEngine;
 using StateMachine;
 using DG.Tweening;
 using Controllers;
+using LorenzoCastelli;
 
 namespace VFX
 { 
@@ -14,7 +15,8 @@ namespace VFX
         private GameObject vfx_PlayerAuraCapsule;
         private GameObject vfx_PlayerAuraBase;
 
-        private Player myPlayer;
+        private PlayerData myPlayer;
+        private bool isPlayer = false;
 
         [SerializeField]private float maxSize;
         [SerializeField]private float minSize;
@@ -116,19 +118,21 @@ namespace VFX
 
         private void StartListeningToMyPlayer() 
         {
-            if (!isListeningToEvents) 
-            { 
-                myPlayer.StateMachine.aimthrow.OnEnter += OnChargingStarted;
-                myPlayer.StateMachine.aimthrow.OnExit += OnChargingCancelled;
+            if ((!isListeningToEvents) && (isPlayer)) 
+            {
+                Player player = myPlayer.GetComponent<Player>();
+                player.StateMachine.aimthrow.OnEnter += OnChargingStarted;
+                player.StateMachine.aimthrow.OnExit += OnChargingCancelled;
                 isListeningToEvents = true;
             }
         }
         private void StopListeningToMyPlayer()
         {
-            if (isListeningToEvents) 
-            { 
-                myPlayer.StateMachine.aimthrow.OnEnter -= OnChargingStarted;
-                myPlayer.StateMachine.aimthrow.OnExit -= OnChargingCancelled;
+            if ((isListeningToEvents) && (isPlayer))  
+            {
+                Player player = myPlayer.GetComponent<Player>();
+                player.StateMachine.aimthrow.OnEnter -= OnChargingStarted;
+                player.StateMachine.aimthrow.OnExit -= OnChargingCancelled;
                 isListeningToEvents = false;
             }
         }
@@ -137,7 +141,10 @@ namespace VFX
         {
             if (!isInitialized)
             {
-                myPlayer = gameObject.GetComponentInParent<Player>();
+                myPlayer = gameObject.GetComponentInParent<PlayerData>();
+                if (myPlayer.gameObject.GetComponent<Player>()) {
+                    isPlayer = true;
+                }
                 vfx_PlayerAuraCapsule = transform.Find("PlayerAuraCapsule").gameObject;
                 vfx_PlayerAuraBase = transform.Find("PlayerAuraBase").gameObject;
                 isInitialized = true;

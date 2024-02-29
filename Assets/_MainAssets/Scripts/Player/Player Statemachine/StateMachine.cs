@@ -36,7 +36,7 @@ namespace StateMachine
 		public void FirstState()
 		{
 			currentState = idle;
-			player.currentState = currentState.ToString();
+			//player.currentState = currentState.ToString();
 			idle.Enter();
 		}
 
@@ -45,7 +45,7 @@ namespace StateMachine
 			currentState.Exit();
 			previousState = currentState;
 			currentState = state;
-			player.currentState = currentState.ToString(); //debug
+			//player.currentState = currentState.ToString(); //debug
 			currentState.Enter();
 		}
 	}

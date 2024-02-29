@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 using Controllers;
 using UnityEngine.InputSystem.Users;
 using vittorio;
+using LorenzoCastelli;
 
 namespace StateMachine
 {
@@ -16,88 +17,91 @@ namespace StateMachine
     {
         #region variables and properties
 
-        public string currentState; //debug
+        //public string currentState; //debug
 
         //linked classes
+        private PlayerData playerData;
         private StateMachine        stateMachine;
         private CharacterController controller;
-        private Transform           handsocket;
-        private PalloController     heldPallo;
+        //private Transform           handsocket;
+        //private PalloController     heldPallo;
         private Camera              mainCamera;
         [SerializeField]
+
         private PlayerAnimation     playerAnimation;
-        public LayerMask            palloLayermask;
+        //public LayerMask            palloLayermask;
 
         //player
-        public int playerId;
+        //public int playerId;
         //hp
         public int currentHp;
 
         [Header("Movement")]  
-        public float    speedRegular = 5f;
+        //public float    speedRegular = 5f;
         public float    controllerDeadzone = 0.01f;
         private Vector2 movementInput = Vector2.zero;
         private Vector2 rotationInput = Vector2.zero;
         private bool    usingGamePad;
         private float   rotateSmoothing = 3f;
 
-        [Header("Throw")]
+        /*[Header("Throw")]
         public float speedSlow = 2f;
         public float throwChargeMax = 1f;
         public float holdBallCooldown = 2f;
         private float throwChargeCurrent = 0f;
         private float throwForceMax = 10f;
         private float throwHeight = 1.2f;
-        private float holdBallCooldownCurrent = 0f;
+        private float holdBallCooldownCurrent = 0f;*/
 
-        [Header("Dodge")]
+        /*[Header("Dodge")]
         public float speedDodge = 15f;
         public float dodgeDuration = .6f; //durata dodge
         public float dodgeCooldown = 1f; //durata dodge cooldown
         public float dodgeDecrease = 2f; //quanto velocemente diminuisce la velocità di dodge
-		private float dodgeCooldownCurrent = 0f;
+		private float dodgeCooldownCurrent = 0f;*/
 
-        [Header("Parry")]
+        /*[Header("Parry")]
         public float parryDuration = 0.5f; //quanto a lungo dura l'azione del parry
         public float parryPercentage = 60f; //percentuale del parry in cui sei invincibile
         public float parryRange = 2f; //quanto lontano raggiunge il parry
         public float parryCooldown = 1f;
         public bool isInvincibile = false;
-        private float parryCooldownCurrent = 0f;
+        private float parryCooldownCurrent = 0f;*/
 
-        [Header("Stun")]
+        /*[Header("Stun")]
         public float pushFactor = 2f;
         public float pushDecrease = 2f;
         private Vector3 pushDirection;
-        private float pushForce;
-        
+        private float pushForce;*/
+
         //properties
+        public PlayerData PlayerD => playerData;
         public PlayerAnimation PlayerAnimation => playerAnimation;
         public StateMachine StateMachine            { get => stateMachine; set => stateMachine = value; }
         public PlayerController PlayerController    { get => PlayerController; set => PlayerController = value; }
-        public PalloController HeldPallo            { get => heldPallo; set => heldPallo = value; }
-		public Transform Handsocket                 { get => handsocket; set => handsocket = value; }
+       // public PalloController HeldPallo            { get => heldPallo; set => heldPallo = value; }
+		//public Transform Handsocket                 { get => handsocket; set => handsocket = value; }
 		public Vector2 MovementInput                { get => movementInput; set => movementInput = value; }
 		public Vector2 RotationInput                { get => rotationInput; set => rotationInput = value; }
-        public float DodgeCooldownCurrent           { get => dodgeCooldownCurrent; set => dodgeCooldownCurrent = value; }
+        /*public float DodgeCooldownCurrent           { get => dodgeCooldownCurrent; set => dodgeCooldownCurrent = value; }
         public float ParryCooldownCurrent           { get => parryCooldownCurrent; set => parryCooldownCurrent = value; }
         public float HoldBallCooldownCurrent        { get => holdBallCooldownCurrent; set => holdBallCooldownCurrent = value; }
         public float ThrowChargeCurrent             { get => throwChargeCurrent; set => throwChargeCurrent = value; }
 		public bool IsInvincibile                   { get => isInvincibile; set => isInvincibile = value; }
 		public Vector3 PushDirection                { get => pushDirection; set => pushDirection = value; }
 		public float PushForce                      { get => pushForce; set => pushForce = value; }
-		public float PushDecrease              { get => pushDecrease; set => pushDecrease = value; }
-        public Vector3  ThrowVelocity
+		public float PushDecrease              { get => pushDecrease; set => pushDecrease = value; }*/
+        /*public Vector3  ThrowVelocity
         {
             get
             {
                 return transform.forward *
-                (ThrowForceMin + (Mathf.Min(throwChargeCurrent, throwChargeMax)
-                * (throwForceMax - ThrowForceMin) / throwChargeMax))
+                (playerData.ThrowForceMin + (Mathf.Min(playerData.ThrowCharge, playerData.throwChargeMax)
+                * (playerData.throwForceMax - ThrowForceMin) / throwChargeMax))
                 + Vector3.up * throwHeight;
             }
-        }
-        public int      CurrentHp
+        }*/
+        /*public int      CurrentHp
         {
             get { return currentHp; }
 
@@ -108,14 +112,14 @@ namespace StateMachine
                 else
                     currentHp = value;
             }
-        }
+        }*/
         private bool IsMovementValid =>             Mathf.Abs(MovementInput.x) > controllerDeadzone ||
                                                     Mathf.Abs(MovementInput.y) > controllerDeadzone ||
                                                     StateMachine.currentState == StateMachine.dodge ||
                                                     StateMachine.currentState == StateMachine.stun;
         public Vector3  MovementDirectionFromInput => new Vector3(MovementInput.x, 0, MovementInput.y).normalized;
-        public float    ThrowForceMin => PalloController.SPEED_TIERS[1];
-        public bool     IsHoldingBall => heldPallo;
+        /*public float    ThrowForceMin => PalloController.SPEED_TIERS[1];
+        public bool     IsHoldingBall => heldPallo;*/
 
 
 		#endregion
@@ -134,7 +138,7 @@ namespace StateMachine
         {
             stateMachine.currentState?.Update();
 
-            HandleCooldowns();
+            //HandleCooldowns();
         }
 
         #region Initialization()
@@ -143,11 +147,12 @@ namespace StateMachine
         {
             stateMachine = new StateMachine(this);
 
-            GetComponent<PalloTrigger>().AddOnEnterListener(PalloContact);
+            //GetComponent<PalloTrigger>().AddOnEnterListener(PalloContact);
             //playerController = gameObject.GetComponent<PlayerController>();
             controller = gameObject.GetComponent<CharacterController>();
             mainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
-            Handsocket = GameObject.Find("HandSocket").GetComponentInChildren<Transform>();
+            //Handsocket = GameObject.Find("HandSocket").GetComponentInChildren<Transform>();
+            playerData = gameObject.GetComponent<PlayerData>();
         }
 
         private void AssingPlayerInput()
@@ -181,7 +186,7 @@ namespace StateMachine
 
         #region helper methods
 
-        private void HandleCooldowns()
+        /*private void HandleCooldowns()
         {
             //dodge cooldown
             if (DodgeCooldownCurrent > 0)
@@ -200,7 +205,7 @@ namespace StateMachine
 			{
                 HoldBallCooldownCurrent -= Time.deltaTime;
             }
-        }
+        }*/
 
         public void HandleMovement(Vector3 direction, float speed)
         {
@@ -261,7 +266,7 @@ namespace StateMachine
             transform.LookAt(heightCorrectedPoint);
         }
 
-        private void PalloContact(PalloController pallo)
+        /*private void PalloContact(PalloController pallo)
 		{
 			switch (pallo.BallState)
 			{
@@ -283,19 +288,19 @@ namespace StateMachine
 
                     break;
             }
-        }
+        }*/
 
         private void GetPushed(Vector3 pushDirection, float pushForce)
 		{
-            if (!IsInvincibile)
+            if (!playerData.IsInvincibile)
 			{
-                PushDirection = pushDirection;
-                PushForce = pushForce;
+                playerData.PushDirection = pushDirection;
+                playerData.PushForce = pushForce;
                 stateMachine.ChangeState(stateMachine.stun);
 			}
 		}
 
-        public void TakeDamage(int amount)
+        /*public void TakeDamage(int amount)
         {
             CurrentHp -= amount;
 
@@ -305,16 +310,16 @@ namespace StateMachine
             {
                 this.KillPlayer();
             }
-        }
+        }*/
 
-        public void KillPlayer()
+        /*public void KillPlayer()
         {
             //TODO trasformare in unityEvent
 
             Debug.Log("player is killed!");
             //TODO rimuovi destroy e togli una vita
             Destroy(this.gameObject);
-        }
+        }*/
 
 		#endregion
 	}

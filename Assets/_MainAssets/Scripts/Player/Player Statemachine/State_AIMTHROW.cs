@@ -27,18 +27,18 @@ namespace StateMachine
 		{
 			base.Update();
 
-			player.ThrowChargeCurrent += Time.deltaTime;
+			player.PlayerD.ThrowChargeCurrent += Time.deltaTime;
 
-			player.HandleMovement(player.MovementDirectionFromInput, player.speedSlow);
+			player.HandleMovement(player.MovementDirectionFromInput, player.PlayerD.speedSlow);
 			player.HandleRotation();
 			player.PlayerAnimation.PlayAnimation(PlayerAnimation.throwLeftCharge);
 		}
 
 		private void ResetCharge()
 		{
-			player.HeldPallo = null;
-			player.ThrowChargeCurrent = 0;
-			player.HoldBallCooldownCurrent = player.holdBallCooldown;
+			player.PlayerD.HeldPallo = null;
+			player.PlayerD.ThrowChargeCurrent = 0;
+			player.PlayerD.HoldBallCooldownCurrent = player.PlayerD.holdBallCooldown;
 		}
 	}
 }

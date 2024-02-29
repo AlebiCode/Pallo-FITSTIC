@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Controllers;
+using LorenzoCastelli;
 
 namespace StateMachine
 {
@@ -11,16 +12,16 @@ namespace StateMachine
 		#region properties
 		public bool CanMove =>  player.StateMachine.currentState == player.StateMachine.idle;
 
-        public bool CanThrow => player.IsHoldingBall                                                &&
+        public bool CanThrow => player.PlayerD.IsHoldingBall                                                &&
                                 (player.StateMachine.currentState == player.StateMachine.idle       ||
                                  player.StateMachine.currentState == player.StateMachine.move);
 
-        public bool CanDodge => player.DodgeCooldownCurrent <= 0                                    &&
+        public bool CanDodge => player.PlayerD.DodgeCooldownCurrent <= 0                                    &&
                                 (player.StateMachine.currentState == player.StateMachine.idle       ||
                                  player.StateMachine.currentState == player.StateMachine.move);
 
-        public bool CanParry => player.DodgeCooldownCurrent <= 0                                    &&
-                                !player.IsHoldingBall                                               &&
+        public bool CanParry => player.PlayerD.DodgeCooldownCurrent <= 0                                    &&
+                                !player.PlayerD.IsHoldingBall &&
                                 (player.StateMachine.currentState == player.StateMachine.idle       ||
                                  player.StateMachine.currentState == player.StateMachine.move);
 
@@ -65,7 +66,7 @@ namespace StateMachine
             if (context.phase == InputActionPhase.Canceled && player.StateMachine.currentState == player.StateMachine.aimthrow)
             {
                 player.PlayerAnimation.PlayAnimation(PlayerAnimation.throwRightOutro);
-                player.HeldPallo.Throw(player.ThrowVelocity);
+                player.PlayerD.HeldPallo.Throw(player.PlayerD.ThrowVelocity);
                 player.StateMachine.ChangeState(player.StateMachine.idle);
             }
         }

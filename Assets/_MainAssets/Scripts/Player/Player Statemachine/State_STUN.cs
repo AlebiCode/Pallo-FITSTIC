@@ -17,24 +17,24 @@ namespace StateMachine
 
 			player.PlayerAnimation.PlayAnimation(PlayerAnimation.idle);
 			LosePallo();
-			player.LookAt(new Vector3(-player.PushDirection.x, 0f, -player.PushDirection.z));
-			player.IsInvincibile = true;
+			player.LookAt(new Vector3(-player.PlayerD.PushDirection.x, 0f, -player.PlayerD.PushDirection.z));
+			player.PlayerD.IsInvincibile = true;
 		}
 
 		public override void Exit()
 		{
 			base.Exit();
-			player.IsInvincibile = false;
+			player.PlayerD.IsInvincibile = false;
 		}
 
 		public override void Update()
 		{
 			base.Update();
-			player.HandleMovement(player.PushDirection, player.PushForce);
+			player.HandleMovement(player.PlayerD.PushDirection, player.PlayerD.PushForce);
 
-			player.PushForce -= player.PushDecrease;
+			player.PlayerD.PushForce -= player.PlayerD.PushDecrease;
 
-			if (player.PushForce <= player.speedSlow)
+			if (player.PlayerD.PushForce <= player.PlayerD.speedSlow)
 			{
 				player.StateMachine.ChangeState(player.StateMachine.idle);
 			}
@@ -42,12 +42,12 @@ namespace StateMachine
 
 		private void LosePallo()
 		{
-			if (player.HeldPallo)
+			if (player.PlayerD.HeldPallo)
 			{
-				player.HeldPallo.Drop();
-				player.HeldPallo = null;
-				player.ThrowChargeCurrent = 0;
-				player.HoldBallCooldownCurrent = player.holdBallCooldown;
+				player.PlayerD.HeldPallo.Drop();
+				player.PlayerD.HeldPallo = null;
+				player.PlayerD.ThrowChargeCurrent = 0;
+				player.PlayerD.HoldBallCooldownCurrent = player.PlayerD.holdBallCooldown;
 			}
 		}
 	}

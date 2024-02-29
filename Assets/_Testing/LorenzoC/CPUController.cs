@@ -15,6 +15,8 @@ namespace LorenzoCastelli {
 
         private static readonly float ORBIT_DISTANCE = 3.5f;
 
+        public PlayerAnimation playeranim;
+
         private bool reachedMyDestination = false;
         public PLAYERSTATES state = PLAYERSTATES.EMPTYHANDED;
         public float maxAttackTime = 4;
@@ -58,7 +60,7 @@ namespace LorenzoCastelli {
 
 
         public override void BallThrow() {
-            if (!playerData.IsHoldingBall())
+            if (!playerData.IsHoldingBall)
                 return;
 
             if (playerData.throwChargeTime >= maxChargeTime) {
@@ -75,7 +77,7 @@ namespace LorenzoCastelli {
 
         public override void PlayerMovement() {
 
-            if (playerData.IsHoldingBall()) {//ho la palla
+            if (playerData.IsHoldingBall) {//ho la palla
                 if (!currentLookTarget) {
                     Debug.LogError("Non ho un bersaglio; La funzione non assegna currentLookTarget correttamente!");
                     currentMoveLocationTarget = transform.position;
@@ -98,10 +100,12 @@ namespace LorenzoCastelli {
                     //se sono lontano dal target, mi ci avvicino
                     currentMoveLocationTarget = currentLookTarget.transform.position;
                 }
-            }
-            else {//non ho la palla
+            } else {//non ho la palla
                 //currentMoveLocationTarget = currentLookTarget.transform.position;
             }
+            Vector3 tmp = transform.InverseTransformDirection(ai.velocity);
+            playeranim.LegMovementParameters(tmp.x, tmp.z);
+
         }
 
         private void Roam() {
@@ -138,9 +142,9 @@ namespace LorenzoCastelli {
             }
         }
 
-        
 
-#endregion
+
+        #endregion
 
         #region ROTATION AND LOOK
 
@@ -183,7 +187,7 @@ namespace LorenzoCastelli {
         bool isAggressive = true;
         float nextAggressiveStateChange = 0;
         void ChangeAggressiveState() {
-            if (Time.time> nextAggressiveStateChange) {
+            if (Time.time > nextAggressiveStateChange) {
                 isAggressive = !isAggressive;
                 nextAggressiveStateChange = Time.time + Random.Range(3, 6);
             }
@@ -204,74 +208,111 @@ namespace LorenzoCastelli {
 
             ChangeAggressiveState();
 
-            if (Time.time> nextUpdateTarget) {
+            if (Time.time > nextUpdateTarget) {
                 nextUpdateTarget = Time.time + 1;
                 currentLookTarget = GameLogic.instance.FindInterestingPlayer(playerData).gameObject;
             }
 
 
-            if (playerData.IsHoldingBall()) {//IO HO IL PALLO
-
+            if (playerData.IsHoldingBall) {//IO HO IL PALLO
+                Debug.Log("I have Ball: " + GameLogic.instance.pallo.PlayerHoldingIt);
                 //check close to target
                 if (Vector3.Distance(currentLookTarget.transform.position, this.transform.position) <= ORBIT_DISTANCE) {
+                    Debug.Log("Go around him: " + currentLookTarget);
                     closeToTarget = true;
                     Debug.Log(this.gameObject + "orbito target");
                 } else {
+                    Debug.Log("Go for him: " + currentLookTarget);
                     closeToTarget = false;
                     Debug.Log(this.gameObject + "vado per il target");
                 }
-            }
-            else if (GameLogic.instance.pallo.IsHeld) {//QUALCUN ALTRO HA LA PALLA
+            } else if (GameLogic.instance.pallo.PlayerHoldingIt) {//QUALCUN ALTRO HA LA PALLA
 
                 /*if (isAggressive) {
                     //se sono aggressivo vado a priori verso il giocatore con la palla
                     currentMoveLocationTarget = GameLogic.instance.pallo.gameObject.transform.position;
                 }
                 else {*/
-                    Vector3 farrestArea = GameLogic.instance.FindFarestPointV2(GameLogic.instance.pallo.gameObject, playerData);
-                    currentMoveLocationTarget = farrestArea;
+                Debug.Log("Someone has Ball: " + GameLogic.instance.pallo.PlayerHoldingIt);
+                Vector3 farrestArea = GameLogic.instance.FindFarestPointV2(GameLogic.instance.pallo.PlayerHoldingIt.gameObject, playerData);
+                currentMoveLocationTarget = farrestArea;
                 //}
-                
-            } else {//NESSUNO HA LA PALLA
 
+            } else {//NESSUNO HA LA PALLA
+                Debug.Log("NO ONE has Ball: " + GameLogic.instance.pallo.PlayerHoldingIt);
                 if (isAggressive) {
                     //se sono aggressivo vado a priori verso la palla
+                    Debug.Log(this.gameObject.name + " Going for the Ball: " + GameLogic.instance.pallo.PlayerHoldingIt);
                     currentMoveLocationTarget = GameLogic.instance.pallo.gameObject.transform.position;
                 } else {
                     PlayerData closestPlayerToBall = GameLogic.instance.GetClosestPlayerToBall();
 
                     if (playerData == closestPlayerToBall)//io sono il piu vicino
                     {
-                        currentMoveLocationTarget = GameLogic.instance.pallo.transform.position;
+                        Debug.Log(this.gameObject.name + " Going for the Ball cause im close: " + closestPlayerToBall);
+                        currentMoveLocationTarget = GameLogic.instance.PalloPosition.position;
                     } else {//scappo / sono corragioso
-                        Vector3 farrestArea = GameLogic.instance.FindFarestPointV2(GameLogic.instance.pallo.gameObject, playerData);
-                        currentMoveLocationTarget = farrestArea;
+                        int coin = (int)UnityEngine.Random.Range(0, 10);
+                        if (coin < 5) {
+                            Vector3 farrestArea = GameLogic.instance.FindFarestPointV2(GameLogic.instance.pallo.gameObject, playerData);
+                            currentMoveLocationTarget = farrestArea;
+                        } else {
+                            Debug.Log("Going for the Ball cause im close: " + closestPlayerToBall);
+                            currentMoveLocationTarget = GameLogic.instance.PalloPosition.position;
+                        }
                     }
                 }
             }
         }
 
 
+            /*public void PalloActions(PalloController pallo) {
+                if (pallo.BallState == PalloController.BallStates.thrown) {
+                    GrabOrNot(pallo);
+                }
+            }*/
 
-
-        private void OnTriggerEnter(Collider other) {
-            if ((other.GetComponent<PalloController>() != null) && (!other.GetComponent<PalloController>().IsHeld)) {
-                ChangeState(PLAYERSTATES.WITHBALL);
-                playerData.PickUpBall(other.GetComponent<PalloController>());
-                playerData.GetPallo().Hold(handsocket);
-                currentLookTarget = GameLogic.instance.FindInterestingPlayer(playerData).gameObject;
+            private void GrabOrNot(PalloController pallo) {
+                int coin = (int)UnityEngine.Random.Range(0, 10);
+                if (coin < 5) {
+                    playerData.TakeDamage(10);
+                } else {
+                    pallo.Hold(handsocket);
+                    playeranim.PlayAnimation(PlayerAnimation.takeIntro);
+                    ChangeState(PLAYERSTATES.WITHBALL);
+                    playerData.PickUpBall(pallo);
+                    //playerData.GetPallo().Hold(handsocket);
+                    currentLookTarget = GameLogic.instance.FindInterestingPlayer(playerData).gameObject;
+                }
             }
+
+        public void PalloContact(PalloController palloController) {
+            if (palloController.BallState == PalloController.BallStates.thrown)
+                playerData.TakeDamage(10);
+            else
+                playerData.GrabPallo(palloController);
         }
+
+        /*  private void OnTriggerEnter(Collider other) {
+              if ((other.GetComponent<PalloController>() != null) && (!other.GetComponent<PalloController>().IsHeld)) {
+
+                  playeranim.PlayAnimation(PlayerAnimation.takeIntro);
+                  ChangeState(PLAYERSTATES.WITHBALL);
+                  playerData.PickUpBall(other.GetComponent<PalloController>());
+                  playerData.GetPallo().Hold(handsocket);
+                  currentLookTarget = GameLogic.instance.FindInterestingPlayer(playerData).gameObject;
+              }
+          }*/
     }
 
-    public enum PLAYERSTATES {
-        EMPTYHANDED,
-        GOINGFORBALL,
-        WITHBALL,
-        BACKINGOFF,
-        ATTACKING,
-        RAGDOLL,
-        DEAD
-    }
+        public enum PLAYERSTATES {
+            EMPTYHANDED,
+            GOINGFORBALL,
+            WITHBALL,
+            BACKINGOFF,
+            ATTACKING,
+            RAGDOLL,
+            DEAD
+        }
 
-}
+    }

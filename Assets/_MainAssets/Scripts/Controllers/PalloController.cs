@@ -27,7 +27,7 @@ namespace Controllers
 
         public enum BallStates { respawning, held, thrown, bouncing }
 
-        PlayerData playerHolding = null;
+        public PlayerData playerHolding = null;
 
         [Header("Components")]
         [SerializeField] private new SphereCollider collider;

@@ -45,7 +45,7 @@ namespace LorenzoCastelli {
             }
     }
         public override void BallThrow(){
-            if (!playerData.IsHoldingBall())
+            if (!playerData.IsHoldingBall)
                 return;
 
             if (playerData.throwChargeTime >= maxChargeTime || Input.GetKeyUp(KeyCode.Mouse0)) {
