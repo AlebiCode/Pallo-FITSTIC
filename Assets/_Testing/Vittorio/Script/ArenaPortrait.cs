@@ -1,18 +1,22 @@
-using System.Collections;
-using System.Collections.Generic;
+
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ArenaPortrait : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
+    [SerializeField] ArenaSO arena;
+    [SerializeField] Image previewImageComponent;
+    private Button button;
+
+    public ArenaSO Arena => arena;
+
+    private void Awake() {
+        previewImageComponent.sprite = arena.smallPreviewImage;
+        button = GetComponent<Button>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    public void SelectButton() {
+        button.Select();
     }
+
 }
