@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3145719933945977357}
   - component: {fileID: 7232276619685092117}
+  - component: {fileID: 8121191128294311849}
   m_Layer: 0
   m_Name: Manager
   m_TagString: GameController
@@ -44,9 +45,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc0ec659c92b417499958acb3cdfa297, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timerText: {fileID: 0}
-  playTime: 99
-  gameState: 0
   pallo: {fileID: 0}
   playersList:
   - {fileID: 0}
@@ -60,4 +58,28 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   areasOccupied: []
+--- !u!114 &8121191128294311849
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3572933660123891778}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2cab096c6f41e1744b484b1dad933628, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnStandardTimeEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  OnOvertimeEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  normalTimerSeconds: 20
+  OvertimeTimerSeconds: 20

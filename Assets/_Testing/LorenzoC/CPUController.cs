@@ -211,7 +211,7 @@ namespace LorenzoCastelli {
 
             if (Time.time > nextUpdateTarget) {
                 nextUpdateTarget = Time.time + 1;
-                currentLookTarget = GameLogic.instance.FindInterestingPlayer(playerData).gameObject;
+                currentLookTarget = ((MonoBehaviour)GameLogic.instance.FindInterestingPlayer(playerData)).gameObject;
             }
 
 
@@ -251,7 +251,7 @@ namespace LorenzoCastelli {
                     if (playerData == closestPlayerToBall)//io sono il piu vicino
                     {
                         //Debug.Log(this.gameObject.name + " Going for the Ball cause im close: " + closestPlayerToBall);
-                        currentMoveLocationTarget = GameLogic.instance.PalloPosition.position;
+                        currentMoveLocationTarget = GameLogic.instance.pallo.transform.position;
                     } else {//scappo / sono corragioso
                         int coin = (int)UnityEngine.Random.Range(0, 10);
                         if (coin < 5) {
@@ -259,7 +259,7 @@ namespace LorenzoCastelli {
                             currentMoveLocationTarget = farrestArea;
                         } else {
                             //Debug.Log("Going for the Ball cause im close: " + closestPlayerToBall);
-                            currentMoveLocationTarget = GameLogic.instance.PalloPosition.position;
+                            currentMoveLocationTarget = GameLogic.instance.pallo.transform.position;
                         }
                     }
                 }
@@ -282,8 +282,7 @@ namespace LorenzoCastelli {
                 PlayerAnimation.PlayAnimation(PlayerAnimation.takeIntro);
                 ChangeState(PLAYERSTATES.WITHBALL);
                 playerData.PickUpBall(pallo);
-                //playerData.GetPallo().Hold(handsocket);
-                currentLookTarget = GameLogic.instance.FindInterestingPlayer(playerData).gameObject;
+                currentLookTarget = ((MonoBehaviour)GameLogic.instance.FindInterestingPlayer(playerData)).gameObject;
             }
         }
 

@@ -4,19 +4,19 @@ using System.Collections.Generic;
 using Controllers;
 using TMPro;
 using UnityEngine;
+using vittorio;
 
 namespace LorenzoCastelli {
 
     public class GameLogic : MonoBehaviour {
 
-        public TextMeshProUGUI timerText;
-        public float playTime;
-        public GAMESTATES gameState = GAMESTATES.START;
         public PalloController pallo;
 
-        public PlayerData[] playersList = new PlayerData[4];
 
-        public List<PlayerData> playerInGame = new List<PlayerData>();
+        public IPlayer[] playersList = new IPlayer[4];
+
+        [SerializeField] private Transform playersContainer;
+        public List<IPlayer> playerInGame = new List<IPlayer>();
 
         public Transform[] arenaAreasPositions;
 
@@ -24,28 +24,24 @@ namespace LorenzoCastelli {
 
         public static GameLogic instance;
 
-        public Transform PalloPosition => pallo.transform;
-        public enum GAMESTATES {
-            START = 0,
-            PLAYING = 1,
-            TIMEUP = 2,
-            ENDGAME = 3
-        }
-
-
-
         private void Awake() {
             if (instance) {
                 Destroy(this);
             } else {
                 instance = this;
             }
+
+            playersList = playersContainer.GetComponentsInChildren<IPlayer>();
+
+
             GameObject[] temp = new GameObject[arenaAreasPositions.Length];
-           
-           for (int i=0; i< arenaAreasPositions.Length; i++) {
+            for (int i=0; i< arenaAreasPositions.Length; i++) {
                 temp[i] = null;
             }
             areasOccupied = temp;
+        }
+        private void Start() {
+            EnterStart();
         }
 
         public void ForceLookTarget(PlayerData initializer) {
@@ -65,12 +61,8 @@ namespace LorenzoCastelli {
             }
         }
 
-        private void Start() {
-            EnterStart();
-        }
 
         private void EnterStart() {
-            timerText.text = "00";
             //Debug.Log("Changing to " + GAMESTATES.PLAYING + " from " + gameState);
             EnterPlaying();
         }
@@ -78,76 +70,23 @@ namespace LorenzoCastelli {
         private void EnterPlaying() {
             //EFFETTO ENTRATA INIZIO PARTITA
             //InitPlayers()
-            foreach (PlayerData player in playersList) {
+            foreach (IPlayer player in playersList) {
                 playerInGame.Add(player);
             }
-            timerText.text = playTime.ToString();
-            gameState = GAMESTATES.PLAYING;
         }
 
-        private void EnterTimeUp() {
-            gameState = GAMESTATES.TIMEUP;
-            //EFFETTO ENTRATA OVERTIME
-        }
+        #region Player Handling
 
-        private static void EnterEndGame() {
-            //EFFETTO ENTRATA FINE PARTITA
-        }
-        private static void UpdateOnGameLogic() {
-
-        }
-
-        private static void UpdateStart() {
-            //ChangeGameLogic(GAMESTATES.PLAYING);
-        }
-
-        private void UpdatePlaying() {
-            playTime -= Time.deltaTime;
-            //TM.text = ((int)playTime).ToString();
-            if (playTime <= 0) {
-                EnterTimeUp();
-            }
-            //EFFETTI DA MANTENERE DURANTE PARTITA
-        }
-
-        private static void UpdateTimeUp() {
-            //ROBE DA FAR FARE QUANDO IN OVERTIME
-        }
-
-        private static void UpdateEndGame() {
-            //ROBE DA FAR FARE QUANDO IN FINE PARTITA
-        }
-
-
-
-        // Update is called once per frame
-        void Update() {
-            switch (gameState) {
-                case GAMESTATES.START:
-                    UpdateStart();
-                    break;
-                case GAMESTATES.PLAYING:
-                    UpdatePlaying();
-                    break;
-                case GAMESTATES.TIMEUP:
-                    UpdateTimeUp();
-                    break;
-                case GAMESTATES.ENDGAME:
-                    UpdateEndGame();
-                    break;
-            }
-        }
-
-        private PlayerData FindPlayer(PlayerData player) {
+        private IPlayer FindPlayer(IPlayer player) {
             return Array.Find(playersList, ele => ele.Equals(player));
         }
 
-        public bool CheckIfIsAlive(PlayerData player) {
-            PlayerData pd = FindPlayer(player);
-            return pd.isAlive();
+        public bool CheckIfIsAlive(IPlayer player) {
+            IPlayer pd = FindPlayer(player);
+            return pd.IsAlive;
         }
 
-        public void RemovePlayer(PlayerData player) {
+        public void RemovePlayer(IPlayer player) {
             if (!CheckIfIsAlive(player)) {
                 playerInGame.Remove(FindPlayer(player));
                 IsOnlyOneAlive();
@@ -156,8 +95,13 @@ namespace LorenzoCastelli {
 
         private void IsOnlyOneAlive() {
             if (playerInGame.Count == 1) {
-                EnterEndGame();
+                EndGame();
             }
+        }
+
+        private void EndGame()
+        {
+            //TODO
         }
 
         /*public void ReorderList() {
@@ -183,9 +127,9 @@ namespace LorenzoCastelli {
 
         public bool IsPlayerClose(PlayerData caller, PlayerData otherPlayer) {
             if (otherPlayer.GetComponent<PlayerData>()) {
-                PlayerData close = playerInGame.Find(player => player == otherPlayer);
-                if (close) {
-                    if (Vector3.Distance(close.gameObject.transform.position, caller.gameObject.transform.position) <= 0.5f) {
+                IPlayer close = playerInGame.Find(player => player == otherPlayer);
+                if (close != null) {
+                    if (Vector3.Distance(((MonoBehaviour)close).transform.position, caller.gameObject.transform.position) <= 0.5f) {
                         return true;
                     }
                        
@@ -212,11 +156,12 @@ namespace LorenzoCastelli {
             }
         }
 
-        public PlayerData FindInterestingPlayer(PlayerData player) {
-            PlayerData target = null;
+        public IPlayer FindInterestingPlayer(IPlayer player) {
+            IPlayer target = null;
             float maxHeavyPoints = -100;
-            foreach (PlayerData pd in playerInGame) {
-                float curHeavyPoints = CalculateHeavyPoint(pd) + Vector3.Distance(player.transform.position, pd.transform.position);
+            Debug.Log("Wtf " + playerInGame.Count);
+            foreach (IPlayer pd in playerInGame) {
+                float curHeavyPoints = CalculateHeavyPoint(pd) + Vector3.Distance(((MonoBehaviour)player).transform.position, ((MonoBehaviour)pd).transform.position);
                 if ((pd != player) && (curHeavyPoints >= maxHeavyPoints)) {
                     target = pd;
                     maxHeavyPoints = curHeavyPoints;
@@ -225,8 +170,10 @@ namespace LorenzoCastelli {
             return target;
         }
 
-        private float CalculateHeavyPoint(PlayerData pd) {
-            return pd.importance - pd.CurrentHp;
+
+        private float CalculateHeavyPoint(IPlayer pd) {
+            Debug.Log("bruh " + ((MonoBehaviour)pd).name);
+            return pd.Importance - pd.CurrentHp;
         }
 
 
@@ -295,17 +242,17 @@ namespace LorenzoCastelli {
             return finalPos;
         }
 
-        public Vector3 FindFarestPointV2(GameObject ballPosition, PlayerData excludePlayer) {
+        public Vector3 FindFarestPointV2(GameObject ballPosition, IPlayer excludePlayer) {
             float distance = 0;
             Transform finalPos = arenaAreasPositions[0];
             for (int i = 0; i < arenaAreasPositions.Length; i++) {
 
                 //controllo che non sia gia occupata
                 bool someOneIsNearThisArea = false;
-                foreach (PlayerData pd in playerInGame) {
+                foreach (IPlayer pd in playerInGame) {
                     if (excludePlayer != pd) {
-                        if (Vector3.Distance(pd.transform.position, arenaAreasPositions[i].position) <2) {
-                            //Debug.Log(excludePlayer.gameObject + " is close to area " + i, excludePlayer.gameObject);
+                        if (Vector3.Distance(((MonoBehaviour)pd).transform.position, arenaAreasPositions[i].position) <2) {
+                            //Debug.Log(((MonoBehaviour)excludePlayer).gameObject + " is close to area " + i, ((MonoBehaviour)excludePlayer).gameObject);
                             someOneIsNearThisArea = true;
                             break;
                         }
@@ -342,6 +289,8 @@ namespace LorenzoCastelli {
 
             return closestPlayer;
         }
+
+        #endregion
 
     }
 }

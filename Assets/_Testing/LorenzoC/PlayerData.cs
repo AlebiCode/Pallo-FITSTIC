@@ -7,7 +7,7 @@ using vittorio;
 
 namespace LorenzoCastelli {
 
-public class PlayerData : MonoBehaviour
+public class PlayerData : MonoBehaviour, IPlayer
 {
         [Header("General Data")]
         public int maxHp = 100; 
@@ -82,6 +82,8 @@ public class PlayerData : MonoBehaviour
 
 
         public int importance;
+
+        public bool IsAlive => currentHp > 0;
 
         private void Awake() {
             currentHp = maxHp;
@@ -220,13 +222,6 @@ public class PlayerData : MonoBehaviour
             Destroy(this.gameObject);
             //UPDATE DELLA UI
             //RAGDOLL
-        }
-
-        public bool isAlive() {
-            if (currentHp > 0)
-                return true;
-            else
-                return false;
         }
 
         public void AddImportance(int value) {

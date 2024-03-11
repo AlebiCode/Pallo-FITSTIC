@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.Events;
 
 namespace vittorio {
+
+    [System.Serializable]
     public class MatchTimer : MonoBehaviour {
         public static MatchTimer Instance { get; private set; }
 
@@ -12,45 +14,37 @@ namespace vittorio {
 
         [SerializeField] float normalTimerSeconds;
         [SerializeField] float OvertimeTimerSeconds;
-        [SerializeField] TMP_Text timeText;
 
         private float timeRemaining;
 
-        private void Awake() {
-
-            if (Instance == null) {
-                Instance = this;
-            }
-            else {
-                Destroy(gameObject);
-            }
-
+        private void Start()
+        {
+            StartTimer();
         }
-        void Start() {
-            timeText.text = "";
+
+        public void StartTimer()
+        {
             StartCoroutine(Countdown());
-        }
-
-        // Update is called once per frame
-        void Update() {
-
         }
 
         private IEnumerator Countdown() {
 
             timeRemaining = normalTimerSeconds;
 
-            float minutes = Mathf.FloorToInt(timeRemaining / 60);
-            float seconds = Mathf.FloorToInt(timeRemaining % 60);
-            timeText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+            InGameUiManager.Instance.UpdateTimer(timeRemaining);
+
+            //float minutes = Mathf.FloorToInt(timeRemaining / 60);
+            //float seconds = Mathf.FloorToInt(timeRemaining % 60);
+            //timeText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
 
             while (timeRemaining > 0) {
                 
                 yield return new WaitForSeconds(1);
                 timeRemaining -= 1;
-                minutes = Mathf.FloorToInt(timeRemaining / 60);
-                seconds = Mathf.FloorToInt(timeRemaining % 60);
-                timeText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+                InGameUiManager.Instance.UpdateTimer(timeRemaining);
+                //minutes = Mathf.FloorToInt(timeRemaining / 60);
+                //seconds = Mathf.FloorToInt(timeRemaining % 60);
+                //timeText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
 
             }
 
@@ -64,10 +58,10 @@ namespace vittorio {
 
                 yield return new WaitForSeconds(1);
                 timeRemaining -= 1;
-                minutes = Mathf.FloorToInt(timeRemaining / 60);
-                seconds = Mathf.FloorToInt(timeRemaining % 60);
-                timeText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
-
+                //minutes = Mathf.FloorToInt(timeRemaining / 60);
+                //seconds = Mathf.FloorToInt(timeRemaining % 60);
+                //timeText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+                InGameUiManager.Instance.UpdateTimer(timeRemaining);
             }
 
             yield return new WaitForSeconds(1);

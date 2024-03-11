@@ -24,7 +24,7 @@ public class InGameUiManager : MonoBehaviour
 
     private void Awake()
     {
-        if(Instance)
+        if(!Instance)
             Instance = this;
         else
             Destroy(Instance);
@@ -32,9 +32,10 @@ public class InGameUiManager : MonoBehaviour
 
     public void UpdateTimer(float secondsRemaining)
     {
+        Debug.Log(".......");
         int minutes = (int)(secondsRemaining / 60);
         int seconds = (int)(secondsRemaining - (minutes * 60));
-        timer.text = minutes.ToString("00") + '+' + seconds.ToString("00");
+        timer.text = minutes.ToString("00") + ':' + seconds.ToString("00");
     }
 
     public void UpdateHpBar(int player, float hpPercent)

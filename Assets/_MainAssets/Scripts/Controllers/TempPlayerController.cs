@@ -8,7 +8,7 @@ using UnityEngine;
 namespace Controllers
 {
     [RequireComponent(typeof(Rigidbody))]
-    public class TempPlayerController : MonoBehaviour
+    public class TempPlayerController : MonoBehaviour, IPlayer
     {
         [SerializeField] private float maxChargeTime = 1;
         [SerializeField] private float maxThrowForce = 10;
@@ -45,6 +45,7 @@ namespace Controllers
 
         private bool IsHoldingBall => heldPallo;
         private float MinThrowForce => PalloController.SPEED_TIERS[0];
+        public bool IsAlive => currentHp > 0;
 
         private void Awake()
         {
